@@ -3,24 +3,16 @@ dotenv.config();
 
 var config = {
   development: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DEV_NAME,
-    host: process.env.DB_HOSTNAME,
-    port: 5432,
+    use_env_variable: 'DATABASE_URL',
     dialect: 'postgres'
   },
   test: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_TEST_NAME,
-    host: process.env.DB_HOSTNAME,
-    port: 5432,
+    use_env_variable: 'TEST_DATABASE_URL',
     dialect: 'postgres'
   },
   production: {
-    use_env_variable: process.env.configEnvVar,
-    dialect: process.env.dialect
+    use_env_variable: 'DATABASE_URL',
+    dialect: 'postgres'
   }
 };
 
