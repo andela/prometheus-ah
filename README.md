@@ -1,8 +1,9 @@
 Authors Haven - A Social platform for the creative at heart.
+
 [![Build Status](https://travis-ci.org/andela/prometheus-ah.svg?branch=develop)](https://travis-ci.org/andela/prometheus-ah)
 
-=======
 [![protected_by hound](https://img.shields.io/badge/hound-protected%20by-blue.svg)](https://houndci.com/repos)
+
 ## Vision
 Create a community of like minded authors to foster inspiration and innovation
 by leveraging the modern web.
