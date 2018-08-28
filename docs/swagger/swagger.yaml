@@ -1,0 +1,71 @@
+paths:
+  /users/:
+    post:
+      tags:
+        - User
+      summary: creates a new user
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: sign up
+        description: It enables a user to create an account
+        required: false
+        schema:
+          $ref: '#/definitions/signUp'
+      responses:
+        201:
+          description: An object with user details
+  /user/{id}:
+    put:
+      tags:
+        - User
+      summary: It updates a user profile detail
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: path parameter takes the user id
+        required: true
+        type: string
+      - in: body
+        name: update user
+        description: It enables a user to update their profile
+        required: false
+        schema:
+          $ref: '#/definitions/updateUser'
+      responses:
+        200:
+          description: An object with a user updated user profile detail
+        401:
+          description: Unauthorized users
+definitions:
+  signUp:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          username:
+            type: string
+          email:
+            type: string
+          password:
+            type: string
+  updateUser:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          username:
+            type: string
+          email:
+            type: string
+          bio:
+            type: string
+          image:
+            type: string
+          password:
+            type: string
