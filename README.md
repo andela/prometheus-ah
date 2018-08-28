@@ -1,4 +1,6 @@
 Authors Haven - A Social platform for the creative at heart.
+[![Build Status](https://travis-ci.org/andela/prometheus-ah.svg?branch=develop)](https://travis-ci.org/andela/prometheus-ah)
+
 =======
 
 ## Vision
