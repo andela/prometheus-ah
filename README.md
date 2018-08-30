@@ -8,9 +8,17 @@ by leveraging the modern web.
 
 ---
 
+## Installation
+1. Ensure [**Node JS**](https://nodejs.org/en/) is installed.
+2. Ensure [**Postgres**](https://www.postgresql.org/) is installed.
+3. Clone the [**repository here**](https://github.com/andela/prometheus-ah.git)
+4. Navigate to the project directory `cd  prometheus-ah`
+5. Run `npm install` on the terminal to install dependecies
+6. Create a .env file in your root directory and copy content from `.env.sample` file to `.env` file and set environment variables with the appropriate values.
+7. Create Postgresql database and run migrations: `npm run migrations`
+
 ## API Spec
 The preferred JSON object to be returned by the API should be structured as follows:
-
 ### Users (for authentication)
 
 ```source-json
