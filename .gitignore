@@ -36,3 +36,5 @@ node_modules
 
 .nyc_output
 .coveralls.yml
+# Environment
+.env 

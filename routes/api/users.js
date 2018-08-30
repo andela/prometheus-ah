@@ -1,87 +1,42 @@
-const mongoose = require("mongoose");
 const router = require("express").Router();
-const passport = require("passport");
-const User = mongoose.model("User");
+const db = require("../../models");
+const User = db.User;
 
-router.get("/user", function(req, res, next) {
-    User.findById(req.payload.id)
-        .then(function(user) {
-            if (!user) {
-                return res.sendStatus(401);
-            }
-            return res.json({ user: user.toAuthJSON() });
-        })
-        .catch(next);
-});
-
-router.put("/user", function(req, res, next) {
-    User.findById(req.payload.id)
-        .then(function(user) {
-            if (!user) {
-                return res.sendStatus(401);
-            }
-
-            // only update fields that were actually passed...
-            if (typeof req.body.user.username !== "undefined") {
-                user.username = req.body.user.username;
-            }
-            if (typeof req.body.user.email !== "undefined") {
-                user.email = req.body.user.email;
-            }
-            if (typeof req.body.user.bio !== "undefined") {
-                user.bio = req.body.user.bio;
-            }
-            if (typeof req.body.user.image !== "undefined") {
-                user.image = req.body.user.image;
-            }
-            if (typeof req.body.user.password !== "undefined") {
-                user.setPassword(req.body.user.password);
-            }
-
-            return user.save().then(function() {
-                return res.json({ user: user.toAuthJSON() });
-            });
-        })
-        .catch(next);
-});
-
-router.post("/users/login", function(req, res, next) {
-    if (!req.body.user.email) {
-        return res.status(422).json({ errors: { email: "can't be blank" } });
-    }
-
-    if (!req.body.user.password) {
-        return res.status(422).json({ errors: { password: "can't be blank" } });
-    }
-    passport.authenticate("local", { session: false }, function(
-        err,
-        user,
-        info
-    ) {
-        if (err) {
-            return next(err);
+router.put("/user/:id", function(req, res, next) {
+    return User
+      .find({
+        where: {
+            id: req.params.id
         }
-
-        if (user) {
-            return res.json({ user: user.toAuthJSON() });
-        } else {
-            return res.status(422).json(info);
+    })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).send({
+            message: 'User Not Found'
+          });
         }
-    })(req, res, next);
+        return user
+          .update({
+            username: req.body.user.username,
+            email: req.body.user.email,
+            bio: req.body.user.bio || user.bio,
+            image: req.body.user.image || user.image
+          })
+        .then((updatedUser) => res.status(200).json({ user: updatedUser.toAuthJSON() })) 
+        .catch(next);
+      })
+      .catch(next);
 });
 
 router.post("/users", function(req, res, next) {
-    const user = new User();
-
-    user.username = req.body.user.username;
-    user.email = req.body.user.email;
-    user.setPassword(req.body.user.password);
-
-    user.save()
-        .then(function() {
-            return res.json({ user: user.toAuthJSON() });
-        })
-        .catch(next);
+    return User
+      .create({
+        username: req.body.user.username,
+        email: req.body.user.email,
+        password: req.body.user.password
+      })
+      .then(user => res.status(201).json({ user: user.toAuthJSON() }))
+      .catch(next);
 });
 
 module.exports = router;
