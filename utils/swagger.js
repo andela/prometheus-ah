@@ -1,5 +1,5 @@
-const swaggerJSDoc = require('swagger-jsdoc'),
-  dotenv = require('dotenv');
+import swaggerJSDoc from 'swagger-jsdoc';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -22,6 +22,4 @@ const options = {
   apis: ['./docs/swagger/**/*.yaml'],
 };
 // initialize swagger-jsdoc
-const swaggerSpec = swaggerJSDoc(options);
-
-module.exports = swaggerSpec;
+export default swaggerJSDoc(options);

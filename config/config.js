@@ -1,7 +1,8 @@
-var dotenv = require('dotenv');
+const dotenv = require('dotenv');
+
 dotenv.config();
 
-var config = {
+const config = {
   development: {
     use_env_variable: 'DATABASE_URL',
     dialect: 'postgres'

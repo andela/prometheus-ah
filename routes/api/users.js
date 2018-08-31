@@ -1,42 +1,45 @@
-const router = require("express").Router();
-const db = require("../../models");
-const User = db.User;
+import express from 'express';
+import db from '../../models';
 
-router.put("/user/:id", function(req, res, next) {
-    return User
-      .find({
-        where: {
-            id: req.params.id
-        }
+const router = express.Router();
+
+const { User } = db;
+
+router.put('/user/:id', (req, res, next) => (
+  User
+    .find({
+      where: {
+        id: req.params.id
+      }
     })
-      .then((user) => {
-        if (!user) {
-          return res.status(404).send({
-            message: 'User Not Found'
-          });
-        }
-        return user
-          .update({
-            username: req.body.user.username,
-            email: req.body.user.email,
-            bio: req.body.user.bio || user.bio,
-            image: req.body.user.image || user.image
-          })
-        .then((updatedUser) => res.status(200).json({ user: updatedUser.toAuthJSON() })) 
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: 'User Not Found'
+        });
+      }
+      return user
+        .update({
+          username: req.body.user.username,
+          email: req.body.user.email,
+          bio: req.body.user.bio || user.bio,
+          image: req.body.user.image || user.image
+        })
+        .then(updatedUser => res.status(200).json({ user: updatedUser.toAuthJSON() }))
         .catch(next);
-      })
-      .catch(next);
-});
+    })
+    .catch(next)
+));
 
-router.post("/users", function(req, res, next) {
-    return User
-      .create({
-        username: req.body.user.username,
-        email: req.body.user.email,
-        password: req.body.user.password
-      })
-      .then(user => res.status(201).json({ user: user.toAuthJSON() }))
-      .catch(next);
-});
+router.post('/users', (req, res, next) => (
+  User
+    .create({
+      username: req.body.user.username,
+      email: req.body.user.email,
+      password: req.body.user.password
+    })
+    .then(user => res.status(201).json({ user: user.toAuthJSON() }))
+    .catch(next)
+));
 
-module.exports = router;
+export default router;

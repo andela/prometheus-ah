@@ -1,11 +1,11 @@
-const bodyParser = require('body-parser'),
-  cors = require('cors'),
-  errorhandler = require('errorhandler'),
-  express = require('express'),
-  session = require('express-session'),
-  swaggerUi = require('swagger-ui-express'),
-  dotenv = require('dotenv'),
-  swaggerSpec = require('./utils/swagger');
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import errorhandler from 'errorhandler';
+import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './utils/swagger';
+import routes from './routes';
 
 dotenv.config();
 
@@ -25,23 +25,14 @@ app.use(bodyParser.json());
 
 app.use(require('method-override')());
 
-app.use(express.static(__dirname + '/public'));
-
-app.use(
-  session({
-    secret: 'authorshaven',
-    cookie: { maxAge: 60000 },
-    resave: false,
-    saveUninitialized: false
-  })
-);
+app.use(express.static(`${__dirname}/'public'`));
 
 if (!isProduction) {
   app.use(errorhandler());
 }
-require('./models/User');
 
-app.use(require('./routes'));
+
+app.use(routes);
 
 if (!isProduction) {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -58,8 +49,11 @@ app.use((req, res, next) => {
 
 // development error handler
 // will print stacktrace
+
 if (!isProduction) {
+  // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
+    // eslint-disable-next-line no-console
     console.log(err.stack);
 
     res.status(err.status || 500);
@@ -75,6 +69,7 @@ if (!isProduction) {
 
 // production error handler
 // no stacktraces leaked to user
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json({
@@ -87,5 +82,6 @@ app.use((err, req, res, next) => {
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 3000, () => {
-  console.log('Listening on port ' + server.address().port);
+  // eslint-disable-next-line no-console
+  console.log(`'Listening on port '${server.address().port}`);
 });
