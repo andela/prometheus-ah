@@ -1,5 +1,6 @@
 import express from 'express';
-import db from '../../models';
+import db from '../../database/models';
+import UserController from '../../controllers/UserController';
 
 const router = express.Router();
 
@@ -31,15 +32,7 @@ router.put('/user/:id', (req, res, next) => (
     .catch(next)
 ));
 
-router.post('/users', (req, res, next) => (
-  User
-    .create({
-      username: req.body.user.username,
-      email: req.body.user.email,
-      password: req.body.user.password
-    })
-    .then(user => res.status(201).json({ user: user.toAuthJSON() }))
-    .catch(next)
-));
+router.post('/users', UserController.signUpUser);
+router.post('/users/login', UserController.signInUser);
 
 export default router;

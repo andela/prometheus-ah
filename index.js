@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 import errorhandler from 'errorhandler';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './utils/swagger';
-import routes from './routes';
+import swaggerSpec from './server/utils/swagger';
+import routes from './server/routes';
 
 dotenv.config();
 
@@ -85,3 +85,5 @@ const server = app.listen(process.env.PORT || 3000, () => {
   // eslint-disable-next-line no-console
   console.log(`'Listening on port '${server.address().port}`);
 });
+
+export default app;
