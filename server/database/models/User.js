@@ -18,11 +18,22 @@ module.exports = (sequelize, DataTypes) => {
         isEmail: { msg: 'Enter a Valid Email' },
       }
     },
+    firstname: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        notEmpty: { msg: 'Empty strings not allowed' }
+      }
+    },
+    lastname: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        notEmpty: { msg: 'Empty strings not allowed' }
+      }
+    },
     bio: {
       type: DataTypes.TEXT,
-    },
-    image: {
-      type: DataTypes.STRING,
     },
     password: {
       type: DataTypes.STRING,
@@ -39,7 +50,6 @@ module.exports = (sequelize, DataTypes) => {
     return {
       username: this.username,
       email: this.email,
-      image: this.image,
       bio: this.bio
     };
   };
