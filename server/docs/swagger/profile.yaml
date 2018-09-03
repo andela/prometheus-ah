@@ -15,7 +15,7 @@ paths:
         description: Set the page for each returned users
       - in: query
         name: order
-        description: Set the page for each returned users
+        description: Set the order for each returned users
       - in: header
         name: authorization
         description: Header takes user authorization token

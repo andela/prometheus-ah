@@ -109,7 +109,7 @@ class ArticlesController {
         }
         if (article.userId !== req.decoded.userId) {
           return res.status(403).json({
-            message: 'You are not the creator of the article'
+            message: 'Access denied.'
           });
         }
         if (body) {
@@ -129,10 +129,6 @@ class ArticlesController {
           title,
           body,
           description,
-        });
-        return res.status(200).json({
-          message: 'Article updated successfully',
-          article
         });
       })
       .catch(next);
@@ -160,7 +156,7 @@ class ArticlesController {
         }
         if (article.userId !== req.decoded.userId) {
           return res.status(403).json({
-            message: 'You are not the creator of the article'
+            message: 'Access denied.'
           });
         }
         article.destroy();

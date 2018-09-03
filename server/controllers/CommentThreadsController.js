@@ -104,7 +104,7 @@ class CommentThreadsControllers {
 
           if (reply.userId !== req.decoded.userId) {
             return res.status(403).json({
-              message: 'Access denied'
+              message: 'Access denied.'
             });
           }
 
@@ -233,7 +233,7 @@ class CommentThreadsControllers {
 
         if (reply.userId !== req.decoded.userId) {
           return res.status(403).json({
-            message: 'Access denied'
+            message: 'Access denied.'
           });
         }
 

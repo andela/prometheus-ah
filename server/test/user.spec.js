@@ -127,7 +127,7 @@ describe('Profile', () => {
         .send(update)
         .end((err, res) => {
           expect(res.status).to.equal(403);
-          expect(res.body.message).to.equal('You are not authorized to continue');
+          expect(res.body.message).to.equal('Access denied.');
           if (err) return done(err);
           done();
         });

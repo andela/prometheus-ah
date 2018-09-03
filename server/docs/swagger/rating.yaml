@@ -1,0 +1,119 @@
+paths:
+  /articles/{slug}/ratings/:
+    get:
+      tags:
+        - Rating
+      summary: gets all the ratings for an article
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: limit
+        description: Set the limit for returned ratings
+      - in: query
+        name: page
+        description: Set the page for returned ratings
+      - in: query
+        name: order
+        description: Set the order for returned ratings
+        type: string
+      - name: slug
+        in: path
+        description: Set the Article slug
+      responses:
+        200:
+          description: Success response
+        400:
+          description: Invalid query parameters
+    post:
+      tags:
+        - Rating
+      summary: create a new article rating
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: slug
+        in: path
+        description: path parameter for the article slug
+        required: true
+        type: string
+      - in: body
+        name: rating
+        description: It enables a user to rate an article
+        required: false
+        schema:
+          $ref: '#/definitions/rateArticle'
+      responses:
+        201:
+          description: An object with rating details
+  /articles/{slug}/ratings/{ratingId}:
+    put:
+      tags:
+        - Rating
+      summary: It updates a user's rating on an article
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: slug
+        in: path
+        description: path parameter for the article slug
+        required: true
+        type: string
+      - name: ratingId
+        in: path
+        description: path parameter takes the rating id
+        required: true
+        type: string
+      - in: body
+        name: update rating
+        description: It enables a user to update their profile
+        required: false
+        schema:
+          $ref: '#/definitions/rateArticle'
+      responses:
+        200:
+          description: An object containing the updated rating values
+        401:
+          description: Unauthorized user
+    delete:
+      tags:
+        - Rating
+      summary: delete a rating
+      produces:
+        - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: slug
+        in: path
+        description: path parameter takes the article slug
+        required: true
+        type: string
+      - name: ratingId
+        in: path
+        description: path parameter takes the rating id
+        required: true
+        type: string
+      responses:
+        200:
+          description: A message confirming the rating has been deleted
+        401:
+          description: Unauthorized user
+definitions:
+  rateArticle:
+    type: object
+    properties:
+      rating:
+        type: integer
+        minimum: '1'
+        maximum: '5'

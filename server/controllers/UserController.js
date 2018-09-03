@@ -89,7 +89,7 @@ class UserController {
     const { decoded, userFound } = req;
     if (userFound.id !== decoded.userId) {
       return res.status(403).json({
-        message: 'You are not authorized to continue'
+        message: 'Access denied.'
       });
     }
     const {

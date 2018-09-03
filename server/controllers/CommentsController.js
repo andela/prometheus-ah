@@ -104,7 +104,7 @@ class CommentsControllers {
 
           if (comment.userId !== req.decoded.userId) {
             return res.status(403).json({
-              message: 'Access denied'
+              message: 'Access denied.'
             });
           }
 
@@ -235,7 +235,7 @@ class CommentsControllers {
 
         if (comment.userId !== req.decoded.userId) {
           return res.status(403).json({
-            message: 'Access denied'
+            message: 'Access denied.'
           });
         }
 
