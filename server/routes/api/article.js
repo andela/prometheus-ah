@@ -1,10 +1,16 @@
 import express from 'express';
+
 import ArticlesController from '../../controllers/ArticlesController';
 import ArticleValidation from '../../middlewares/validations/ArticleValidation';
+
 import Authenticate from '../../middlewares/Authenticate';
+
 import CommentsController from '../../controllers/CommentsController';
 import CommentValidation from '../../middlewares/validations/CommentValidation';
 import Queryvalidation from '../../middlewares/validations/QueryValidation';
+
+import RatingsController from '../../controllers/RatingsController';
+import RatingsValidation from '../../middlewares/validations/RatingsValidation';
 
 const router = express.Router();
 
@@ -19,6 +25,15 @@ router.get(
   CommentsController.getAllComments
 );
 
+// Ratting endpoint
+router.get(
+  '/:slug/ratings/',
+  RatingsValidation.validateArticleId,
+  Queryvalidation.queryValidation,
+  RatingsController.getRatings
+);
+
+// Protect Endpoints
 router.use(Authenticate.auth);
 
 // Article endpoints (Protected)
@@ -27,6 +42,7 @@ router.post(
   ArticleValidation.createArticle,
   ArticlesController.createArticles
 );
+
 router.put('/:slug', ArticlesController.updateArticle);
 router.delete('/:slug', ArticlesController.deleteArticle);
 
@@ -46,6 +62,27 @@ router.delete(
   '/:slug/comments/:id',
   CommentValidation.validateId,
   CommentsController.deleteComment
+);
+
+// Rating endpoints (Protected)
+router.put(
+  '/:slug/ratings/:ratingId',
+  RatingsValidation.validateRating,
+  RatingsValidation.modifyRating,
+  RatingsController.updateRating
+);
+
+router.delete(
+  '/:slug/ratings/:ratingId',
+  RatingsValidation.modifyRating,
+  RatingsController.deleteRating
+);
+
+router.post(
+  '/:slug/ratings/',
+  RatingsValidation.validateRating,
+  RatingsValidation.validateUserRating,
+  RatingsController.createRating
 );
 
 export default router;

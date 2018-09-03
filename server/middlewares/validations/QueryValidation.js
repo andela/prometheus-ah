@@ -1,5 +1,3 @@
-import Validator from 'validatorjs';
-
 /**
  * @class QueryValidation
  */
@@ -14,28 +12,12 @@ class QueryValidation {
    * @return {void}
    */
   static queryValidation(req, res, next) {
-    const { limit, page } = req.query;
-    if (limit < 0 || page <= 0) {
-      return res.status(400).json({
-        message: 'Invalid query parameter'
-      });
-    }
-    const validation = new Validator({
-      limit,
-      page
-    }, {
-      limit: 'numeric',
-      page: 'numeric',
-    }, {
-      'numeric.limit': ':attribute in the query parameter can only be numbers.',
-      'numeric.page': ':attribute in the query parameter can only be numbers.',
-    });
-    if (validation.passes()) {
-      return next();
-    }
-    return res.status(400).json({
-      errors: validation.errors.all(),
-    });
+    let { limit, page } = req.query;
+    page = parseInt(page, 10);
+    limit = parseInt(limit, 10);
+    req.query.page = (page && Number.isInteger(page) && page > 0) ? page : 1;
+    req.query.limit = (limit && Number.isInteger(limit) && limit > 0) ? limit : 10;
+    return next();
   }
 }
 

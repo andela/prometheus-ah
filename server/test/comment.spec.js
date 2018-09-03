@@ -158,7 +158,7 @@ describe('Test API endpoint to comment on articles', () => {
       })
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.message).to.equal('Access denied');
+        expect(res.body.message).to.equal('Access denied.');
         done();
       });
   });
@@ -215,7 +215,7 @@ describe('Test API endpoint to comment on articles', () => {
       .set('authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.message).to.equal('Access denied');
+        expect(res.body.message).to.equal('Access denied.');
         done();
       });
   });
