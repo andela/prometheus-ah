@@ -3,20 +3,11 @@ const userFakeData = {
   validUserDetails: {
     firstname: 'Valentine',
     lastname: 'Ezeh',
-    username: 'ugochukwu15',
+    username: 'ugochukwu',
     password: 'password',
     email: 'valentine.ezeh@yahoo.com',
-    confirmPassword: 'password',
+    password_confirmation: 'password',
     bio: 'I am awesome',
-  },
-  userDetailsWithPasswordMismatch: {
-    firstname: 'Valentine',
-    lastname: 'Ezeh',
-    email: 'valentine.ezeh@yahoo.com',
-    username: 'ugochukwu15',
-    password: 'password1',
-    confirmPassword: 'password',
-    bio: 'I am awesome.',
   },
   userDetailsDoesNotExist: {
     firstname: 'user',
@@ -24,7 +15,7 @@ const userFakeData = {
     email: 'user.user@gmail.com',
     username: 'user1234',
     password: 'password',
-    confirmPassword: 'password',
+    password_confirmation: 'password',
     bio: 'I am awesome.',
   }
 };

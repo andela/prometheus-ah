@@ -46,7 +46,7 @@
     "slug": "^0.9.1",
     "swagger-jsdoc": "^3.0.2",
     "swagger-ui-express": "^4.0.0",
-    "underscore": "^1.9.1"
+    "validatorjs": "^3.14.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
