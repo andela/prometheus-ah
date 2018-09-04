@@ -1,13 +1,26 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import User from '../database/models';
+import db from '../database/models';
 
 dotenv.config();
 
+const { User } = db;
 const secret = process.env.SECRET_KEY;
 
-const Auth = {
-  verify: (req, res, next) => {
+/**
+ * @class Authenticate
+ */
+class Authentication {
+  /**
+ * @description it authenticates the validity of user
+ *
+ * @return {void}
+ *
+ * @param {param} req
+ * @param {param} res
+ * @param {func} next
+ */
+  static auth(req, res, next) {
     const token = req.headers.authorization;
     if (token) {
       jwt.verify(token, secret, (err, decoded) => {
@@ -16,7 +29,7 @@ const Auth = {
             message: 'You do not have permission to this page.'
           });
         }
-        User.findById(decoded.id)
+        User.findById(decoded.userId)
           .then((user) => {
             if (!user) {
               return res.status(401).json({
@@ -25,13 +38,15 @@ const Auth = {
             }
             req.decoded = decoded;
             next();
-          }).catch(error => res.status(400).json(error));
+          })
+          .catch(error => res.status(400).json(error));
+      });
+    } else {
+      return res.status(401).json({
+        message: 'You need to signup or login to perform this action'
       });
     }
-    return res.status(401).json({
-      message: 'You need to signup or login to perform this action'
-    });
   }
-};
+}
 
-export default Auth;
+export default Authentication;

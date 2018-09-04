@@ -13,6 +13,38 @@ describe('Tests', () => {
 });
 
 describe('User SignUp', () => {
+  describe('When passed invalid data', () => {
+    it('It should throw an error if password and confirm password does not match.', (done) => {
+      const userDetailsWithPasswordMismatch = { ...userFaker.validUserDetails, password: 'password1' };
+      chai.request(app)
+        .post('/api/users')
+        .set('Content-Type', 'application/json')
+        .send({
+          user: userDetailsWithPasswordMismatch
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.body.errors.password[0]).to.equal('Password Mismatch.');
+          if (err) return done(err);
+          done();
+        });
+    });
+    it('It should throw an error if password lenght is less than 8 characters.', (done) => {
+      const userDetailsWithInvalidAlphaNumericPasswordFormat = { ...userFaker.validUserDetails, password: 'pass' };
+      chai.request(app)
+        .post('/api/users')
+        .set('Content-Type', 'application/json')
+        .send({
+          user: userDetailsWithInvalidAlphaNumericPasswordFormat
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.body.errors.password[0]).to.equal('The password is too short. Min length is 8 characters.');
+          if (err) return done(err);
+          done();
+        });
+    });
+  });
   describe('When passed valid data', () => {
     it('it should create a new User and respond with jwt ', (done) => {
       chai.request(app)
@@ -25,7 +57,7 @@ describe('User SignUp', () => {
           const newUser = res.body.user;
           expect(res.status).to.equal(201);
           expect(res.type).to.equal('application/json');
-          expect(newUser.username).to.equal('ugochukwu15');
+          expect(newUser.username).to.equal('ugochukwu');
           expect(newUser.email).to.equal('valentine.ezeh@yahoo.com');
           if (err) return done(err);
           done();
@@ -41,22 +73,6 @@ describe('User SignUp', () => {
         .end((err, res) => {
           expect(res.status).to.equal(409);
           expect(res.body.message).to.equal('Email or Username is already in use by another User.');
-          if (err) return done(err);
-          done();
-        });
-    });
-  });
-  describe('When passed invalid data', () => {
-    it('It should throw an error if password and confirm password does not match.', (done) => {
-      chai.request(app)
-        .post('/api/users')
-        .set('Content-Type', 'application/json')
-        .send({
-          user: userFaker.userDetailsWithPasswordMismatch
-        })
-        .end((err, res) => {
-          expect(res.status).to.equal(400);
-          expect(res.body.errors.password[0]).to.equal('Password Mismatch.');
           if (err) return done(err);
           done();
         });
@@ -85,12 +101,12 @@ describe('User Login', () => {
 
   describe('When passed invalid data/credentials', () => {
     it('It should not authenticate a user if invalid credentials sent.', (done) => {
-      const { username, password } = userFaker.userDetailsWithPasswordMismatch;
+      const userDetailsWithPasswordMismatch = { ...userFaker.validUserDetails, password: 'passwordme' };
       chai.request(app)
         .post('/api/users/login')
         .set('Content-Type', 'application/json')
         .send({
-          user: { username, password }
+          user: userDetailsWithPasswordMismatch
         })
         .end((err, res) => {
           expect(res.status).to.equal(401);

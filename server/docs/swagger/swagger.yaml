@@ -16,6 +16,27 @@ paths:
       responses:
         201:
           description: An object with user details
+  /users/login/:
+    post:
+      tags:
+        - User
+      summary: login a user
+      produces:
+        - application/json
+      parameters:
+      - in: body
+        name: sign in
+        description: It enable a user to login into an account
+        required: false
+        schema:
+          $ref: '#/definitions/login'
+      responses:
+        200:
+          description: Welcome User you are now logged in.
+        401:
+          description: Username or password does not match.
+        404:
+          description: Username or password does not match.
   /user/{id}:
     put:
       tags:
@@ -50,6 +71,18 @@ definitions:
           username:
             type: string
           email:
+            type: string
+          password:
+            type: string
+          password_confirmation:
+            type: string
+  login:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          username: 
             type: string
           password:
             type: string

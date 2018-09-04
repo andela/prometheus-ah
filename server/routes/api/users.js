@@ -1,10 +1,15 @@
 import express from 'express';
 import db from '../../database/models';
 import UserController from '../../controllers/UserController';
+import UserInputValidation from '../../middlewares/AuthValidation';
 
 const router = express.Router();
 
 const { User } = db;
+
+router.get('/', (req, res) => res.status(404).json({
+  message: 'Welcome to Author Haven.'
+}));
 
 router.put('/user/:id', (req, res, next) => (
   User
@@ -32,7 +37,7 @@ router.put('/user/:id', (req, res, next) => (
     .catch(next)
 ));
 
-router.post('/users', UserController.signUpUser);
-router.post('/users/login', UserController.signInUser);
+router.post('/users', UserInputValidation.signUpInputValidation, UserController.signUpUser);
+router.post('/users/login', UserInputValidation.loginInputValidation, UserController.signInUser);
 
 export default router;

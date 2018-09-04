@@ -9,7 +9,7 @@
     "NODE_ENV": {
       "required": true
     },
-    "SECRET_KEYgit": {
+    "SECRET_KEY": {
       "required": true
     }
   },

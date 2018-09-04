@@ -22,15 +22,8 @@ class UserController {
    */
   static signUpUser(req, res, next) {
     const {
-      email, username, password, confirmPassword, bio, firstname, lastname
+      email, username, password, bio, firstname, lastname
     } = req.body.user;
-    if (password !== confirmPassword) {
-      return res.status(400).json({
-        errors: {
-          password: ['Password Mismatch.']
-        }
-      });
-    }
     User.find({
       where: {
         [Op.or]: [{ username }, { email }]
@@ -71,20 +64,19 @@ class UserController {
     const { username, password } = req.body.user;
     User.findOne({
       where: {
-        username,
+        username
       },
     }).then((user) => {
       if (user) {
         if (bcrypt.compareSync(password, user.password)) {
           const token = jwt.sign({
-            id: user.id,
+            userId: user.id,
             username: user.username,
           }, secret, { expiresIn: '24h' });
           return res.status(200).json({
             message: 'Welcome User you are now logged in.',
             user: {
               email: user.email,
-              password: user.password,
               token
             }
           });
