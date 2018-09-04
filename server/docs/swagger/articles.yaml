@@ -1,0 +1,117 @@
+paths:
+  /articles/:
+    post:
+      tags:
+        - Articles
+      summary: creates a new article
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: create article
+        description: It enables a user to create an article
+        required: true
+        schema:
+          $ref: '#/definitions/createArticle'
+      responses:
+        201:
+          description: An object with article details
+    get:
+      tags:
+        - Articles
+      summary: get all articles
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: get articles
+        description: It enables users to get all articles
+        required: false
+      responses:
+        200:
+          description: An object with articles details
+  /articles/{articleId}:
+    get:
+      tags:
+        - Articles
+      summary: get a single articles
+      produces:
+      - application/json
+      parameters:
+      - name: articleId
+        in: path
+        description: path parameter takes the article id
+        required: true
+        type: integer
+      - in: body
+        name: get a single article
+        description: It enables users to a single article
+        required: false
+      responses:
+        200:
+          description: An object with an articles details
+    put:
+      tags:
+        - Articles
+      summary: update articles you created
+      produces:
+      - application/json
+      parameters:
+      - name: articleId
+        in: path
+        description: path parameter takes the article id
+        required: true
+        type: integer
+      - name: authorization
+        in: header
+        description: authorization token
+        required: true
+        type: string
+      - in: body
+        name: update an article
+        description: It enables users to update an article
+        required: true
+        schema:
+          $ref: '#/definitions/updateArticle'
+      responses:
+        200:
+          description: A message with status of the update
+    delete:
+      tags:
+        - Articles
+      summary: delete articles you created
+      produces:
+      - application/json
+      parameters:
+      - name: articleId
+        in: path
+        description: path parameter takes the article id
+        required: true
+        type: integer
+      - name: authorization
+        in: header
+        description: authorization token
+        required: true
+        type: string
+      - in: body
+        name: delete an article
+        description: It enables users to delete an article
+        required: false
+      responses:
+        200:
+          description: A message with status of the delete
+definitions:
+  createArticle:
+    type: object
+    properties:
+      title:
+        type: string
+      body:
+        type: string
+  updateArticle:
+    type: object
+    properties:
+      title:
+        type: string
+      body:
+        type: string
