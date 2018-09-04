@@ -17,6 +17,10 @@ const userFakeData = {
     password: 'password',
     password_confirmation: 'password',
     bio: 'I am awesome.',
+  },
+  loginUser: {
+    username: 'ugochukwu',
+    password: 'password'
   }
 };
 

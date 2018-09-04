@@ -22,8 +22,9 @@ class UserController {
    */
   static signUpUser(req, res, next) {
     const {
-      email, username, password, bio, firstname, lastname
+      email, username, bio, firstname, lastname
     } = req.body.user;
+    const password = bcrypt.hashSync(req.body.user.password, 10);
     User.find({
       where: {
         [Op.or]: [{ username }, { email }]
