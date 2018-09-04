@@ -1,21 +1,31 @@
-import slugify from 'slugify';
-
 import db from '../database/models/index';
 
 const { Article } = db;
 
+/**
+ * @param {param} req
+ * @param {param} res
+ * @param {func} next
+ */
 class ArticlesController {
+  /**
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} createArticles
+ */
   static createArticles(req, res, next) {
     const {
-      title, body
+      title, body, description
     } = req.body;
 
-    const slug = slugify(title);
+    const { userId } = req.decoded;
 
     Article.create({
       title,
-      slug,
-      body
+      body,
+      description,
+      userId
     })
       .then((article) => {
         res.status(201).json({
@@ -25,54 +35,123 @@ class ArticlesController {
       .catch(next);
   }
 
+  /**
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} getArticles
+ */
   static getArticles(req, res, next) {
     Article.findAll()
       .then((article) => {
-        res.status(200).json({
+        if (!article) {
+          return res.status(400).json({
+            message: 'Article not found'
+          });
+        }
+        return res.status(200).json({
           article
         });
       })
       .catch(next);
   }
 
+  /**
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} articles
+ */
   static getSingleArticle(req, res, next) {
-    Article.findById(parseInt(req.params.articleId, 10))
+    Article.findOne(
+      {
+        where: {
+          slug: req.params.slug
+        }
+      }
+    )
       .then((article) => {
-        res.status(200).json({
+        if (!article) {
+          return res.status(400).json({
+            message: 'Article not found'
+          });
+        }
+        return res.status(200).json({
           article
         });
       })
       .catch(next);
   }
 
+  /**
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} articles
+ */
   static updateArticle(req, res, next) {
-    const { articleId } = req.params;
-    const { title, body } = req.body;
-    Article.update({
-      title,
-      body
-    },
-    {
-      where: {
-        id: articleId
+    const { title, body, description } = req.body;
+    Article.findOne(
+      {
+        where: {
+          slug: req.params.slug
+        }
       }
-    })
-      .then(() => {
-        res.status(200).json({
-          message: 'Updated article successfully'
+    )
+      .then((article) => {
+        if (!article) {
+          return res.status(404).json({
+            message: 'Article not found'
+          });
+        }
+        if (article.userId !== req.decoded.userId) {
+          return res.status(403).json({
+            message: 'You are not the creator of the article'
+          });
+        }
+        article.update({
+          title,
+          body,
+          description
+        });
+
+        return res.status(200).json({
+          message: 'Article updated successfully',
+          article
         });
       })
       .catch(next);
   }
 
+  /**
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} articles
+ */
   static deleteArticle(req, res, next) {
-    const { articleId } = req.params;
-    Article.destroy({
-      where: { id: articleId }
-    })
-      .then(() => {
-        res.status(200).json({
-          message: 'Deleted article successfully'
+    Article.findOne(
+      {
+        where: {
+          slug: req.params.slug
+        }
+      }
+    )
+      .then((article) => {
+        if (!article) {
+          return res.status(404).json({
+            message: 'Article not found'
+          });
+        }
+        if (article.userId !== req.decoded.userId) {
+          return res.status(403).json({
+            message: 'You are not the creator of the article'
+          });
+        }
+        article.destroy();
+
+        return res.status(200).json({
+          message: 'Article deleted successfully'
         });
       })
       .catch(next);

@@ -7,10 +7,13 @@ paths:
       produces:
       - application/json
       parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
       - in: body
         name: create article
         description: It enables a user to create an article
-        required: true
         schema:
           $ref: '#/definitions/createArticle'
       responses:
@@ -30,7 +33,7 @@ paths:
       responses:
         200:
           description: An object with articles details
-  /articles/{articleId}:
+  /articles/{slug}:
     get:
       tags:
         - Articles
@@ -38,15 +41,13 @@ paths:
       produces:
       - application/json
       parameters:
-      - name: articleId
+      - name: slug
         in: path
-        description: path parameter takes the article id
-        required: true
-        type: integer
+        description: path parameter takes the article slug
+        type: string
       - in: body
         name: get a single article
         description: It enables users to a single article
-        required: false
       responses:
         200:
           description: An object with an articles details
@@ -57,20 +58,17 @@ paths:
       produces:
       - application/json
       parameters:
-      - name: articleId
+      - name: slug
         in: path
-        description: path parameter takes the article id
-        required: true
-        type: integer
+        description: path parameter takes the article slug
+        type: slug
       - name: authorization
         in: header
         description: authorization token
-        required: true
         type: string
       - in: body
         name: update an article
         description: It enables users to update an article
-        required: true
         schema:
           $ref: '#/definitions/updateArticle'
       responses:
@@ -83,20 +81,17 @@ paths:
       produces:
       - application/json
       parameters:
-      - name: articleId
+      - name: slug
         in: path
-        description: path parameter takes the article id
-        required: true
-        type: integer
+        description: path parameter takes the article slug
+        type: string
       - name: authorization
         in: header
         description: authorization token
-        required: true
         type: string
       - in: body
         name: delete an article
         description: It enables users to delete an article
-        required: false
       responses:
         200:
           description: A message with status of the delete
@@ -107,6 +102,8 @@ definitions:
       title:
         type: string
       body:
+        type: string
+      description:
         type: string
   updateArticle:
     type: object
