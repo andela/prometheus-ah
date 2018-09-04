@@ -5,17 +5,14 @@ import userFaker from './helpers/userFakeData';
 
 chai.use(chaiHttp);
 
-describe('Tests', () => {
-  it('it should pass the test', (done) => {
-    expect('true').to.equal('true');
-    done();
-  });
-});
-
 describe('User SignUp', () => {
   describe('When passed invalid data', () => {
     it('It should throw an error if password and confirm password does not match.', (done) => {
-      const userDetailsWithPasswordMismatch = { ...userFaker.validUserDetails, password: 'password1' };
+      const userDetailsWithPasswordMismatch = {
+        ...userFaker.validUserDetails,
+        password: 'password1',
+      };
+
       chai.request(app)
         .post('/api/users')
         .set('Content-Type', 'application/json')
@@ -30,16 +27,17 @@ describe('User SignUp', () => {
         });
     });
     it('It should throw an error if password lenght is less than 8 characters.', (done) => {
-      const userDetailsWithInvalidAlphaNumericPasswordFormat = { ...userFaker.validUserDetails, password: 'pass' };
+      const userWithInvalidPasswordFormat = { ...userFaker.validUserDetails, password: 'pass' };
       chai.request(app)
         .post('/api/users')
         .set('Content-Type', 'application/json')
         .send({
-          user: userDetailsWithInvalidAlphaNumericPasswordFormat
+          user: userWithInvalidPasswordFormat
         })
         .end((err, res) => {
           expect(res.status).to.equal(400);
-          expect(res.body.errors.password[0]).to.equal('The password is too short. Min length is 8 characters.');
+          expect(res.body.errors.password[0])
+            .to.equal('The password is too short. Min length is 8 characters.');
           if (err) return done(err);
           done();
         });
@@ -101,7 +99,10 @@ describe('User Login', () => {
 
   describe('When passed invalid data/credentials', () => {
     it('It should not authenticate a user if invalid credentials sent.', (done) => {
-      const userDetailsWithPasswordMismatch = { ...userFaker.validUserDetails, password: 'passwordme' };
+      const userDetailsWithPasswordMismatch = {
+        ...userFaker.validUserDetails,
+        password: 'passwordme'
+      };
       chai.request(app)
         .post('/api/users/login')
         .set('Content-Type', 'application/json')

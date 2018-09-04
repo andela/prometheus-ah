@@ -3,9 +3,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import errorhandler from 'errorhandler';
 import express from 'express';
+import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './server/utils/swagger';
 import routes from './server/routes';
+import './server/database/config/passport';
+
 
 dotenv.config();
 
@@ -16,6 +19,8 @@ const app = express();
 
 app.use(cors());
 
+// initial passport for persistent session
+app.use(passport.initialize());
 // Normal express config defaults
 app.use(require('morgan')('dev'));
 

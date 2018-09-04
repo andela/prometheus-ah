@@ -38,13 +38,13 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
     },
+    socialLoginType: {
+      type: DataTypes.STRING
+    }
   });
   /**
    * Hook for hashing passeord before creating new user
    */
-  User.hook('beforeCreate', (newUser) => {
-    newUser.password = bcrypt.hashSync(newUser.password, bcrypt.genSaltSync(8));
-  });
 
   User.prototype.toAuthJSON = function () {
     return {
