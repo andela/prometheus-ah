@@ -10,7 +10,6 @@ paths:
       - in: body
         name: sign up
         description: It enables a user to create an account
-        required: false
         schema:
           $ref: '#/definitions/signUp'
       responses:
@@ -27,7 +26,6 @@ paths:
       - in: body
         name: sign in
         description: It enable a user to login into an account
-        required: false
         schema:
           $ref: '#/definitions/login'
       responses:
@@ -48,12 +46,10 @@ paths:
       - name: id
         in: path
         description: path parameter takes the user id
-        required: true
         type: string
       - in: body
         name: update user
         description: It enables a user to update their profile
-        required: false
         schema:
           $ref: '#/definitions/updateUser'
       responses:

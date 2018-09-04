@@ -1,6 +1,6 @@
 Authors Haven - A Social platform for the creative at heart.
 
-[![Build Status](https://travis-ci.org/andela/prometheus-ah.svg?branch=develop)](https://travis-ci.org/andela/prometheus-ah)  [![Coverage Status](https://coveralls.io/repos/github/andela/prometheus-ah/badge.svg?branch=ch-integrate-coveralls-159987719)](https://coveralls.io/github/andela/prometheus-ah?branch=ch-integrate-coveralls-159987719)  [![protected_by hound](https://img.shields.io/badge/hound-protected%20by-blue.svg)](https://houndci.com/repos)
+[![Build Status](https://travis-ci.org/andela/prometheus-ah.svg?branch=develop)](https://travis-ci.org/andela/prometheus-ah)  [![Coverage Status](https://coveralls.io/repos/github/andela/prometheus-ah/badge.svg?branch=develop)](https://coveralls.io/github/andela/prometheus-ah?branch=develop)  [![protected_by hound](https://img.shields.io/badge/hound-protected%20by-blue.svg)](https://houndci.com/repos)
 
 ## Vision
 Create a community of like minded authors to foster inspiration and innovation

@@ -23,12 +23,21 @@ describe('Articles Endpoint /articles', () => {
       });
   });
 
-  it('it should get a single article', (done) => {
+  it('it should create an article', (done) => {
+    const article = {
+      title: 'how to code',
+      body: 'PHP is a cool framework for coding but not fast as node',
+      description: 'coding'
+    };
     chai.request(app)
-      .get('/api/articles/2')
+      .post('/api/articles')
+      .set('authorization', userToken)
+      .send(article)
       .end((err, res) => {
-        expect(res).to.have.status(200);
+        expect(res).to.have.status(201);
         expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('article');
+        expect(res.body.article).to.be.an('object');
         done();
       });
   });
@@ -45,21 +54,12 @@ describe('Articles Endpoint /articles', () => {
       });
   });
 
-  it('it should create an article', (done) => {
-    const article = {
-      title: 'how to code in ruby2',
-      body: 'PHP is a cool framework for coding but not fast as node',
-      slug: 'how_to_code_in_ruby'
-    };
+  it('it should get a single article', (done) => {
     chai.request(app)
-      .post('/api/articles')
-      .set('authorization', userToken)
-      .send(article)
+      .get('/api/articles/how-to-code')
       .end((err, res) => {
-        expect(res).to.have.status(201);
+        expect(res).to.have.status(200);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('article');
-        expect(res.body.article).to.be.an('object');
         done();
       });
   });
@@ -71,27 +71,27 @@ describe('Articles Endpoint /articles', () => {
       description: 'coding',
     };
     chai.request(app)
-      .put('/api/articles/2')
+      .put('/api/articles/how-to-code')
       .set('authorization', userToken)
       .send(article)
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
-        expect(res.body.message).to.equal('Updated article successfully');
+        expect(res.body.message).to.equal('Article updated successfully');
         done();
       });
   });
 
   it('it should delete an article', (done) => {
     chai.request(app)
-      .delete('/api/articles/3')
+      .delete('/api/articles/how-to-code-in-python')
       .set('authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
-        expect(res.body.message).to.equal('Deleted article successfully');
+        expect(res.body.message).to.equal('Article deleted successfully');
         done();
       });
   });
@@ -116,8 +116,8 @@ describe('Test Endpoint /articles', () => {
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('errors');
-        expect(res.body).to.have.property('errors').to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body).to.have.property('message').to.be.equal('Article not found');
         done();
       });
   });
@@ -126,10 +126,10 @@ describe('Test Endpoint /articles', () => {
       .put('/api/articles/wrong_id')
       .set('authorization', userToken)
       .end((err, res) => {
-        expect(res).to.have.status(400);
+        expect(res).to.have.status(404);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('errors');
-        expect(res.body).to.have.property('errors').to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body).to.have.property('message').to.be.equal('Article not found');
         done();
       });
   });
@@ -138,10 +138,10 @@ describe('Test Endpoint /articles', () => {
       .delete('/api/articles/wrong_id')
       .set('authorization', userToken)
       .end((err, res) => {
-        expect(res).to.have.status(400);
+        expect(res).to.have.status(404);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('errors');
-        expect(res.body).to.have.property('errors').to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body).to.have.property('message').to.be.equal('Article not found');
         done();
       });
   });
