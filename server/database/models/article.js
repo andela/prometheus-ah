@@ -22,13 +22,18 @@ module.exports = (sequelize, DataTypes) => {
   SequelizeSlugify.slugifyModel(Article, {
     source: ['title'],
     slugOptions: { lower: true },
-    overwrite: true,
+    overwrite: false,
     column: 'slug'
   });
 
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
       foreignKey: 'userId',
+    });
+
+    Article.hasMany(models.Comment, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE'
     });
   };
 

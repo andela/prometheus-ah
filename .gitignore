@@ -37,7 +37,7 @@ node_modules
 .nyc_output
 .coveralls.yml
 # Environment
-.env 
+.env
 
 # Build folder.
 dist/

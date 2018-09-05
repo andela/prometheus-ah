@@ -88,7 +88,7 @@ describe('Articles Endpoint /articles', () => {
 
   it('it should delete an article', (done) => {
     chai.request(app)
-      .delete('/api/articles/how-to-code-in-python')
+      .delete('/api/articles/how-to-code')
       .set('authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);

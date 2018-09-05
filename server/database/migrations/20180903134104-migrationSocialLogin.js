@@ -11,7 +11,7 @@ module.exports = {
     })
   ],
 
-  down: (queryInterface, Sequelize) => [
+  down: queryInterface => [
     queryInterface.removeColumn('Users', 'socialLogin'),
     queryInterface.removeColumn('Users', 'socialLoginType')
   ]
