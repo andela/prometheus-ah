@@ -2,6 +2,7 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
 import userFaker from './helpers/userFakeData';
+import users from '../utils/users';
 
 chai.use(chaiHttp);
 
@@ -15,8 +16,8 @@ describe('Profile', () => {
       .set('Content-Type', 'application/json')
       .send({
         user: {
-          username: 'joeeasy',
-          password: '123456'
+          username: users[0].username,
+          password: users[2].password1
         }
       })
       .end((err, res) => {
@@ -32,8 +33,8 @@ describe('Profile', () => {
       .set('Content-Type', 'application/json')
       .send({
         user: {
-          username: 'faksam',
-          password: '123456'
+          username: users[1].username,
+          password: users[2].password2
         }
       })
       .end((err, res) => {
@@ -77,7 +78,7 @@ describe('Profile', () => {
 
   describe('Edit User Profile', () => {
     it('should edit a profile if the right username and token is sent', (done) => {
-      const username = 'joeeasy';
+      const { username } = users[0];
       const update = {
         user: { bio: 'tomorrow is a better day' }
       };
@@ -95,8 +96,26 @@ describe('Profile', () => {
         });
     });
 
+    it('should not edit a profile if the validation of input fails', (done) => {
+      const { username } = users[0];
+      const update = {
+        user: { bio: 'tom' }
+      };
+      chai
+        .request(app)
+        .put(`/api/profiles/${username}`)
+        .set('Content-Type', 'application/json')
+        .set('authorization', token1)
+        .send(update)
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          if (err) return done(err);
+          done();
+        });
+    });
+
     it('should not edit a profile if the wrong username and token is sent', (done) => {
-      const username = 'joeeasy';
+      const { username } = users[0];
       const update = {
         user: { bio: 'tomorrow is a better day' }
       };
@@ -115,7 +134,7 @@ describe('Profile', () => {
     });
 
     it('should return a message when no token is sent', (done) => {
-      const username = 'joeeasy';
+      const { username } = users[0];
       const update = {
         user: { bio: 'tomorrow is a better day' }
       };
@@ -133,7 +152,7 @@ describe('Profile', () => {
     });
 
     it('should return an error message when a bad token is sent', (done) => {
-      const username = 'joeeasy';
+      const { username } = users[0];
       const update = {
         user: { bio: 'tomorrow is a better day' }
       };

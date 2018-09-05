@@ -1,4 +1,5 @@
 import { Op } from 'sequelize';
+import { hashSync, genSaltSync } from 'bcrypt';
 import db from '../database/models';
 
 const { User } = db;
@@ -31,6 +32,18 @@ class Users {
         return next();
       })
       .catch(next);
+  }
+
+  /**
+   * hash user password
+   * @function hashPassword
+   * @param {*} password - password to be hashed
+   *
+   * @returns {hashedPassword} - hashed password
+   */
+  static hashPassword(password) {
+    const hashedPassword = hashSync(password, genSaltSync(8));
+    return hashedPassword;
   }
 }
 

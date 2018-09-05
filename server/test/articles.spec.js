@@ -1,6 +1,6 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import userFaker from './helpers/userFakeData';
+import users from '../utils/users';
 
 import app from '../..';
 
@@ -13,7 +13,10 @@ describe('Articles Endpoint /articles', () => {
     chai.request(app)
       .post('/api/users/login')
       .send({
-        user: userFaker.validUserDetails
+        user: {
+          username: users[0].username,
+          password: users[2].password1
+        }
       })
       .end((err, res) => {
         userToken = res.body.user.token;
