@@ -1,0 +1,151 @@
+paths:
+  /articles/{slug}/comments:
+    post:
+      tags:
+        - Comment
+      summary: creates a new comment
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: slug
+        in: path
+        description: path parameter takes the article slug
+        type: string
+      - in: body
+        name: create comment
+        description: It enables a user to comment on an article
+        schema:
+          $ref: '#/definitions/createComment'
+      responses:
+        201:
+          description: An object with the comment and user details
+    get:
+      tags:
+        - Comment
+      summary: It returns all comments details
+      produces:
+      - application/json
+      parameters:
+      - name: slug
+        in: path
+        description: path parameter takes the article slug
+        type: string
+      - in: body
+        name: get comments
+        description: It enables a user to get all comments for an article
+        schema:
+          $ref: '#/definitions/getComments'
+      responses:
+        200:
+          description: An object with an array of comments
+        404:
+          description: Article does not exist or No Comment was found for the article
+  /articles/{slug}/comments/{id}:
+    get:
+      tags:
+        - Comment
+      summary: It returns a comment details
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: path parameter takes the comments id
+        type: integer
+      - name: slug
+        in: path
+        description: path parameter takes the article slug
+        type: string
+      - in: body
+        name: get comment
+        description: It enables a user to get a comment for an article
+        schema:
+          $ref: '#/definitions/getComment'
+      responses:
+        200:
+          description: An object with a comment
+        404:
+          description: Article or Comment does not exist
+    put:
+      tags:
+        - Comment
+      summary: update a comment
+      produces:
+        - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: id
+        in: path
+        description: path parameter takes the comments id
+        type: integer
+      - name: slug
+        in: path
+        description: path parameter takes the article slug
+        type: string
+      - in: body
+        name: update comment
+        description: It enable a user to update his/her comment
+        schema:
+          $ref: '#/definitions/updateComment'
+      responses:
+        200:
+          description: An object with the updated comment.
+        403:
+          description: Unauthorized updating of comment.
+        404:
+          description: Article or Comment does not exist.
+    delete:
+      tags:
+        - Comment
+      summary: It deletes a comments
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: id
+        in: path
+        description: path parameter takes the comments id
+        type: integer
+      - name: slug
+        in: path
+        description: path parameter takes the article slug
+        type: string
+      - in: body
+        name: get comments
+        description: It enables a user to delete a comments for an article
+        schema:
+          $ref: '#/definitions/deleteComment'
+      responses:
+        200:
+          description: comment deleted
+        403:
+          description: Unauthorized deletion of comment.
+        404:
+          description: Article or Comment does not exist
+definitions:
+  createComment:
+    type: object
+    properties:
+      comment:
+        type: object
+        properties:
+          body:
+            type: string
+  updateComment:
+    type: object
+    properties:
+      comment:
+        type: object
+        properties:
+          body:
+            type: string
