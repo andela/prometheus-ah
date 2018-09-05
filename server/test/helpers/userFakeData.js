@@ -1,5 +1,5 @@
 const userFakeData = {
-  invalidToken: 'invalideToken',
+  invalidToken: 'invalidToken',
   validUserDetails: {
     firstname: 'Valentine',
     lastname: 'Ezeh',

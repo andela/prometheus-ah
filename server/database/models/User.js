@@ -38,9 +38,13 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
     },
+    image: {
+      type: DataTypes.STRING,
+      defaultValue: 'https://bit.ly/2MKfwkO'
+    }
   });
   /**
-   * Hook for hashing passeord before creating new user
+   * Hook for hashing password before creating new user
    */
   User.hook('beforeCreate', (newUser) => {
     newUser.password = bcrypt.hashSync(newUser.password, bcrypt.genSaltSync(8));

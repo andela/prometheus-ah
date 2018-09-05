@@ -39,7 +39,7 @@ class Authentication {
             req.decoded = decoded;
             next();
           })
-          .catch(error => res.status(400).json(error));
+          .catch(next);
       });
     } else {
       return res.status(401).json({

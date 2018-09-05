@@ -12,7 +12,8 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "undo:migrations": "node_modules/.bin/sequelize db:migrate:undo:all",
     "migrations": "node_modules/.bin/sequelize db:migrate",
-    "pretest": "cross-env NODE_ENV=test npm run undo:migrations && cross-env NODE_ENV=test npm run migrations",
+    "seeders": "node_modules/.bin/sequelize db:seed:all",
+    "pretest": "cross-env NODE_ENV=test npm run undo:migrations && cross-env NODE_ENV=test npm run migrations && cross-env NODE_ENV=test npm run seeders",
     "heroku-postbuild": "npm run migrations"
   },
   "engines": {
