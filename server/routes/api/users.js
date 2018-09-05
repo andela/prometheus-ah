@@ -1,10 +1,11 @@
 import express from 'express';
 import UserController from '../../controllers/UserController';
 import AuthController from '../../controllers/AuthController';
-import UserInputValidation from '../../middlewares/AuthValidation';
+import UserInputValidation from '../../middlewares/validations/AuthValidation';
 import Authenticate from '../../middlewares/Authenticate';
 import Users from '../../utils/utilities';
-import UserValidation from '../../middlewares/UserValidation';
+import UserValidation from '../../middlewares/validations/UserValidation';
+import QueryValidation from '../../middlewares/validations/QueryValidation';
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.get('/', (req, res) => res.status(404).json({
 router.get(
   '/profiles',
   Authenticate.auth,
-  UserInputValidation.queryValidation,
+  QueryValidation.queryValidation,
   UserController.getAllUserProfile
 );
 router.post('/users', UserInputValidation.signUpInputValidation, AuthController.signUpUser);

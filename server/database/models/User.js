@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     username: {
@@ -38,6 +36,9 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
     },
+    socialLogin: {
+      type: DataTypes.BOOLEAN
+    },
     socialLoginType: {
       type: DataTypes.STRING
     },
@@ -45,12 +46,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: 'https://bit.ly/2MKfwkO'
     }
-  });
-  /**
-   * Hook for hashing password before creating new user
-   */
-  User.hook('beforeCreate', (newUser) => {
-    newUser.password = bcrypt.hashSync(newUser.password, bcrypt.genSaltSync(8));
   });
 
   User.prototype.toAuthJSON = function () {

@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
 import db from '../database/models';
+import Users from '../utils/utilities';
 
 dotenv.config();
 
@@ -39,7 +40,7 @@ class AuthController {
         lastname,
         username,
         email,
-        password,
+        password: Users.hashPassword(password),
         bio
       })
         .then((user) => {

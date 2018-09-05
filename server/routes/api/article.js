@@ -1,17 +1,17 @@
 import express from 'express';
-import articlesController from '../../controllers/ArticlesController';
-import ArticleValidation from '../../middlewares/ArticleValidation';
-import authenticate from '../../middlewares/Authenticate';
+import ArticlesController from '../../controllers/ArticlesController';
+import ArticleValidation from '../../middlewares/validations/ArticleValidation';
+import Authenticate from '../../middlewares/Authenticate';
 
 const article = express.Router();
 
-article.get('/', articlesController.getArticles);
-article.get('/:slug', articlesController.getSingleArticle);
+article.get('/', ArticlesController.getArticles);
+article.get('/:slug', ArticlesController.getSingleArticle);
 
-article.use(authenticate.auth);
+article.use(Authenticate.auth);
 
-article.post('/', ArticleValidation.createArticle, articlesController.createArticles);
-article.put('/:slug', articlesController.updateArticle);
-article.delete('/:slug', articlesController.deleteArticle);
+article.post('/', ArticleValidation.createArticle, ArticlesController.createArticles);
+article.put('/:slug', ArticlesController.updateArticle);
+article.delete('/:slug', ArticlesController.deleteArticle);
 
 export default article;
