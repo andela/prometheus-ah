@@ -1,0 +1,152 @@
+paths:
+  /comments/{id}/replies:
+    post:
+      tags:
+        - CommentReplies
+      summary: creates a reply to a comment
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: id
+        in: path
+        description: path parameter takes the comment id
+        type: integer
+      - in: body
+        name: create a reply
+        description: It enables a user to reply a comment
+        schema:
+          $ref: '#/definitions/createReply'
+      responses:
+        201:
+          description: An object with the reply and user details
+    get:
+      tags:
+        - CommentReplies
+      summary: It returns all the replies
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: path parameter takes the comment id
+        type: integer
+      - in: body
+        name: get replies
+        description: It enables a user to get all replies for a comment
+        schema:
+          $ref: '#/definitions/Replies'
+      responses:
+        200:
+          description: An object with an array of replies
+        404:
+          description: Comment does not exist or No Reply was found for the article
+  /comments/{commentId}/replies/{id}:
+    get:
+      tags:
+        - CommentReplies
+      summary: It returns a reply details
+      produces:
+      - application/json
+      parameters:
+      - name: commentId
+        in: path
+        description: path parameter takes the comments id
+        type: integer
+      - name: id
+        in: path
+        description: path parameter takes the reply id
+        type: integer
+      - in: body
+        name: get reply
+        description: It enables a user to get a reply
+        schema:
+          $ref: '#/definitions/getReply'
+      responses:
+        200:
+          description: An object with a reply
+        404:
+          description: Comment or reply does not exist
+    put:
+      tags:
+        - CommentReplies
+      summary: update a reply
+      produces:
+        - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: commentId
+        in: path
+        description: path parameter takes the comments id
+        type: integer
+      - name: id
+        in: path
+        description: path parameter takes the reply id
+        type: integer
+      - in: body
+        name: update reply
+        description: It enable a user to update his/her reply
+        required: false
+        schema:
+          $ref: '#/definitions/updateReply'
+      responses:
+        200:
+          description: An object with the updated reply.
+        403:
+          description: Unauthorized updating of reply.
+        404:
+          description: Comment or Reply does not exist.
+    delete:
+      tags:
+        - CommentReplies
+      summary: It deletes a reply
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: commentId
+        in: path
+        description: path parameter takes the comments id
+        type: integer
+      - name: id
+        in: path
+        description: path parameter takes the reply id
+        type: integer
+      - in: body
+        name: delete reply
+        description: It enables a user to delete a reply for a comment
+        schema:
+          $ref: '#/definitions/deleteReply'
+      responses:
+        200:
+          description: Reply deleted
+        403:
+          description: Unauthorized deletion of reply.
+        404:
+          description: Comment or Reply does not exist
+definitions:
+  createReply:
+    type: object
+    properties:
+      reply:
+        type: object
+        properties:
+          body:
+            type: string
+  updateReply:
+    type: object
+    properties:
+      reply:
+        type: object
+        properties:
+          body:
+            type: string
