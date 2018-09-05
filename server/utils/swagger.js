@@ -19,7 +19,13 @@ const options = {
   // import swaggerDefinitions
   swaggerDefinition,
   // path to the API docs
-  apis: ['./server/docs/swagger/**/*.yaml'],
+  apis: [
+    './server/docs/swagger/swagger.yaml',
+    './server/docs/swagger/profile.yaml',
+    './server/docs/swagger/articles.yaml',
+    './server/docs/swagger/comment.yaml',
+    './server/docs/swagger/commentThread.yaml'
+  ]
 };
 // initialize swagger-jsdoc
 export default swaggerJSDoc(options);

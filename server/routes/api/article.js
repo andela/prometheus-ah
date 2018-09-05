@@ -2,16 +2,50 @@ import express from 'express';
 import ArticlesController from '../../controllers/ArticlesController';
 import ArticleValidation from '../../middlewares/validations/ArticleValidation';
 import Authenticate from '../../middlewares/Authenticate';
+import CommentsController from '../../controllers/CommentsController';
+import CommentValidation from '../../middlewares/validations/CommentValidation';
+import Queryvalidation from '../../middlewares/validations/QueryValidation';
 
-const article = express.Router();
+const router = express.Router();
 
-article.get('/', ArticlesController.getArticles);
-article.get('/:slug', ArticlesController.getSingleArticle);
+// Article endpoints
+router.get('/', ArticlesController.getArticles);
+router.get('/:slug', ArticlesController.getSingleArticle);
 
-article.use(Authenticate.auth);
+// Comment endpoints
+router.get(
+  '/:slug/comments/',
+  Queryvalidation.queryValidation,
+  CommentsController.getAllComments
+);
 
-article.post('/', ArticleValidation.createArticle, ArticlesController.createArticles);
-article.put('/:slug', ArticlesController.updateArticle);
-article.delete('/:slug', ArticlesController.deleteArticle);
+router.use(Authenticate.auth);
 
-export default article;
+// Article endpoints (Protected)
+router.post(
+  '/',
+  ArticleValidation.createArticle,
+  ArticlesController.createArticles
+);
+router.put('/:slug', ArticlesController.updateArticle);
+router.delete('/:slug', ArticlesController.deleteArticle);
+
+// Comment endpoints (Protected)
+router.post(
+  '/:slug/comments',
+  CommentValidation.commentValidate,
+  CommentsController.createComment
+);
+router.put(
+  '/:slug/comments/:id',
+  CommentValidation.validateId,
+  CommentValidation.commentValidate,
+  CommentsController.updateComment
+);
+router.delete(
+  '/:slug/comments/:id',
+  CommentValidation.validateId,
+  CommentsController.deleteComment
+);
+
+export default router;

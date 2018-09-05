@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import db from '../database/models';
 
 dotenv.config();
-
 const { User } = db;
+
 const secret = process.env.SECRET_KEY;
 
 /**
@@ -36,7 +36,9 @@ class Authenticate {
                 message: 'User with this token not found.'
               });
             }
-            req.decoded = decoded;
+            req.decoded = {
+              ...user.toAuthJSON(), userId: decoded.userId
+            };
             next();
           })
           .catch(next);
