@@ -35,28 +35,53 @@ paths:
           description: Username or password does not match.
         404:
           description: Username or password does not match.
-  /user/{id}:
+  /profiles/{username}:
     put:
       tags:
-        - User
-      summary: It updates a user profile detail
+        - Profiles
+      summary: It updates a users profile details
       produces:
       - application/json
       parameters:
-      - name: id
+      - name: username
         in: path
-        description: path parameter takes the user id
+        description: path parameter takes the user's username
+        required: true
+        type: string
+      - name: authorization
+        in: header
+        description: header takes the user's token
+        required: true
         type: string
       - in: body
-        name: update user
-        description: It enables a user to update their profile
+        name: update user profile
+        description: It enables a user update their profile
+        required: false
         schema:
-          $ref: '#/definitions/updateUser'
+          $ref: '#/definitions/updateUserProfile'
       responses:
         200:
           description: An object with a user updated user profile detail
-        401:
+        403:
           description: Unauthorized users
+  /profiles/{username}/:
+    get:
+      tags:
+        - Profiles
+      summary: It returns a users profile details
+      produces:
+      - application/json
+      parameters:
+      - name: username
+        in: path
+        description: path parameter takes the user's username
+        required: true
+        type: string
+      responses:
+        200:
+          description: An object with a user profile detail
+        404:
+          description: User with username not found
 definitions:
   signUp:
     type: object
@@ -82,7 +107,7 @@ definitions:
             type: string
           password:
             type: string
-  updateUser:
+  updateUserProfile:
     type: object
     properties:
       user:
@@ -95,6 +120,4 @@ definitions:
           bio:
             type: string
           image:
-            type: string
-          password:
             type: string
