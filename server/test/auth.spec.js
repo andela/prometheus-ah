@@ -89,6 +89,7 @@ describe('User Login', () => {
           user: { username, password }
         })
         .end((err, res) => {
+          console.log(res.body);
           expect(res.status).to.equal(200);
           expect(res.body.message).to.equal('Welcome User you are now logged in.');
           if (err) return done(err);

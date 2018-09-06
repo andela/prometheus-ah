@@ -10,7 +10,7 @@ const secret = process.env.SECRET_KEY;
 /**
  * @class Authenticate
  */
-class Authentication {
+class Authenticate {
   /**
  * @description it authenticates the validity of user
  *
@@ -39,7 +39,7 @@ class Authentication {
             req.decoded = decoded;
             next();
           })
-          .catch(error => res.status(400).json(error));
+          .catch(next);
       });
     } else {
       return res.status(401).json({
@@ -49,4 +49,4 @@ class Authentication {
   }
 }
 
-export default Authentication;
+export default Authenticate;

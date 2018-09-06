@@ -9,4 +9,4 @@ router.use('/', users);
 router.use('/', socialLogin);
 router.use('/articles', article);
 
-module.exports = router;
+export default router;
