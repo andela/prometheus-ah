@@ -1,0 +1,28 @@
+paths:
+  /profiles/:
+    get:
+      tags:
+        - Profile
+      summary: Get all users profile
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: limit
+        description: Set the limit for each returned users
+      - in: query
+        name: page
+        description: Set the page for each returned users
+      - in: query
+        name: order
+        description: Set the page for each returned users
+      - in: header
+        name: authorization
+        description: Header takes user authorization token
+      responses:
+        200:
+          description: Success response
+        400:
+          description: Invalid query parameters
+        401:
+          description: Unauthorized users

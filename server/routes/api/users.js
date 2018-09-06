@@ -2,6 +2,7 @@ import express from 'express';
 import db from '../../database/models';
 import UserController from '../../controllers/UserController';
 import UserInputValidation from '../../middlewares/AuthValidation';
+import Authentication from '../../middlewares/Authenticate';
 
 const router = express.Router();
 
@@ -39,5 +40,11 @@ router.put('/user/:id', (req, res, next) => (
 
 router.post('/users', UserInputValidation.signUpInputValidation, UserController.signUpUser);
 router.post('/users/login', UserInputValidation.loginInputValidation, UserController.signInUser);
+router.get(
+  '/profiles',
+  Authentication.auth,
+  UserInputValidation.queryValidation,
+  UserController.getAllUserProfile
+);
 
 export default router;
