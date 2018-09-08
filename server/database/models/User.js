@@ -56,7 +56,15 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.hasMany(models.Article, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
+    });
+
+    User.hasMany(models.Comment, {
+      foreignKey: 'userId',
+    });
+
+    User.hasMany(models.CommentThread, {
+      foreignKey: 'userId',
     });
   };
 
