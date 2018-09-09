@@ -1,4 +1,5 @@
 import db from '../database/models/index';
+import ReadingTime from '../utils/ReadingTime';
 
 const { Article } = db;
 
@@ -18,6 +19,7 @@ class ArticlesController {
     const {
       title, body, description
     } = req.body;
+    const readingTime = ReadingTime.wordCount(body);
 
     const { userId } = req.decoded;
 
@@ -25,7 +27,8 @@ class ArticlesController {
       title,
       body,
       description,
-      userId
+      userId,
+      readingTime
     })
       .then((article) => {
         res.status(201).json({
@@ -109,12 +112,24 @@ class ArticlesController {
             message: 'You are not the creator of the article'
           });
         }
+        if (body) {
+          const readingTime = ReadingTime.wordCount(body);
+          article.update({
+            title,
+            body,
+            description,
+            readingTime
+          });
+          return res.status(200).json({
+            message: 'Article updated successfully',
+            article
+          });
+        }
         article.update({
           title,
           body,
-          description
+          description,
         });
-
         return res.status(200).json({
           message: 'Article updated successfully',
           article

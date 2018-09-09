@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.STRING,
+    },
+    readingTime: {
+      type: DataTypes.STRING,
+      allowNull: true,
     }
   }, {});
 

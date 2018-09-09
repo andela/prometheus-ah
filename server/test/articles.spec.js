@@ -40,6 +40,7 @@ describe('Articles Endpoint /articles', () => {
         expect(res).to.have.status(201);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('article');
+        expect(res.body.article).to.have.property('readingTime');
         expect(res.body.article).to.be.an('object');
         done();
       });
