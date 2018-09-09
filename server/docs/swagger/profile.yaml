@@ -2,7 +2,7 @@ paths:
   /profiles/:
     get:
       tags:
-        - Profile
+        - Profiles
       summary: Get all users profile
       produces:
       - application/json
