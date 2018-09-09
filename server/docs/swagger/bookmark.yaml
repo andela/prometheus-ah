@@ -1,0 +1,35 @@
+paths:
+  /articles/user/bookmarks/{slug}:
+    post:
+      tags:
+        - Bookmark
+      summary: add or removes a bookmark
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: slug
+        in: path
+        description: the slug of the article to bookmark
+        type: string
+      responses:
+        201:
+          description: An object with bookmark details
+  /articles/user/bookmarks:
+    get:
+      tags:
+        - Bookmark
+      summary: get all your bookmark
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      responses:
+        200:
+          description: An object with articles details

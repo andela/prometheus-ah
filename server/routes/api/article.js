@@ -8,6 +8,7 @@ import Authenticate from '../../middlewares/Authenticate';
 import CommentsController from '../../controllers/CommentsController';
 import CommentValidation from '../../middlewares/validations/CommentValidation';
 import Queryvalidation from '../../middlewares/validations/QueryValidation';
+import BookmarkController from '../../controllers/BookmarkController';
 
 import RatingsController from '../../controllers/RatingsController';
 import RatingsValidation from '../../middlewares/validations/RatingsValidation';
@@ -18,13 +19,6 @@ const router = express.Router();
 router.get('/', ArticlesController.getArticles);
 router.get('/:slug', ArticlesController.getSingleArticle);
 
-// Comment endpoints
-router.get(
-  '/:slug/comments/',
-  Queryvalidation.queryValidation,
-  CommentsController.getAllComments
-);
-
 // Ratting endpoint
 router.get(
   '/:slug/ratings/',
@@ -33,8 +27,17 @@ router.get(
   RatingsController.getRatings
 );
 
-// Protect Endpoints
 router.use(Authenticate.auth);
+
+router.post('/user/bookmarks/:slug', BookmarkController.bookmarkArticle);
+router.get('/user/bookmarks', BookmarkController.getBookmarks);
+
+// Comment endpoints
+router.get(
+  '/:slug/comments/',
+  Queryvalidation.queryValidation,
+  CommentsController.getAllComments
+);
 
 // Article endpoints (Protected)
 router.post(

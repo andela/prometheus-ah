@@ -4,9 +4,7 @@ import app from '../../index';
 import userFaker from './helpers/userFakeData';
 
 chai.use(chaiHttp);
-
 let userToken;
-
 describe('Tests API endpoint to rate articles', () => {
   /**
    * @description - POST (it should login a valid user)
@@ -26,7 +24,6 @@ describe('Tests API endpoint to rate articles', () => {
         done();
       });
   });
-
   describe('GET /api/articles/:slug/ratings/', () => {
     /**
      * @description - GET (it should return all ratings for a specific article)
@@ -47,7 +44,6 @@ describe('Tests API endpoint to rate articles', () => {
           done();
         });
     });
-
     /**
      * @description - GET - (it should return an error when an passed an invalid article slug)
      */
@@ -63,7 +59,6 @@ describe('Tests API endpoint to rate articles', () => {
           done();
         });
     });
-
     /**
      * @description - GET - (it should return an error when an passed an invalid article slug)
      */
@@ -80,7 +75,6 @@ describe('Tests API endpoint to rate articles', () => {
           done();
         });
     });
-
     /**
      * @description - GET - (it should return an error when an passed an invalid article slug)
      */
@@ -97,7 +91,6 @@ describe('Tests API endpoint to rate articles', () => {
         });
     });
   });
-
   describe('POST /api/articles/:slug/ratings/', () => {
   /**
    * @description - POST (it should create a new rating for a specific article)
@@ -118,7 +111,6 @@ describe('Tests API endpoint to rate articles', () => {
           done();
         });
     });
-
     /**
      * @description
      * POST (it should not create ratings for and article more than once by the same user)
@@ -139,7 +131,6 @@ describe('Tests API endpoint to rate articles', () => {
           done();
         });
     });
-
     /**
      * @description - POST (it should not create a new rating when the rating is not an integer)
      */
@@ -160,7 +151,6 @@ describe('Tests API endpoint to rate articles', () => {
           done();
         });
     });
-
     describe('PUT /api/articles/:slug/ratings/:ratingId', () => {
       /**
        * @description - PUT (it should update a specific users rating on an article)
@@ -181,7 +171,6 @@ describe('Tests API endpoint to rate articles', () => {
             done();
           });
       });
-
       /**
        * @description - PUT (it should not update another user rating on an article)
        */
@@ -200,7 +189,6 @@ describe('Tests API endpoint to rate articles', () => {
             done();
           });
       });
-
       /**
        * @description - PUT (it should not update a rating with an invalid rating ID)
        */
@@ -220,7 +208,6 @@ describe('Tests API endpoint to rate articles', () => {
           });
       });
     });
-
     describe('DELETE /api/articles/:slug/ratings/:ratingId', () => {
       /**
        * @description - Delete (it should not delete another users rating on an article)
@@ -237,7 +224,6 @@ describe('Tests API endpoint to rate articles', () => {
             done();
           });
       });
-
       /**
        * @description - Delete (it should delete a specific rating by a user on an article)
        */

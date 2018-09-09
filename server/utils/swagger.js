@@ -22,6 +22,7 @@ const options = {
   apis: [
     './server/docs/swagger/swagger.yaml',
     './server/docs/swagger/profile.yaml',
+    './server/docs/swagger/bookmark.yaml',
     './server/docs/swagger/articles.yaml',
     './server/docs/swagger/comment.yaml',
     './server/docs/swagger/commentThread.yaml',
