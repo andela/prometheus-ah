@@ -25,7 +25,8 @@ const options = {
     './server/docs/swagger/articles.yaml',
     './server/docs/swagger/comment.yaml',
     './server/docs/swagger/commentThread.yaml',
-    './server/docs/swagger/rating.yaml'
+    './server/docs/swagger/rating.yaml',
+    './server/docs/swagger/follow.yaml'
   ]
 };
 // initialize swagger-jsdoc

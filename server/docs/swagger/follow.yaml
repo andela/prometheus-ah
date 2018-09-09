@@ -1,0 +1,113 @@
+paths:
+  /profiles/{username}/follow:
+    post:
+      tags:
+        - Follow
+      summary: User can Follow an Author
+      produces:
+        - application/json
+      parameters:
+      - name: username
+        in: path
+        description: path parameter takes the username of author
+        required: true
+        type: string
+      - name: authorization
+        in: header
+        description: Header takes user authorization token
+        required: true
+        type: string
+      - in: body
+        name: Follow Author
+        description: It enables a User to Follow an Author
+        schema:
+          $ref: '#/definitions/follow'
+      responses:
+        200:
+          description: You are now following this User.
+        409:
+          description: You are already following this User.
+        404:
+          description: User not found
+    delete:
+      tags:
+        - Follow
+      summary: User can unfollow an Author
+      produces:
+        - application/json
+      parameters:
+      - name: unfollow
+        in: path
+        description: path parameter takes the username of author
+        type: string
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - in: body
+        name: unfollow an author
+        description: It enables a user to unfollow a Author
+        schema:
+          $ref: '#/definitions/unfollow'
+      responses:
+        200:
+          description: You have Unfollowed this User.
+        404:
+          description: You never followed this User.
+  /profiles/{username}/following:
+    get:
+      tags:
+        - Follow
+      summary: User can get all Authors he is Following
+      produces:
+        - application/json
+      parameters:
+      - name: username
+        in: path
+        description: path parameter takes the username of the author
+        type: string
+      - in: query
+        name: limit
+        description: Set the limit for each returned users
+      - in: query
+        name: page
+        description: Set the page for each returned users
+      - name: authorization
+        in: header
+        description: Header takes user authorization token
+        type: string
+        schema:
+          $ref: '#/definitions/following'
+      responses:
+        200:
+          description: An object with Authors I am following
+  /profiles/{username}/followers:
+      get:
+        tags:
+          - Follow
+        summary: Author can get all his Followers
+        produces:
+          - application/json
+        parameters:
+        - name: username
+          in: path
+          description: path parameter takes the username of the author
+          type: string
+        - in: query
+          name: limit
+          description: Set the limit for each returned users
+        - in: query
+          name: page
+          description: Set the page for each returned users
+        - name: authorization
+          in: header
+          description: Header takes user authorization token
+          type: string
+          schema:
+            $ref: '#/definitions/followers'
+        responses:
+          200:
+            description: An Object of Authors Following a User
+
+
+
