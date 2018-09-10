@@ -45,15 +45,31 @@ describe('Articles Endpoint /articles', () => {
         done();
       });
   });
-
-  it('it should get all articles', (done) => {
+  it('should return articles with paginationMeta', (done) => {
     chai.request(app)
-      .get('/api/articles')
+      .get('/api/articles?limit=1&page=1&order=DESC')
+      .set('Content-Type', 'application/json')
       .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('article');
-        expect(res.body).to.have.property('article').to.be.an('array');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('articles');
+        expect(res.body.articles).to.be.an('array');
+        expect(res.body).to.have.property('paginationMeta');
+        expect(res.body.paginationMeta.currentPage).to.equal(1);
+        expect(res.body.paginationMeta.pageSize).to.equal(1);
+        if (err) return done(err);
+        done();
+      });
+  });
+  it('should return default when page query  or limit or order doesnt exist', (done) => {
+    chai.request(app)
+      .get('/api/articles?limit=-3&page=1&order=asdd')
+      .set('Content-Type', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('articles');
+        expect(res.body.paginationMeta.currentPage).to.equal(1);
+        expect(res.body.paginationMeta.pageSize).to.equal(10);
+        if (err) return done(err);
         done();
       });
   });
@@ -86,8 +102,25 @@ describe('Articles Endpoint /articles', () => {
         done();
       });
   });
-
-  it('it should delete an article', (done) => {
+  it('it should not update an article since you are not the creator', (done) => {
+    const article = {
+      title: 'how to code in python',
+      body: 'PHP is a cool framework for coding but not fast as node',
+      description: 'coding',
+    };
+    chai.request(app)
+      .put('/api/articles/how-to-train-your-dragon-3')
+      .set('authorization', userToken)
+      .send(article)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Access denied.');
+        done();
+      });
+  });
+  it('it should delete an article you created', (done) => {
     chai.request(app)
       .delete('/api/articles/how-to-code')
       .set('authorization', userToken)
@@ -96,6 +129,19 @@ describe('Articles Endpoint /articles', () => {
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
         expect(res.body.message).to.equal('Article deleted successfully');
+        done();
+      });
+  });
+
+  it('it should not delete an article since you are not the creator', (done) => {
+    chai.request(app)
+      .delete('/api/articles/how-to-train-your-dragon-3')
+      .set('authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Access denied.');
         done();
       });
   });

@@ -45,15 +45,28 @@ class ArticlesController {
  * @returns {json} getArticles
  */
   static getArticles(req, res, next) {
-    Article.findAll()
+    const { page, limit, order } = req.query;
+    const offset = parseInt((page - 1), 10) * limit;
+
+    Article.findAndCountAll({
+      order: [
+        ['createdAt', order]
+      ],
+      offset,
+      limit
+    })
       .then((article) => {
-        if (!article) {
-          return res.status(400).json({
-            message: 'Article not found'
-          });
-        }
+        const { count } = article;
+        const pageCount = Math.ceil(count / limit);
         return res.status(200).json({
-          article
+          paginationMeta: {
+            currentPage: page,
+            pageSize: limit,
+            totalCount: count,
+            resultCount: article.rows.length,
+            pageCount,
+          },
+          articles: article.rows
         });
       })
       .catch(next);
@@ -129,6 +142,10 @@ class ArticlesController {
           title,
           body,
           description,
+        });
+        return res.status(200).json({
+          message: 'Article updated successfully',
+          article
         });
       })
       .catch(next);

@@ -14,17 +14,8 @@ class UserController {
    * @returns {object} user - User object
    */
   static getAllUserProfile(req, res, next) {
-    const page = parseInt((req.query.page || 1), 10);
-    const limit = parseInt((req.query.limit || 10), 10);
+    const { page, limit, order } = req.query;
     const offset = parseInt((page - 1), 10) * limit;
-    let order = req.query.order || 'ASC';
-    order = order.toUpperCase();
-
-    if (order !== 'ASC' && order !== 'DESC') {
-      return res.status(400).json({
-        message: 'order can only be ASC or DESC'
-      });
-    }
 
     User.findAndCountAll({
       order: [
