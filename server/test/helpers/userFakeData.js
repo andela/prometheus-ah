@@ -10,6 +10,15 @@ const userFakeData = {
     password_confirmation: 'password',
     bio: 'I am awesome',
   },
+  validUserDetails2: {
+    firstname: 'Valentine',
+    lastname: 'Ezeh',
+    username: 'ugochukwu1',
+    password: 'password',
+    email: 'valentine1.ezeh@yahoo.com',
+    password_confirmation: 'password',
+    bio: 'I am awesome',
+  },
   userDetailsDoesNotExist: {
     firstname: 'user',
     lastname: 'user',
