@@ -159,7 +159,8 @@ class RatingsValidation {
           .findOne({
             where: {
               id: req.params.ratingId,
-              userId: req.decoded.userId
+              userId: req.decoded.userId,
+              articleId: article.id,
             }
           })
           .then((rating) => {

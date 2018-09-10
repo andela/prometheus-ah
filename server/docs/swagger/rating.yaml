@@ -39,12 +39,10 @@ paths:
       - name: slug
         in: path
         description: path parameter for the article slug
-        required: true
         type: string
       - in: body
         name: rating
         description: It enables a user to rate an article
-        required: false
         schema:
           $ref: '#/definitions/rateArticle'
       responses:
@@ -65,17 +63,14 @@ paths:
       - name: slug
         in: path
         description: path parameter for the article slug
-        required: true
         type: string
       - name: ratingId
         in: path
         description: path parameter takes the rating id
-        required: true
         type: string
       - in: body
         name: update rating
         description: It enables a user to update their profile
-        required: false
         schema:
           $ref: '#/definitions/rateArticle'
       responses:
@@ -97,12 +92,10 @@ paths:
       - name: slug
         in: path
         description: path parameter takes the article slug
-        required: true
         type: string
       - name: ratingId
         in: path
         description: path parameter takes the rating id
-        required: true
         type: string
       responses:
         200:
