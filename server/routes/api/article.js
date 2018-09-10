@@ -7,23 +7,23 @@ import Authenticate from '../../middlewares/Authenticate';
 
 import CommentsController from '../../controllers/CommentsController';
 import CommentValidation from '../../middlewares/validations/CommentValidation';
-import Queryvalidation from '../../middlewares/validations/QueryValidation';
 import BookmarkController from '../../controllers/BookmarkController';
 
 import RatingsController from '../../controllers/RatingsController';
 import RatingsValidation from '../../middlewares/validations/RatingsValidation';
+import QueryValidation from '../../middlewares/validations/QueryValidation';
 
 const router = express.Router();
 
 // Article endpoints
-router.get('/', ArticlesController.getArticles);
+router.get('/', QueryValidation.queryValidation, ArticlesController.getArticles);
 router.get('/:slug', ArticlesController.getSingleArticle);
 
 // Ratting endpoint
 router.get(
   '/:slug/ratings/',
   RatingsValidation.validateArticleId,
-  Queryvalidation.queryValidation,
+  QueryValidation.queryValidation,
   RatingsController.getRatings
 );
 
@@ -35,7 +35,7 @@ router.get('/user/bookmarks', BookmarkController.getBookmarks);
 // Comment endpoints
 router.get(
   '/:slug/comments/',
-  Queryvalidation.queryValidation,
+  QueryValidation.queryValidation,
   CommentsController.getAllComments
 );
 

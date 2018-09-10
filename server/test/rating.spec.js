@@ -62,22 +62,6 @@ describe('Tests API endpoint to rate articles', () => {
     /**
      * @description - GET - (it should return an error when an passed an invalid article slug)
      */
-    it('should return an error when order query is invalid', (done) => {
-      chai.request(app)
-        .get('/api/articles/how-to-train-your-dragon/ratings?order=a')
-        .set('Content-Type', 'application/json')
-        .set('authorization', userToken)
-        .then((res) => {
-          expect(res.status).to.equal(400);
-          expect(res.body.message)
-            .to.equal('order can only be ASC or DESC');
-          expect(res.body).not.to.have.property('ratings');
-          done();
-        });
-    });
-    /**
-     * @description - GET - (it should return an error when an passed an invalid article slug)
-     */
     it('should not return any rating when page is beyond ', (done) => {
       chai.request(app)
         .get('/api/articles/how-to-train-your-dragon/ratings?page=12')

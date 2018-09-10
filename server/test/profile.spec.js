@@ -46,10 +46,8 @@ describe('Get All User Profile', () => {
         .set('Content-Type', 'application/json')
         .set('authorization', userToken)
         .end((err, res) => {
-          expect(res.status).to.equal(400);
-          expect(res.body.message)
-            .to.equal('order can only be ASC or DESC');
-          expect(res.body).not.to.have.property('users');
+          expect(res.status).to.equal(200);
+          expect(res.body).to.have.property('users');
           if (err) return done(err);
           done();
         });

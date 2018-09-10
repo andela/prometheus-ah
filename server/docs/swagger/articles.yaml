@@ -26,10 +26,15 @@ paths:
       produces:
       - application/json
       parameters:
-      - in: body
-        name: get articles
-        description: It enables users to get all articles
-        required: false
+      - in: query
+        name: limit
+        description: Set the limit for each returned users
+      - in: query
+        name: page
+        description: Set the page for each returned users
+      - in: query
+        name: order
+        description: Set the order for each returned users
       responses:
         200:
           description: An object with articles details
