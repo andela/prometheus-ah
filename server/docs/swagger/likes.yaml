@@ -1,0 +1,84 @@
+paths:
+  /articles/{slug}/like:
+    post:
+      tags:
+        - Likes
+      summary: creates a new like
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: slug
+        in: path
+        description: It enables a user to create a like
+      responses:
+        201:
+          description: Successfully liked
+    get:
+      tags:
+        - Likes
+      summary: get all likes
+      produces:
+      - application/json
+      parameters:
+      - name: slug
+        in: path
+        description: It enables users to get all likes
+      responses:
+        200:
+          description: An object with likes details          
+    
+  /articles/{slug}/dislike:
+    post:
+      tags:
+        - Likes
+      summary: create dislike
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+      - name: slug
+        in: path
+        description: path parameter takes the article slug
+        type: string
+      responses:
+        201:
+          description: successfully dislikes        
+    get:
+      tags:
+        - Likes
+      summary: get all dislikes
+      produces:
+      - application/json
+      parameters:
+      - name: slug
+        in: path
+        description: It enables users to get all dislikes
+      responses:
+        200:
+          description: An object with dislikes details      
+
+  /articles/{slug}/unlike:
+    delete:
+      tags:
+        - Likes
+      summary: delete likes you created
+      produces:
+      - application/json
+      parameters:
+      - name: slug
+        in: path
+        description: path parameter takes the article slug, like, or dislike
+        type: string
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      responses:
+        200:
+          description: A message with status of the delete

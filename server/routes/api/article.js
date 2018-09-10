@@ -15,11 +15,15 @@ import ReportsController from '../../controllers/ReportsController';
 import ReportValidation from '../../middlewares/validations/ReportValidation';
 import Articles from '../../utils/findArticle';
 
+import LikeController from '../../controllers/ArticleLikesController';
+
 const router = express.Router();
 
 // Article endpoints
 router.get('/', QueryValidation.queryValidation, ArticlesController.getArticles);
 router.get('/:slug', ArticlesController.getSingleArticle);
+router.get('/:slug/like', QueryValidation.queryValidation, LikeController.totalLikes);
+router.get('/:slug/dislike', QueryValidation.queryValidation, LikeController.totalDislikes);
 
 // Rating endpoint
 router.get(
@@ -29,11 +33,6 @@ router.get(
   RatingsController.getRatings
 );
 
-router.use(Authenticate.auth);
-
-router.post('/user/bookmarks/:slug', BookmarkController.bookmarkArticle);
-router.get('/user/bookmarks', BookmarkController.getBookmarks);
-
 // Comment endpoints
 router.get(
   '/:slug/comments/',
@@ -41,12 +40,19 @@ router.get(
   CommentsController.getAllComments
 );
 
+router.use(Authenticate.auth);
+
+router.post('/user/bookmarks/:slug', BookmarkController.bookmarkArticle);
+router.get('/user/bookmarks', BookmarkController.getBookmarks);
+
 // Article endpoints (Protected)
 router.post(
   '/',
   ArticleValidation.createArticle,
   ArticlesController.createArticles
 );
+router.post('/:slug/like', LikeController.likeArticle);
+router.post('/:slug/dislike', LikeController.dislikeArticle);
 
 router.put(
   '/:slug',
@@ -55,6 +61,9 @@ router.put(
   ArticlesController.updateArticle
 );
 router.delete('/:slug', Articles.findArticleBySlug, ArticlesController.deleteArticle);
+router.put('/:slug', ArticleValidation.updateArticle, ArticlesController.updateArticle);
+router.delete('/:slug', ArticlesController.deleteArticle);
+router.delete('/:slug/unlike', LikeController.unlikeArticle);
 
 // Comment endpoints (Protected)
 router.post(
