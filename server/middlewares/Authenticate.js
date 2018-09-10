@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import db from '../database/models';
 
 dotenv.config();
-const { User } = db;
 
+const { User } = db;
 const secret = process.env.SECRET_KEY;
 
 /**
