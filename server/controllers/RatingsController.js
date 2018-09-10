@@ -48,20 +48,10 @@ class RatingsController {
    * @returns {object} response - Paginated Article Ratings JSON Object
    */
   static getRatings(req, res) {
-    const page = parseInt((req.query.page), 10);
-    const limit = parseInt((req.query.limit), 10);
+    const { page, limit, order } = req.query;
     const offset = parseInt((page - 1), 10) * limit;
-    let order = req.query.order || 'ASC';
-    order = order.toUpperCase();
     let averageRating = 0;
-
-    if (order !== 'ASC' && order !== 'DESC') {
-      return res.status(400).json({
-        message: 'order can only be ASC or DESC'
-      });
-    }
     const { slug } = req.params;
-
     return Article.findOne({
       where: {
         slug
@@ -88,12 +78,6 @@ class RatingsController {
                 articleId: req.articleId
               }
             }).then((sum) => {
-              if (ratings.rows.length === 0) {
-                return res.status(200).json({
-                  message: 'No ratings on this page',
-                  ratings: ratings.rows,
-                });
-              }
               averageRating = sum / count;
               return res.status(200).json({
                 message: 'Article ratings successfully retrieved',

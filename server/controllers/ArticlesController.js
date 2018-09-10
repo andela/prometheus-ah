@@ -125,28 +125,20 @@ class ArticlesController {
             message: 'Access denied.'
           });
         }
-        if (body) {
-          const readingTime = ReadingTime.wordCount(body);
-          article.update({
-            title,
-            body,
-            description,
-            readingTime
-          });
-          return res.status(200).json({
-            message: 'Article updated successfully',
-            article
+        if (title || body || description) {
+          if (body) {
+            req.body.readingTime = ReadingTime.wordCount(body);
+          }
+          article.update(req.body)
+            .then(updateArticle => res.status(200).json({
+              message: 'Article updated successfully',
+              article: updateArticle
+            }));
+        } else {
+          return res.status(400).json({
+            message: 'Invalid request sent.'
           });
         }
-        article.update({
-          title,
-          body,
-          description,
-        });
-        return res.status(200).json({
-          message: 'Article updated successfully',
-          article
-        });
       })
       .catch(next);
   }

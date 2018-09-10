@@ -11,6 +11,8 @@ import BookmarkController from '../../controllers/BookmarkController';
 import QueryValidation from '../../middlewares/validations/QueryValidation';
 import RatingsController from '../../controllers/RatingsController';
 import RatingsValidation from '../../middlewares/validations/RatingsValidation';
+import ReportsController from '../../controllers/ReportsController';
+import ReportValidation from '../../middlewares/validations/ReportValidation';
 
 const router = express.Router();
 
@@ -25,7 +27,7 @@ router.get(
   CommentsController.getAllComments
 );
 
-// Ratting endpoint
+// Rating endpoint
 router.get(
   '/:slug/ratings/',
   RatingsValidation.validateArticleId,
@@ -52,7 +54,7 @@ router.post(
   ArticlesController.createArticles
 );
 
-router.put('/:slug', ArticlesController.updateArticle);
+router.put('/:slug', ArticleValidation.updateArticle, ArticlesController.updateArticle);
 router.delete('/:slug', ArticlesController.deleteArticle);
 
 // Comment endpoints (Protected)
@@ -92,6 +94,13 @@ router.post(
   RatingsValidation.validateRating,
   RatingsValidation.validateUserRating,
   RatingsController.createRating
+);
+
+// Report Article Endpoint (Protected)
+router.post(
+  '/:slug/reports',
+  ReportValidation.validateReport,
+  ReportsController.createReport
 );
 
 export default router;

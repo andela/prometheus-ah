@@ -64,23 +64,25 @@ describe('Tests API endpoint to rate articles', () => {
     /**
      * @description - GET - (it should return an error when an passed an invalid article slug)
      */
-    it('should not return any rating when page is beyond ', (done) => {
+    it('should not return any rating when passed an invalid article slug', (done) => {
       chai.request(app)
-        .get('/api/articles/how-to-train-your-dragon/ratings?page=12')
-        .set('Content-Type', 'application/json')
-        .set('authorization', userToken)
+        .post('/api/articles/invalidArticle-Something/ratings/')
+        .set('authorization', `${userToken}`)
+        .send({
+          rating: 3,
+        })
         .then((res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body.message)
-            .to.equal('No ratings on this page');
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('errors');
+          expect(res.body.errors).to.have.property('message');
+          expect(res.body.errors.message).to.equal('Article not found');
           done();
         });
     });
-  });
-  describe('POST /api/articles/:slug/ratings/', () => {
-  /**
-   * @description - POST (it should create a new rating for a specific article)
-   */
+    /**
+    * @description - POST (it should create a new rating for a specific article)
+    */
     it('should create a new rating for a specific article', (done) => {
       chai.request(app)
         .post('/api/articles/how-to-train-your-dragon-2/ratings/')
@@ -137,94 +139,113 @@ describe('Tests API endpoint to rate articles', () => {
           done();
         });
     });
-    describe('PUT /api/articles/:slug/ratings/:ratingId', () => {
-      /**
-       * @description - PUT (it should update a specific users rating on an article)
-       */
-      it('should update a specific user rating on an article', (done) => {
-        chai.request(app)
-          .put('/api/articles/how-to-train-your-dragon-2/ratings/6')
-          .set('authorization', `${userToken}`)
-          .send({
-            rating: 4,
-          })
-          .then((res) => {
-            expect(res).to.have.status(200);
-            expect(res.body).to.be.an('object');
-            expect(res.body).to.have.property('ratings');
-            expect(res.body.ratings.articleId).to.equal(2);
-            expect(res.body.ratings.rating).to.equal(4);
-            done();
-          });
-      });
-      /**
-       * @description - PUT (it should not update another user rating on an article)
-       */
-      it('should not update another user rating on an article', (done) => {
-        chai.request(app)
-          .put('/api/articles/how-to-train-your-dragon-2/ratings/3')
-          .set('authorization', `${userToken}`)
-          .send({
-            rating: 4,
-          })
-          .then((res) => {
-            expect(res).to.have.status(403);
-            expect(res.body).to.be.an('object');
-            expect(res.body).to.have.property('errors');
-            expect(res.body.errors.message).to.equal('Access denied.');
-            done();
-          });
-      });
-      /**
-       * @description - PUT (it should not update a rating with an invalid rating ID)
-       */
-      it('should not update a rating with an invalid rating ID', (done) => {
-        chai.request(app)
-          .put('/api/articles/how-to-train-your-dragon-2/ratings/error')
-          .set('authorization', `${userToken}`)
-          .send({
-            rating: 4,
-          })
-          .then((res) => {
-            expect(res).to.have.status(400);
-            expect(res.body).to.be.an('object');
-            expect(res.body).to.have.property('errors');
-            expect(res.body.errors.ratingId[0]).to.equal('The ratingId must be a number.');
-            done();
-          });
-      });
+  });
+  describe('PUT /api/articles/:slug/ratings/:ratingId', () => {
+    /**
+     * @description - PUT (should not update the rating of an invalid article)
+     */
+    it('should not update the rating of an invalid article', (done) => {
+      chai.request(app)
+        .put('/api/articles/invalidArticle-Something/ratings/6')
+        .set('authorization', `${userToken}`)
+        .send({
+          rating: 3,
+        })
+        .then((res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('errors');
+          expect(res.body.errors).to.have.property('message');
+          expect(res.body.errors.message).to.equal('Article not found');
+          done();
+        });
     });
-    describe('DELETE /api/articles/:slug/ratings/:ratingId', () => {
-      /**
-       * @description - Delete (it should not delete another users rating on an article)
-       */
-      it('should not delete another users rating on an article', (done) => {
-        chai.request(app)
-          .delete('/api/articles/how-to-train-your-dragon-2/ratings/3')
-          .set('authorization', `${userToken}`)
-          .then((res) => {
-            expect(res).to.have.status(403);
-            expect(res.body).to.be.an('object');
-            expect(res.body).to.have.property('errors');
-            expect(res.body.errors.message).to.equal('Access denied.');
-            done();
-          });
-      });
-      /**
-       * @description - Delete (it should delete a specific rating by a user on an article)
-       */
-      it('should delete a specific rating by a user on an article', (done) => {
-        chai.request(app)
-          .delete('/api/articles/how-to-train-your-dragon-2/ratings/6')
-          .set('authorization', `${userToken}`)
-          .then((res) => {
-            expect(res).to.have.status(200);
-            expect(res.body).to.be.an('object');
-            expect(res.body).to.have.property('message');
-            expect(res.body.message).to.equal('Rating has been removed');
-            done();
-          });
-      });
+    /**
+     * @description - PUT (it should update a specific users rating on an article)
+     */
+    it('should update a specific user rating on an article', (done) => {
+      chai.request(app)
+        .put('/api/articles/how-to-train-your-dragon-2/ratings/6')
+        .set('authorization', `${userToken}`)
+        .send({
+          rating: 4,
+        })
+        .then((res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('ratings');
+          expect(res.body.ratings.articleId).to.equal(2);
+          expect(res.body.ratings.rating).to.equal(4);
+          done();
+        });
+    });
+    /**
+     * @description - PUT (it should not update another user rating on an article)
+     */
+    it('should not update another user rating on an article', (done) => {
+      chai.request(app)
+        .put('/api/articles/how-to-train-your-dragon-2/ratings/4')
+        .set('authorization', `${userToken}`)
+        .send({
+          rating: 4,
+        })
+        .then((res) => {
+          expect(res).to.have.status(403);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('errors');
+          expect(res.body.errors.message).to.equal('Access denied.');
+          done();
+        });
+    });
+    /**
+     * @description - PUT (it should not update a rating with an invalid rating ID)
+     */
+    it('should not update a rating with an invalid rating ID', (done) => {
+      chai.request(app)
+        .put('/api/articles/how-to-train-your-dragon-2/ratings/error')
+        .set('authorization', `${userToken}`)
+        .send({
+          rating: 4,
+        })
+        .then((res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('errors');
+          expect(res.body.errors.ratingId[0]).to.equal('The ratingId must be a number.');
+          done();
+        });
+    });
+  });
+  describe('DELETE /api/articles/:slug/ratings/:ratingId', () => {
+    /**
+     * @description - Delete (it should not delete another users rating on an article)
+     */
+    it('should not delete another users rating on an article', (done) => {
+      chai.request(app)
+        .delete('/api/articles/how-to-train-your-dragon-2/ratings/3')
+        .set('authorization', `${userToken}`)
+        .then((res) => {
+          expect(res).to.have.status(403);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('errors');
+          expect(res.body.errors.message).to.equal('Access denied.');
+          done();
+        });
+    });
+    /**
+     * @description - Delete (it should delete a specific rating by a user on an article)
+     */
+    it('should delete a specific rating by a user on an article', (done) => {
+      chai.request(app)
+        .delete('/api/articles/how-to-train-your-dragon-2/ratings/6')
+        .set('authorization', `${userToken}`)
+        .then((res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Rating has been removed');
+          done();
+        });
     });
   });
 });

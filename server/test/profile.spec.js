@@ -55,7 +55,7 @@ describe('Get All User Profile', () => {
   describe('When user passed valid query parameter', () => {
     it('should return success status when no user on a page', (done) => {
       chai.request(app)
-        .get('/api/profiles?page=20')
+        .get('/api/profiles?page=20&order=a')
         .set('Content-Type', 'application/json')
         .set('authorization', userToken)
         .end((err, res) => {

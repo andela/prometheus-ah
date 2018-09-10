@@ -120,6 +120,19 @@ describe('Articles Endpoint /articles', () => {
         done();
       });
   });
+
+  it('it should not update article if invalid request body sent', (done) => {
+    chai.request(app)
+      .put('/api/articles/how-to-code')
+      .set('authorization', userToken)
+      .send({ invalidKey: 'a' })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message').to.be.equal('Invalid request sent.');
+        done();
+      });
+  });
   it('it should delete an article you created', (done) => {
     chai.request(app)
       .delete('/api/articles/how-to-code')
@@ -168,6 +181,19 @@ describe('Test Endpoint /articles', () => {
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
         expect(res.body).to.have.property('message').to.be.equal('Article not found');
+        done();
+      });
+  });
+  it('it should not update article if title length less than 3', (done) => {
+    chai.request(app)
+      .put('/api/articles/how-to-code')
+      .set('authorization', userToken)
+      .send({ title: 'a' })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('errors');
+        expect(res.body).to.have.property('errors').to.be.an('object');
         done();
       });
   });

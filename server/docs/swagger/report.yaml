@@ -1,0 +1,132 @@
+paths:
+  /articles/{slug}/reports/:
+    post:
+      tags:
+        - Report
+      summary: create a new article report
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: slug
+        in: path
+        description: path parameter for the article slug
+        type: string
+      - in: body
+        name: report create
+        description: It enables a user to report an article
+        schema:
+          $ref: '#/definitions/reportArticle'
+      responses:
+        201:
+          description: An object with report details
+        400:
+          description: Invalid query parameters
+        404:
+          description: Resource not found
+  /reports/:
+    get:
+      tags:
+        - Report
+      summary: gets all the reports
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - in: query
+        name: limit
+        description: Set the limit for returned reports
+      - in: query
+        name: page
+        description: Set the page for returned reports
+      - in: query
+        name: order
+        description: Set the order for returned reports
+        type: string
+      responses:
+        200:
+          description: Success response
+        400:
+          description: Invalid query parameters
+  /reports/{reportId}:
+    get:
+      tags:
+        - Report
+      summary: gets all the reports
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: reportId
+        in: path
+        description: path parameter takes the report id
+        type: string
+      responses:
+        200:
+          description: Success response
+        400:
+          description: Invalid query parameters
+        404:
+          description: Resource not found
+    put:
+      tags:
+        - Report
+      summary: It updates a user's report on an article
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: reportId
+        in: path
+        description: path parameter takes the report id
+        type: string
+      - in: body
+        name: update report
+        description: It enables a user to update their profile
+        schema:
+          $ref: '#/definitions/reportArticle'
+      responses:
+        200:
+          description: An object containing the updated report values
+        401:
+          description: Unauthorized user
+    delete:
+      tags:
+        - Report
+      summary: delete a report
+      produces:
+        - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: reportId
+        in: path
+        description: path parameter takes the report id
+        type: string
+      responses:
+        200:
+          description: A message confirming the report has been deleted
+        401:
+          description: Unauthorized user
+definitions:
+  reportArticle:
+    type: object
+    properties:
+      categoryId:
+        type: integer
+      details:
+        type: string
