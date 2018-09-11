@@ -2,13 +2,17 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
+import crypto from 'crypto';
 import db from '../database/models';
 import Users from '../utils/utilities';
+import sendVerifyEmailMessage from './helpers/emailSender';
+
 
 dotenv.config();
 
 const { User } = db;
 const secret = process.env.SECRET_KEY;
+const secret2 = process.env.EMAIL_SECRET_KEY;
 
 /**
  * Class representing users
@@ -25,6 +29,12 @@ class AuthController {
     const {
       email, username, password, bio, firstname, lastname
     } = req.body.user;
+
+    const myKey = crypto.createCipher('aes192', secret2);
+    let hash = myKey.update(email, 'utf8', 'hex');
+    hash += myKey.final('hex');
+    const tokenExpiredTime = new Date();
+    tokenExpiredTime.setHours(tokenExpiredTime.getHours() + 2);
     User.find({
       where: {
         [Op.or]: [{ username }, { email }]
@@ -41,20 +51,16 @@ class AuthController {
         username,
         email,
         password: Users.hashPassword(password),
+        hash,
+        verify_hash_expiration: tokenExpiredTime,
         bio
       })
         .then((user) => {
-          const token = jwt.sign(
-            {
-              userId: user.id,
-              role: user.role,
-            },
-            secret, {
-              expiresIn: '24h'
-            }
-          );
+          const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '24h' });
+          sendVerifyEmailMessage(user);
           res.status(201).json({
-            user: { ...user.toAuthJSON(), token }
+            user: { ...user.toAuthJSON(), token },
+            message: `A verification email has been sent to ${user.email}.`,
           });
         })
         .catch(next);
@@ -91,16 +97,17 @@ class AuthController {
             message: 'Welcome User you are now logged in.',
             user: {
               email: user.email,
+              isVerified: user.isVerified,
               token
             }
           });
         }
-        return res.status(401).json({
+        return res.status(400).json({
           message: 'Username or password does not match.'
         });
       }
       return res.status(404).json({
-        message: 'Username or password does not match.'
+        message: 'You are yet to register. Kindly sign up.'
       });
     }).catch(next);
   }

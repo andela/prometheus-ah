@@ -36,6 +36,12 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
     },
+    hash: {
+      type: DataTypes.STRING,
+    },
+    verify_hash_expiration: {
+      type: DataTypes.DATE,
+    },
     socialLogin: {
       type: DataTypes.BOOLEAN
     },
@@ -61,6 +67,10 @@ module.exports = (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
       defaultValue: 'https://bit.ly/2MKfwkO'
+    },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      default: false
     }
   });
 

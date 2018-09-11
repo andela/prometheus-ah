@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
-
+import users from '../database/seed-data/users';
 
 chai.use(chaiHttp);
 
@@ -10,8 +10,8 @@ let userToken;
 describe('Follow/Unfollow Test Feature', () => {
   const payload = {
     user: {
-      username: 'ugochukwu',
-      password: 'password'
+      username: users[1].username,
+      password: users[2].password2
     }
   };
   before((done) => {
@@ -50,7 +50,7 @@ describe('Follow/Unfollow Test Feature', () => {
   });
   it('Should not allow User to follow himself', (done) => {
     chai.request(app)
-      .post('/api/profiles/ugochukwu/follow')
+      .post('/api/profiles/faksam/follow')
       .set('authorization', userToken)
       .end((err, res) => {
         expect(err).to.equal(null);

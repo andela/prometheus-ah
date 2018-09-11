@@ -3,6 +3,8 @@
     "env"
   ],
   "plugins": [
-    "transform-object-rest-spread"
+    "transform-object-rest-spread",
+    "transform-runtime",
+    "transform-async-to-generator"
   ]
 }

@@ -118,6 +118,38 @@ class UserInputValidation {
       errors: validation.errors.all()
     });
   }
+
+  /**
+   * validate user input on email Verification
+   *
+   * @param {object} req
+   * @param {object} res
+   * @param {func} next
+   *
+   * @return {void}
+   */
+  static emailInputValidation(req, res, next) {
+    const { email } = req.body.user;
+    const validation = new Validator(
+      {
+        email
+      },
+      {
+        email: 'required|email',
+      },
+      {
+        'required.email':
+          'This :attribute field is required.',
+        'email.email': 'Please enter a valid :attribute address.',
+      }
+    );
+    if (validation.passes()) {
+      return next();
+    }
+    return res.status(400).json({
+      errors: validation.errors.all()
+    });
+  }
 }
 
 export default UserInputValidation;
