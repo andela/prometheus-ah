@@ -6,6 +6,7 @@ const userFakeData = {
     username: 'ugochukwu',
     password: 'password',
     email: 'valentine.ezeh@yahoo.com',
+    isVerified: true,
     password_confirmation: 'password',
     bio: 'I am awesome',
   },

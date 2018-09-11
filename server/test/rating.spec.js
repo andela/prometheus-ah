@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
-import userFaker from './helpers/userFakeData';
+import users from '../database/seed-data/users';
 
 chai.use(chaiHttp);
 let userToken;
@@ -10,12 +10,14 @@ describe('Tests API endpoint to rate articles', () => {
    * @description - POST (it should login a valid user)
   */
   before((done) => {
-    const { username, password } = userFaker.validUserDetails;
     chai.request(app)
       .post('/api/users/login')
       .set('Content-Type', 'application/json')
       .send({
-        user: { username, password }
+        user: {
+          username: users[0].username,
+          password: users[2].password1
+        }
       })
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -160,7 +162,7 @@ describe('Tests API endpoint to rate articles', () => {
        */
       it('should not update another user rating on an article', (done) => {
         chai.request(app)
-          .put('/api/articles/how-to-train-your-dragon-2/ratings/2')
+          .put('/api/articles/how-to-train-your-dragon-2/ratings/3')
           .set('authorization', `${userToken}`)
           .send({
             rating: 4,

@@ -1,23 +1,22 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
-import userFaker from './helpers/userFakeData';
+import users from '../database/seed-data/users';
 
 chai.use(chaiHttp);
 
 let userToken;
 describe('Get All User Profile', () => {
   before((done) => {
-    const newUser = {
-      ...userFaker.validUserDetails,
-      username: 'cwizardtest',
-      email: 'cwizardtest@gmail.com'
-    };
     chai.request(app)
-      .post('/api/users')
+      .post('/api/users/login')
       .set('Accept', 'application/json')
       .send({
-        user: newUser,
+        user: {
+          username: users[1].username,
+          password: users[2].password2
+        }
+
       })
       .end((err, res) => {
         userToken = res.body.user.token;
