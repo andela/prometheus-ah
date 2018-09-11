@@ -62,6 +62,8 @@ class AuthController {
             user: { ...user.toAuthJSON(), token },
             message: `A verification email has been sent to ${user.email}.`,
           });
+          const userWithToken = { data: user.toAuthJSON() };
+          sendVerifyEmailMessage(userWithToken);
         })
         .catch(next);
     });
