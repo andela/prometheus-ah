@@ -42,8 +42,7 @@ class Users {
    * @returns {hashedPassword} - hashed password
    */
   static hashPassword(password) {
-    const hashedPassword = hashSync(password, genSaltSync(8));
-    return hashedPassword;
+    return hashSync(password, genSaltSync(8));
   }
 }
 

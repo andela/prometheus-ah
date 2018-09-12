@@ -1,4 +1,4 @@
-import articles from '../../utils/articles';
+import articles from '../seed-data/articles';
 
 module.exports = {
   up: queryInterface => queryInterface.bulkInsert('Articles', [

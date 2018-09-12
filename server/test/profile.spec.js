@@ -10,8 +10,8 @@ describe('Get All User Profile', () => {
   before((done) => {
     const newUser = {
       ...userFaker.validUserDetails,
-      username: 'cwizard18',
-      email: 'cwizard2018@gmail.com'
+      username: 'cwizardtest',
+      email: 'cwizardtest@gmail.com'
     };
     chai.request(app)
       .post('/api/users')

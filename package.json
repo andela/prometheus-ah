@@ -8,14 +8,16 @@
     "dev": "nodemon index.js --exec babel-node",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "clean:build": "rimraf dist/",
-    "test": "cross-env NODE_ENV=test nyc --reporter=html mocha --require babel-core/register server/test/**/*.spec.js --exit && nyc report",
+    "test2": "cross-env NODE_ENV=test nyc --reporter=html mocha --require babel-core/register server/test/userSuperAdmin.spec.js --exit && nyc report",
+    "test": "cross-env NODE_ENV=test nyc --reporter=html mocha --require babel-core/register server/test/**/*.spec.js --exit && nyc report --timeout 600000 --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "undo:migrations": "node_modules/.bin/sequelize db:migrate:undo:all",
     "migrations": "node_modules/.bin/sequelize db:migrate",
     "undo:seeders": "node_modules/.bin/sequelize db:seed:undo:all",
     "seeders": "babel-node node_modules/.bin/sequelize db:seed:all",
+    "seed:admin": "babel-node node_modules/.bin/sequelize db:seed --seed `basename $(ls server/database/seeders/*-admin-user.js)`",
     "pretest": "cross-env NODE_ENV=test npm run undo:migrations && cross-env NODE_ENV=test npm run migrations && cross-env NODE_ENV=test npm run seeders",
-    "heroku-postbuild": "npm run migrations"
+    "heroku-postbuild": "npm run migrations && npm run seed:admin"
   },
   "engines": {
     "node": "8.11.4"

@@ -1,4 +1,4 @@
-import commentThread from '../../utils/commentThreads';
+import commentThread from '../seed-data/commentThreads';
 
 module.exports = {
   up: queryInterface => queryInterface.bulkInsert('CommentThreads', [

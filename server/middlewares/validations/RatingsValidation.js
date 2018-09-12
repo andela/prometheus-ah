@@ -27,12 +27,11 @@ class RatingsValidation {
     const validation = new Validator(data, rules);
 
     if (validation.passes()) {
-      next();
-    } else {
-      res.status(400).json({
-        errors: validation.errors.all()
-      });
+      return next();
     }
+    return res.status(400).json({
+      errors: validation.errors.all()
+    });
   }
 
   /**

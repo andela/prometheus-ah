@@ -1,6 +1,6 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import users from '../utils/users';
+import users from '../database/seed-data/users';
 
 import app from '../..';
 

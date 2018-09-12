@@ -31,15 +31,22 @@ class Authenticate {
         }
         User.findById(decoded.userId)
           .then((user) => {
+            if (user && user.status === 'active') {
+              req.decoded = {
+                ...user.toAuthJSON(),
+                userId: decoded.userId,
+                role: decoded.role,
+              };
+              return next();
+            }
             if (!user) {
               return res.status(401).json({
                 message: 'User with this token not found.'
               });
             }
-            req.decoded = {
-              ...user.toAuthJSON(), userId: decoded.userId
-            };
-            next();
+            return res.status(403).json({
+              message: 'You have been blocked from accessing this site, contact the admin'
+            });
           })
           .catch(next);
       });

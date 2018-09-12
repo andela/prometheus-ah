@@ -33,6 +33,8 @@ paths:
           description: Welcome User you are now logged in.
         401:
           description: Username or password does not match.
+        403:
+          description: User is forbidden from accessing the site
         404:
           description: Username or password does not match.
   /profiles/{username}:

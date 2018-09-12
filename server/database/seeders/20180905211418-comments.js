@@ -1,4 +1,4 @@
-import comments from '../../utils/comments';
+import comments from '../seed-data/comments';
 
 module.exports = {
   up: queryInterface => queryInterface.bulkInsert('Comments', [
