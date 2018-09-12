@@ -7,6 +7,7 @@ import app from '../../index';
 chai.use(chaiHttp);
 
 let userToken;
+let userToken2;
 
 describe('Articles Endpoint /articles', () => {
   before((done) => {
@@ -26,11 +27,29 @@ describe('Articles Endpoint /articles', () => {
       });
   });
 
-  it('it should create an article', (done) => {
+  before((done) => {
+    chai.request(app)
+      .post('/api/users/login')
+      .send({
+        user: {
+          username: users[1].username,
+          password: users[2].password2
+        }
+      })
+      .end((err, res) => {
+        userToken2 = res.body.user.token;
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+
+  it('should create an article', (done) => {
     const article = {
       title: 'how to code',
       body: 'PHP is a cool framework for coding but not fast as node',
-      description: 'coding'
+      description: 'coding',
+      tagList: ['PHP', 'coding', 'framework'],
     };
     chai.request(app)
       .post('/api/articles')
@@ -40,8 +59,10 @@ describe('Articles Endpoint /articles', () => {
         expect(res).to.have.status(201);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('article');
+        expect(res.body).to.have.property('tags');
         expect(res.body.article).to.have.property('readingTime');
         expect(res.body.article).to.be.an('object');
+        expect(res.body.tags).to.be.an('array').that.includes('coding');
         done();
       });
   });
@@ -74,7 +95,7 @@ describe('Articles Endpoint /articles', () => {
       });
   });
 
-  it('it should get a single article', (done) => {
+  it('should get a single article', (done) => {
     chai.request(app)
       .get('/api/articles/how-to-code')
       .end((err, res) => {
@@ -84,10 +105,31 @@ describe('Articles Endpoint /articles', () => {
       });
   });
 
-  it('it should update an article', (done) => {
+  it('should update an article', (done) => {
     const article = {
       title: 'how to code in python',
       body: 'PHP is a cool framework for coding but not fast as node',
+      description: 'coding',
+      tagList: ['coding', 'framework']
+    };
+    chai.request(app)
+      .put('/api/articles/how-to-code')
+      .set('authorization', userToken)
+      .send(article)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body).to.have.property('tags');
+        expect(res.body.message).to.equal('Article updated successfully');
+        expect(res.body.tags).to.be.an('array').that.includes('framework');
+        done();
+      });
+  });
+
+  it('should update an article', (done) => {
+    const article = {
+      title: 'how to code in python',
       description: 'coding',
     };
     chai.request(app)
@@ -102,7 +144,7 @@ describe('Articles Endpoint /articles', () => {
         done();
       });
   });
-  it('it should not update an article since you are not the creator', (done) => {
+  it('should not update an article since you are not the creator', (done) => {
     const article = {
       title: 'how to code in python',
       body: 'PHP is a cool framework for coding but not fast as node',
@@ -133,7 +175,17 @@ describe('Articles Endpoint /articles', () => {
         done();
       });
   });
-  it('it should delete an article you created', (done) => {
+  it('should not delete an article created by another user', (done) => {
+    chai.request(app)
+      .delete('/api/articles/how-to-code')
+      .set('authorization', userToken2)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.message).to.equal('Access denied.');
+        done();
+      });
+  });
+  it('should delete an article you created', (done) => {
     chai.request(app)
       .delete('/api/articles/how-to-code')
       .set('authorization', userToken)
@@ -146,7 +198,7 @@ describe('Articles Endpoint /articles', () => {
       });
   });
 
-  it('it should not delete an article since you are not the creator', (done) => {
+  it('should not delete an article since you are not the creator', (done) => {
     chai.request(app)
       .delete('/api/articles/how-to-train-your-dragon-3')
       .set('authorization', userToken)
@@ -161,7 +213,7 @@ describe('Articles Endpoint /articles', () => {
 });
 
 describe('Test Endpoint /articles', () => {
-  it('it should not create article', (done) => {
+  it('should not create article', (done) => {
     chai.request(app)
       .post('/api/articles')
       .set('authorization', userToken)
@@ -173,11 +225,11 @@ describe('Test Endpoint /articles', () => {
         done();
       });
   });
-  it('it should not get an article', (done) => {
+  it('should not get an article', (done) => {
     chai.request(app)
       .get('/api/articles/wrong_id')
       .end((err, res) => {
-        expect(res).to.have.status(400);
+        expect(res).to.have.status(404);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
         expect(res.body).to.have.property('message').to.be.equal('Article not found');
@@ -197,7 +249,7 @@ describe('Test Endpoint /articles', () => {
         done();
       });
   });
-  it('it should not update an article', (done) => {
+  it('should not update an article', (done) => {
     chai.request(app)
       .put('/api/articles/wrong_id')
       .set('authorization', userToken)
@@ -209,7 +261,7 @@ describe('Test Endpoint /articles', () => {
         done();
       });
   });
-  it('it should not delete an article', (done) => {
+  it('should not delete an article', (done) => {
     chai.request(app)
       .delete('/api/articles/wrong_id')
       .set('authorization', userToken)

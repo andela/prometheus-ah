@@ -202,23 +202,6 @@ describe('Tests API endpoint to report articles', () => {
         });
     });
     /**
-     * @description - GET (it should return all reports)
-     */
-    it('should return all reports', (done) => {
-      chai.request(app)
-        .get('/api/reports')
-        .set('authorization', userToken)
-        .then((res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('reports');
-          expect(res.body.reports[0].categoryId).to.equal(1);
-          expect(res.body.reports[0].details)
-            .to.equal('This article is too hot');
-          done();
-        });
-    });
-    /**
      * @description - GET - (it should return a specific report)
      */
     it('should return a specific report', (done) => {
