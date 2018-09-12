@@ -15,7 +15,7 @@ class QueryValidation {
     let { limit, page } = req.query;
     page = parseInt(page, 10);
     limit = parseInt(limit, 10);
-    let order = req.query.order || 'ASC';
+    let order = req.query.order || 'DESC';
     order = order.toUpperCase();
     if (order !== 'DESC' && order !== 'ASC') {
       order = 'ASC';

@@ -14,12 +14,7 @@ router.get('/', (req, res) => res.status(404).json({
   message: 'Welcome to Author Haven.'
 }));
 
-router.get(
-  '/profiles',
-  Authenticate.auth,
-  QueryValidation.queryValidation,
-  UserController.getAllUserProfile
-);
+// Auth endpoints
 router.post('/users', UserInputValidation.signUpInputValidation, AuthController.signUpUser);
 router.post(
   '/users/reverify',
@@ -31,11 +26,21 @@ router.get(
   EmailVerifyController.emailVerification
 );
 router.post('/users/login', UserInputValidation.loginInputValidation, AuthController.signInUser);
+
+// User profile endpoints
 router.get('/profiles/:username', Users.findUserByUsername, UserController.getProfileByUsername);
-router.put('/profiles/:username',
+router.put(
+  '/profiles/:username',
   Authenticate.auth,
   Users.findUserByUsername,
   UserValidation.editUserProfile,
-  UserController.editProfile);
+  UserController.editProfile
+);
+router.get(
+  '/profiles',
+  Authenticate.auth,
+  QueryValidation.queryValidation,
+  UserController.getAllUserProfile
+);
 
 export default router;

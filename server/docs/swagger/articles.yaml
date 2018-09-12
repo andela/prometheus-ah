@@ -110,6 +110,10 @@ definitions:
         type: string
       description:
         type: string
+      tagList:
+        type: array
+        items:
+          type: string
   updateArticle:
     type: object
     properties:
@@ -117,3 +121,7 @@ definitions:
         type: string
       body:
         type: string
+      tagList:
+        type: array
+        items:
+          type: string

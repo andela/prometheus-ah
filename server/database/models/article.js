@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     readingTime: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
   }, {});
 
   SequelizeSlugify.slugifyModel(Article, {
@@ -38,6 +38,11 @@ module.exports = (sequelize, DataTypes) => {
     Article.hasMany(models.Comment, {
       foreignKey: 'articleId',
       onDelete: 'CASCADE'
+    });
+
+    Article.belongsToMany(models.Tag, {
+      through: 'ArticleTag',
+      foreignKey: 'articleId',
     });
   };
 

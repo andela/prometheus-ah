@@ -13,19 +13,13 @@ import RatingsController from '../../controllers/RatingsController';
 import RatingsValidation from '../../middlewares/validations/RatingsValidation';
 import ReportsController from '../../controllers/ReportsController';
 import ReportValidation from '../../middlewares/validations/ReportValidation';
+import Articles from '../../utils/findArticle';
 
 const router = express.Router();
 
 // Article endpoints
 router.get('/', QueryValidation.queryValidation, ArticlesController.getArticles);
 router.get('/:slug', ArticlesController.getSingleArticle);
-
-// Comment endpoints
-router.get(
-  '/:slug/comments/',
-  QueryValidation.queryValidation,
-  CommentsController.getAllComments
-);
 
 // Rating endpoint
 router.get(
@@ -54,8 +48,13 @@ router.post(
   ArticlesController.createArticles
 );
 
-router.put('/:slug', ArticleValidation.updateArticle, ArticlesController.updateArticle);
-router.delete('/:slug', ArticlesController.deleteArticle);
+router.put(
+  '/:slug',
+  ArticleValidation.updateArticle,
+  Articles.findArticleBySlug,
+  ArticlesController.updateArticle
+);
+router.delete('/:slug', Articles.findArticleBySlug, ArticlesController.deleteArticle);
 
 // Comment endpoints (Protected)
 router.post(
