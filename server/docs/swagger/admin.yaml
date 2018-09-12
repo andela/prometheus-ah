@@ -1,0 +1,128 @@
+paths:
+  /admin/{username}/create/:
+    put:
+      tags:
+        - Admin
+      summary: It allows super admin to create an admin
+      produces:
+      - application/json
+      parameters:
+      - name: username
+        in: path
+        description: path parameter takes the username
+        type: string
+      - name: authorization
+        in: header
+        description: header takes the user's token
+        type: string
+      responses:
+        200:
+          description: Success response
+        401:
+          description: Unauthorized users
+        403:
+          description: Access Denied
+        404:
+          description: Not found
+        405:
+          description: Method not allowed
+  /admin/{username}/remove/:
+    put:
+      tags:
+        - Admin
+      summary: It allows super admin remove any faulting admin
+      produces:
+      - application/json
+      parameters:
+      - name: username
+        in: path
+        description: path parameter takes the username
+        type: string
+      - name: authorization
+        in: header
+        description: header takes the user's token
+        type: string
+      responses:
+        200:
+          description: Success response
+        401:
+          description: Unauthorized users
+        403:
+          description: Access Denied
+        404:
+          description: Not found
+        405:
+          description: Method not allowed
+  /admin/{username}/block/:
+    put:
+      tags:
+        - Admin
+      summary: It allows admin to block user
+      produces:
+      - application/json
+      parameters:
+      - name: username
+        in: path
+        description: path parameter takes the username
+        type: string
+      - name: authorization
+        in: header
+        description: header takes the user's token
+        type: string
+      responses:
+        200:
+          description: Success response
+        401:
+          description: Unauthorized users
+        403:
+          description: Access Denied
+        404:
+          description: Not found
+        405:
+          description: Method not allowed
+  /admin/{username}/unblock/:
+    put:
+      tags:
+        - Admin
+      summary: It allows admin to unblock user
+      produces:
+      - application/json
+      parameters:
+      - name: username
+        in: path
+        description: path parameter takes the username
+        type: string
+      - name: authorization
+        in: header
+        description: header takes the user's token
+        type: string
+      responses:
+        200:
+          description: Success response
+        401:
+          description: Unauthorized users
+        403:
+          description: Access Denied
+        404:
+          description: Not found
+        405:
+          description: Method not allowed
+  /admin/blocked/:
+    get:
+      tags:
+        - Admin
+      summary: Get all blocked users
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: header takes the user's token
+        type: string
+      responses:
+        200:
+          description: Success response
+        401:
+          description: Unauthorized users
+        403:
+          description: Access Denied

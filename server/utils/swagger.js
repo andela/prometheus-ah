@@ -30,6 +30,7 @@ const options = {
     './server/docs/swagger/follow.yaml',
     './server/docs/swagger/commentLike.yaml',
     './server/docs/swagger/commentThreadLike.yaml',
+    './server/docs/swagger/admin.yaml'
   ]
 };
 // initialize swagger-jsdoc

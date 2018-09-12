@@ -44,9 +44,15 @@ class AuthController {
         bio
       })
         .then((user) => {
-          const token = jwt.sign({ userId: user.id }, secret, {
-            expiresIn: '24h'
-          });
+          const token = jwt.sign(
+            {
+              userId: user.id,
+              role: user.role,
+            },
+            secret, {
+              expiresIn: '24h'
+            }
+          );
           res.status(201).json({
             user: { ...user.toAuthJSON(), token }
           });
@@ -70,10 +76,16 @@ class AuthController {
       },
     }).then((user) => {
       if (user) {
+        if (user.status === 'blocked') {
+          return res.status(403).json({
+            message: 'You have been blocked from accessing this site, contact the admin'
+          });
+        }
         if (bcrypt.compareSync(password, user.password)) {
           const token = jwt.sign({
             userId: user.id,
             username: user.username,
+            role: user.role,
           }, secret, { expiresIn: '24h' });
           return res.status(200).json({
             message: 'Welcome User you are now logged in.',

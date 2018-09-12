@@ -8,16 +8,22 @@ import Authenticate from '../../middlewares/Authenticate';
 import CommentsController from '../../controllers/CommentsController';
 import CommentValidation from '../../middlewares/validations/CommentValidation';
 import BookmarkController from '../../controllers/BookmarkController';
-
+import QueryValidation from '../../middlewares/validations/QueryValidation';
 import RatingsController from '../../controllers/RatingsController';
 import RatingsValidation from '../../middlewares/validations/RatingsValidation';
-import QueryValidation from '../../middlewares/validations/QueryValidation';
 
 const router = express.Router();
 
 // Article endpoints
 router.get('/', QueryValidation.queryValidation, ArticlesController.getArticles);
 router.get('/:slug', ArticlesController.getSingleArticle);
+
+// Comment endpoints
+router.get(
+  '/:slug/comments/',
+  QueryValidation.queryValidation,
+  CommentsController.getAllComments
+);
 
 // Ratting endpoint
 router.get(

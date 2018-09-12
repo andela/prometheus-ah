@@ -1,4 +1,4 @@
-import ratings from '../../utils/ratings';
+import ratings from '../seed-data/ratings';
 
 module.exports = {
   up: queryInterface => queryInterface.bulkInsert('Ratings', [

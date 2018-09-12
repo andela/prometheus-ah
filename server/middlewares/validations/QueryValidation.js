@@ -23,7 +23,7 @@ class QueryValidation {
     req.query.page = (page && Number.isInteger(page) && page > 0) ? page : 1;
     req.query.limit = (limit && Number.isInteger(limit) && limit > 0) ? limit : 10;
     req.query.order = order;
-    return next();
+    next();
   }
 }
 

@@ -42,6 +42,22 @@ module.exports = (sequelize, DataTypes) => {
     socialLoginType: {
       type: DataTypes.STRING
     },
+    role: {
+      type: DataTypes.STRING,
+      isIn: {
+        args: [['user', 'admin', 'superAdmin']],
+        message: 'User role can only be user, admin or super admin',
+      },
+      defaultValue: 'user',
+    },
+    status: {
+      type: DataTypes.STRING,
+      isIn: {
+        args: [['active', 'blocked']],
+        message: 'User status can only be active or blocked',
+      },
+      defaultValue: 'active',
+    },
     image: {
       type: DataTypes.STRING,
       defaultValue: 'https://bit.ly/2MKfwkO'
@@ -52,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
     return {
       username: this.username,
       email: this.email,
-      bio: this.bio
+      bio: this.bio,
     };
   };
 

@@ -2,7 +2,7 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
 import userFaker from './helpers/userFakeData';
-import users from '../utils/users';
+import users from '../database/seed-data/users';
 
 chai.use(chaiHttp);
 
