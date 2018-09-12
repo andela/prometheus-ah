@@ -25,7 +25,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should create a comment', (done) => {
+  it('should create a comment', (done) => {
     chai.request(app)
       .post('/api/articles/how-to-train-your-dragon/comments')
       .set('Content-type', 'application/json')
@@ -43,7 +43,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should not create a comment', (done) => {
+  it('should not create a comment', (done) => {
     chai.request(app)
       .post('/api/articles/how-to-train-your-dragon2/comments')
       .set('Content-type', 'application/json')
@@ -60,7 +60,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should return error if article does not exixt', (done) => {
+  it('should return error if article does not exixt', (done) => {
     chai.request(app)
       .post('/api/articles/how-to-train-me/comments')
       .set('Content-type', 'application/json')
@@ -77,7 +77,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should update a comment for an article', (done) => {
+  it('should update a comment for an article', (done) => {
     chai.request(app)
       .put('/api/articles/how-to-train-your-dragon/comments/5')
       .set('Content-type', 'application/json')
@@ -95,7 +95,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should return error if comment does not exixt', (done) => {
+  it('should return error if comment does not exixt', (done) => {
     chai.request(app)
       .put('/api/articles/how-to-train-your-dragon/comments/24')
       .set('Content-type', 'application/json')
@@ -112,7 +112,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should not update a comment with invalid id', (done) => {
+  it('should not update a comment with invalid id', (done) => {
     chai.request(app)
       .put('/api/articles/how-to-train-your-dragon2/comments/-7')
       .set('Content-type', 'application/json')
@@ -129,7 +129,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should not update a comment if article does not exist', (done) => {
+  it('should not update a comment if article does not exist', (done) => {
     chai.request(app)
       .put('/api/articles/how-to-train-your-dragon24/comments/7')
       .set('Content-type', 'application/json')
@@ -146,7 +146,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should not update comment', (done) => {
+  it('should not update comment', (done) => {
     chai.request(app)
       .put('/api/articles/how-to-train-your-dragon/comments/4')
       .set('Content-type', 'application/json')
@@ -163,7 +163,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should get all comment', (done) => {
+  it('should get all comment', (done) => {
     chai.request(app)
       .get('/api/articles/how-to-train-your-dragon/comments')
       .set('authorization', userToken)
@@ -176,18 +176,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should return message if no comments', (done) => {
-    chai.request(app)
-      .get('/api/articles/how-to-train-your-dragon-3/comments')
-      .set('authorization', userToken)
-      .end((err, res) => {
-        expect(res).to.have.status(404);
-        expect(res.body.message).to.equal('There are no comments for this article');
-        done();
-      });
-  });
-
-  it('it should return error if article does not exixt', (done) => {
+  it('should return error if article does not exixt', (done) => {
     chai.request(app)
       .get('/api/articles/how-to-train-your/comments')
       .set('authorization', userToken)
@@ -198,7 +187,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should delete a comment', (done) => {
+  it('should delete a comment', (done) => {
     chai.request(app)
       .delete('/api/articles/how-to-train-your-dragon/comments/5')
       .set('authorization', userToken)
@@ -209,7 +198,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should not delete a comment', (done) => {
+  it('should not delete a comment', (done) => {
     chai.request(app)
       .delete('/api/articles/how-to-train-your-dragon/comments/4')
       .set('authorization', userToken)
@@ -220,7 +209,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should return error if article does not exixt', (done) => {
+  it('should return error if article does not exixt', (done) => {
     chai.request(app)
       .delete('/api/articles/how-to-train-me/comments/7')
       .set('authorization', userToken)
@@ -231,7 +220,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('it should return error if comment does not exixt', (done) => {
+  it('should return error if comment does not exixt', (done) => {
     chai.request(app)
       .delete('/api/articles/how-to-train-your-dragon-2/comments/77')
       .set('authorization', userToken)
@@ -240,5 +229,72 @@ describe('Test API endpoint to comment on articles', () => {
         expect(res.body.message).to.equal('Comment does not exist');
         done();
       });
+  });
+
+  describe('Test API endpoints to like a comment', () => {
+    it('should like an existing comment', (done) => {
+      chai.request(app)
+        .post('/api/comments/1/likes')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.equal('Successfully liked');
+          expect(res.body.commentId).to.equal(1);
+          done();
+        });
+    });
+
+    it('should return message if comment does not exist', (done) => {
+      chai.request(app)
+        .post('/api/comments/50/likes')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.equal('Comment does not exist');
+          done();
+        });
+    });
+
+    it('should return the count of all likes for a comment', (done) => {
+      chai.request(app)
+        .get('/api/comments/1/likes')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.commentId).to.equal(1);
+          expect(res.body.likesCount).to.equal(1);
+          done();
+        });
+    });
+
+    it('should return nothing if the comment has no likes', (done) => {
+      chai.request(app)
+        .get('/api/comments/3/likes')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.likes).to.be.empty; //eslint-disable-line
+          done();
+        });
+    });
+
+    it('should return message if comment does not exist when trying to get all likes', (done) => {
+      chai.request(app)
+        .get('/api/comments/20/likes')
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.equal('Comment does not exist');
+          done();
+        });
+    });
+
+    it('should unlike an already liked comment', (done) => {
+      chai.request(app)
+        .post('/api/comments/1/likes')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.equal('Successfully unliked');
+          done();
+        });
+    });
   });
 });

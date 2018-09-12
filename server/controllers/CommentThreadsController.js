@@ -137,8 +137,8 @@ class CommentThreadsControllers {
    * @return {Object} Returned object
    */
   static getAllReplies(req, res, next) {
-    const page = parseInt((req.query.page || 1), 10);
-    const limit = parseInt((req.query.limit || 10), 10);
+    const page = parseInt((req.query.page), 10);
+    const limit = parseInt((req.query.limit), 10);
     const offset = parseInt((page - 1), 10) * limit;
 
     Comment.find({
@@ -167,12 +167,6 @@ class CommentThreadsControllers {
       }).then((replies) => {
         const { count } = replies;
         const pageCount = Math.ceil(count / limit);
-        if (count < 1) {
-          return res.status(404).json({
-            message: 'There are no replies for this comment',
-            replies: []
-          });
-        }
 
         return res.status(200).json({
           paginationMeta: {
