@@ -25,7 +25,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should reply a comment', (done) => {
+  it('should reply a comment', (done) => {
     chai.request(app)
       .post('/api/comments/1/replies')
       .set('Content-type', 'application/json')
@@ -43,7 +43,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should not reply a comment', (done) => {
+  it('should not reply a comment', (done) => {
     chai.request(app)
       .post('/api/comments/1/replies')
       .set('Content-type', 'application/json')
@@ -60,7 +60,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should return error if comment does not exixt', (done) => {
+  it('should return error if comment does not exixt', (done) => {
     chai.request(app)
       .post('/api/comments/55/replies')
       .set('Content-type', 'application/json')
@@ -77,7 +77,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should update a reply to a comment', (done) => {
+  it('should update a reply to a comment', (done) => {
     chai.request(app)
       .put('/api/comments/2/replies/1')
       .set('Content-type', 'application/json')
@@ -95,7 +95,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should return error if comment does not exixt', (done) => {
+  it('should return error if comment does not exixt', (done) => {
     chai.request(app)
       .put('/api/comments/24/replies/1')
       .set('Content-type', 'application/json')
@@ -112,7 +112,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should not update a reply with invalid id', (done) => {
+  it('should not update a reply with invalid id', (done) => {
     chai.request(app)
       .put('/api/comments/-7/replies/1')
       .set('Content-type', 'application/json')
@@ -129,7 +129,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should not update a reply if comment does not exist', (done) => {
+  it('should not update a reply if comment does not exist', (done) => {
     chai.request(app)
       .put('/api/comments/2/replies/44')
       .set('Content-type', 'application/json')
@@ -146,7 +146,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should not update reply', (done) => {
+  it('should not update reply', (done) => {
     chai.request(app)
       .put('/api/comments/2/replies/3')
       .set('Content-type', 'application/json')
@@ -163,7 +163,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should get all replies for a comment', (done) => {
+  it('should get all replies for a comment', (done) => {
     chai.request(app)
       .get('/api/comments/1/replies')
       .set('authorization', userToken)
@@ -175,18 +175,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should return message if no replies', (done) => {
-    chai.request(app)
-      .get('/api/comments/3/replies')
-      .set('authorization', userToken)
-      .end((err, res) => {
-        expect(res).to.have.status(404);
-        expect(res.body.message).to.equal('There are no replies for this comment');
-        done();
-      });
-  });
-
-  it('it should return error if comment does not exixt', (done) => {
+  it('should return error if comment does not exixt', (done) => {
     chai.request(app)
       .get('/api/comments/57/replies')
       .set('authorization', userToken)
@@ -197,7 +186,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should not delete a comment', (done) => {
+  it('should not delete a comment', (done) => {
     chai.request(app)
       .delete('/api/comments/2/replies/4')
       .set('authorization', userToken)
@@ -208,7 +197,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should return error if comment does not exixt', (done) => {
+  it('should return error if comment does not exixt', (done) => {
     chai.request(app)
       .delete('/api/comments/71/replies/1')
       .set('authorization', userToken)
@@ -219,7 +208,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should return error if reply does not exixt', (done) => {
+  it('should return error if reply does not exixt', (done) => {
     chai.request(app)
       .delete('/api/comments/2/replies/20')
       .set('authorization', userToken)
@@ -230,7 +219,7 @@ describe('Test API endpoint to replies on comments', () => {
       });
   });
 
-  it('it should delete a reply', (done) => {
+  it('should delete a reply', (done) => {
     chai.request(app)
       .delete('/api/comments/2/replies/2')
       .set('authorization', userToken)
@@ -239,5 +228,72 @@ describe('Test API endpoint to replies on comments', () => {
         expect(res.body.message).to.equal('Reply was deleted successfully');
         done();
       });
+  });
+
+  describe('Test API endpoints to like a comment in a thread', () => {
+    it('should like an existing comment', (done) => {
+      chai.request(app)
+        .post('/api/replies/1/likes')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.equal('Successfully liked');
+          expect(res.body.commentThreadId).to.equal(1);
+          done();
+        });
+    });
+
+    it('should return message if comment does not exist', (done) => {
+      chai.request(app)
+        .post('/api/replies/50/likes')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.equal('Reply does not exist');
+          done();
+        });
+    });
+
+    it('should return the count of all likes for a comment in a thread', (done) => {
+      chai.request(app)
+        .get('/api/replies/1/likes')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.replyId).to.equal(1);
+          expect(res.body.likesCount).to.equal(1);
+          done();
+        });
+    });
+
+    it('should return nothing if the comment has no likes', (done) => {
+      chai.request(app)
+        .get('/api/replies/3/likes')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.likes).to.be.empty; //eslint-disable-line
+          done();
+        });
+    });
+
+    it('should return message if comment does not exist when trying to get all likes', (done) => {
+      chai.request(app)
+        .get('/api/replies/20/likes')
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.equal('Reply does not exist');
+          done();
+        });
+    });
+
+    it('should unlike an already liked comment', (done) => {
+      chai.request(app)
+        .post('/api/replies/1/likes')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.equal('Successfully unliked');
+          done();
+        });
+    });
   });
 });

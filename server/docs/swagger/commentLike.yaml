@@ -1,0 +1,38 @@
+paths:
+  /comments/{id}/likes:
+    post:
+      tags:
+        - CommentLikes
+      summary: like and unlike a comment
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: id
+        in: path
+        description: path parameter takes the comment id
+        type: integer
+      responses:
+        200:
+          description: An object with the commentId and username
+        404:
+          description: Comment does not exist
+    get:
+      tags:
+        - CommentLikes
+      summary: It returns the count of the comment likes
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: path parameter takes the comment id
+        type: integer
+      responses:
+        200:
+          description: An object containing the likes count and comment id
+        404:
+          description: Comment does not exist

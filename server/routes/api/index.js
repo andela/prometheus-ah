@@ -1,5 +1,6 @@
 import express from 'express';
 import commentThread from './commentThreads';
+import commentThreadLikes from './commentThreadLikes';
 import users from './users';
 import socialLogin from './socialLogin';
 import article from './article';
@@ -12,6 +13,7 @@ router.use('/', socialLogin);
 router.use('/articles', article);
 
 router.use('/comments', commentThread);
+router.use('/replies', commentThreadLikes);
 
 router.use('/', follow);
 

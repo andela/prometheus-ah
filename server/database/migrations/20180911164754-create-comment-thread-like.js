@@ -1,35 +1,28 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('CommentThreadLikes', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    articleId: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      onDelete: 'CASCADE',
-      reference: {
-        model: 'Articles',
-        key: 'id',
-        as: 'articleId'
-      }
-    },
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      reference: {
+      references: {
         model: 'Users',
         key: 'id',
         as: 'userId'
       }
     },
-    body: {
-      type: Sequelize.STRING,
-      required: true,
-      trim: true,
-      allowNull: false
+    commentThreadId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'CommentThreads',
+        key: 'id',
+        as: 'commentThreadId'
+      }
     },
     createdAt: {
       allowNull: false,
@@ -40,6 +33,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-
-  down: queryInterface => queryInterface.dropTable('Comments'),
+  down: queryInterface => queryInterface.dropTable('CommentThreadLikes')
 };
