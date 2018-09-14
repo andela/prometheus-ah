@@ -243,6 +243,17 @@ describe('Test API endpoint to replies on comments', () => {
         });
     });
 
+    it('should return a message if comment is already liked', (done) => {
+      chai.request(app)
+        .post('/api/replies/1/likes')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal('Reply already liked');
+          done();
+        });
+    });
+
     it('should return message if comment does not exist', (done) => {
       chai.request(app)
         .post('/api/replies/50/likes')
@@ -261,6 +272,7 @@ describe('Test API endpoint to replies on comments', () => {
           expect(res).to.have.status(200);
           expect(res.body.replyId).to.equal(1);
           expect(res.body.likesCount).to.equal(1);
+          expect(res.body.likes[0].user.username).to.equal('joeeasy');
           done();
         });
     });
@@ -285,9 +297,31 @@ describe('Test API endpoint to replies on comments', () => {
         });
     });
 
+    it('should return a message if comment has not been liked', (done) => {
+      chai.request(app)
+        .delete('/api/replies/3/likes')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal('Reply has not been liked');
+          done();
+        });
+    });
+
+    it('should return a message if comment to be unliked does not exist', (done) => {
+      chai.request(app)
+        .delete('/api/replies/50/likes')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.equal('Reply does not exist');
+          done();
+        });
+    });
+
     it('should unlike an already liked comment', (done) => {
       chai.request(app)
-        .post('/api/replies/1/likes')
+        .delete('/api/replies/1/likes')
         .set('authorization', userToken)
         .end((err, res) => {
           expect(res).to.have.status(200);

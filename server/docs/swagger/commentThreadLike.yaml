@@ -20,6 +20,30 @@ paths:
           description: An object with the commentThreadId and username
         404:
           description: Reply does not exist
+        400:
+          description: Reply has already been liked
+    delete:
+      tags:
+        - CommentThreadLikes
+      summary: unlike a reply to a comment
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: id
+        in: path
+        description: path parameter takes the commentThread id
+        type: integer
+      responses:
+        200:
+          description: An object with the commentThreadId and username
+        404:
+          description: Reply does not exist
+        400:
+          description: Reply has not been liked
     get:
       tags:
         - CommentThreadLikes
