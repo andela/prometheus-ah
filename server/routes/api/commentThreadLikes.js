@@ -22,4 +22,11 @@ router.post(
   CommentThreadLikesController.likeReply
 );
 
+router.delete(
+  '/:id/likes',
+  CommentValidation.validateId,
+  Queryvalidation.queryValidation,
+  CommentThreadLikesController.unLikeReply
+);
+
 export default router;

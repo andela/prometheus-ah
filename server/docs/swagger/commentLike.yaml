@@ -3,7 +3,7 @@ paths:
     post:
       tags:
         - CommentLikes
-      summary: like and unlike a comment
+      summary: like a comment
       produces:
       - application/json
       parameters:
@@ -20,6 +20,30 @@ paths:
           description: An object with the commentId and username
         404:
           description: Comment does not exist
+        400:
+          description: Comment has already been liked
+    delete:
+      tags:
+        - CommentLikes
+      summary: unlike a comment
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: id
+        in: path
+        description: path parameter takes the comment id
+        type: integer
+      responses:
+        200:
+          description: An object with the commentId and username
+        404:
+          description: Comment does not exist
+        400:
+          description: Comment has not been liked
     get:
       tags:
         - CommentLikes

@@ -50,4 +50,11 @@ router.post(
   CommentLikesController.likeComment,
 );
 
+router.delete(
+  '/:id/likes',
+  CommentValidation.validateId,
+  Queryvalidation.queryValidation,
+  CommentLikesController.unLikeComment,
+);
+
 export default router;

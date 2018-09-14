@@ -48,17 +48,15 @@ class CommentThreadLikesController {
           }
         },
         defaults: { userId, commentThreadId: commentThread.id }
-      }).then(([found, created]) => {
+      }).then(([found, created]) => { // eslint-disable-line
         if (!created) {
-          found.destroy();
-          return res.status(200).json({
-            message: 'Successfully unliked'
+          return res.status(400).json({
+            message: 'Reply already liked'
           });
         }
 
         return res.status(200).json({
           commentThreadId: commentThread.id,
-          username: req.decoded.username,
           message: 'Successfully liked'
         });
       }).catch(next);
@@ -66,7 +64,58 @@ class CommentThreadLikesController {
   }
 
   /**
-   * @description Create a like for a comment
+   * @description Delete a like for a comment
+   *
+   * @param {Object} req - HTTP Request
+   * @param {Object} res - HTTP Response
+   * @param {*} next - Next function
+   *
+   * @return {Object} Returned object
+   */
+  static unLikeReply(req, res, next) {
+    const { id } = req.params;
+    const { userId } = req.decoded;
+    CommentThread.findOne({
+      where: {
+        id: {
+          [Op.eq]: id,
+        }
+      }
+    }).then((commentThread) => {
+      if (!commentThread) {
+        return res.status(404).json({
+          message: 'Reply does not exist'
+        });
+      }
+
+
+      CommentThreadLike.findOne({
+        where: {
+          commentThreadId: {
+            [Op.eq]: commentThread.id
+          },
+          userId: {
+            [Op.eq]: userId
+          }
+        }
+      }).then((commentThreadLike) => {
+        if (!commentThreadLike) {
+          return res.status(400).json({
+            message: 'Reply has not been liked'
+          });
+        }
+
+        commentThreadLike.destroy()
+          .then(() => res.status(200).json({
+            commentThreadId: commentThread.id,
+            message: 'Successfully unliked'
+          })).catch(next);
+      }).catch(next);
+    }).catch(next);
+  }
+
+  /**
+   * @description Get all likes for a comment
    *
    * @param {Object} req - HTTP Request
    * @param {Object} res - HTTP Response
