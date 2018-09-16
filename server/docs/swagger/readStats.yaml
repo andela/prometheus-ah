@@ -1,0 +1,19 @@
+paths:
+  /readstats/:
+    get:
+      tags:
+        - ReadStats
+      summary: get all articles read by a user
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - in: query
+        name: bound
+        description: Set the boundary of read articles returned to a user
+      responses:
+        200:
+          description: An object with articles details read by a user

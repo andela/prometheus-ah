@@ -42,7 +42,12 @@ module.exports = (sequelize, DataTypes) => {
 
     Article.hasMany(models.Comment, {
       foreignKey: 'articleId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+    });
+
+    Article.hasMany(models.ReadView, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE',
     });
 
     Article.belongsToMany(models.Tag, {

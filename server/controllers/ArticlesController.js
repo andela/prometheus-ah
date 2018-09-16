@@ -181,13 +181,20 @@ class ArticlesController {
     })
       .then((article) => {
         if (!article) {
-          return res.status(404).json({
+          res.status(404).json({
             message: 'Article not found'
           });
+          return next('route');
         }
-        return res.status(200).json({
-          article
+        const { id: articleId } = article;
+        if (req.decoded) {
+          const { userId } = req.decoded;
+          req.storage = { userId, articleId };
+        }
+        res.status(200).json({
+          article,
         });
+        return next();
       })
       .catch(next);
   }

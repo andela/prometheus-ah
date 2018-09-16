@@ -2,6 +2,9 @@ import express from 'express';
 
 import ArticlesController from '../../controllers/ArticlesController';
 import ArticleValidation from '../../middlewares/validations/ArticleValidation';
+import OptionalAuthentication from '../../middlewares/validations/OptionalAuthentication';
+
+import ReadingStatsController from '../../controllers/ReadingStatsController';
 
 import Authenticate from '../../middlewares/Authenticate';
 
@@ -34,6 +37,19 @@ router.get(
   Authenticate.optionalAuth,
   QueryValidation.queryValidation,
   ArticlesController.getArticles
+);
+router.get('/', QueryValidation.queryValidation, ArticlesController.getArticles);
+router.get('/:slug', ArticlesController.getSingleArticle);
+router.get('/:slug/like', QueryValidation.queryValidation, LikeController.totalLikes);
+router.get('/:slug/dislike', QueryValidation.queryValidation, LikeController.totalDislikes);
+router.get('/:slug', OptionalAuthentication.auth, ArticlesController.getSingleArticle,
+  ReadingStatsController.saveViewed);
+
+// Comment endpoints
+router.get(
+  '/:slug/comments/',
+  QueryValidation.queryValidation,
+  CommentsController.getAllComments
 );
 
 router.get(

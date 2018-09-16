@@ -34,6 +34,7 @@ const options = {
     './server/docs/swagger/report.yaml',
     './server/docs/swagger/likes.yaml',
     './server/docs/swagger/reportCategory.yaml',
+    './server/docs/swagger/readStats.yaml'
   ]
 };
 // initialize swagger-jsdoc

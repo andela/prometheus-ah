@@ -25,6 +25,24 @@ class QueryValidation {
     req.query.order = order;
     next();
   }
+
+  /**
+   * @description query validation for read stats
+   * @param  {object} req
+   * @param  {object} res
+   * @param  {function} next
+   * @returns {void}
+   * @memberof QueryValidation
+   */
+  static readStatsValidation(req, res, next) {
+    const query = req.query.bound;
+    if (query === 'day' || query === 'week' || query === 'month') {
+      next();
+    } else {
+      req.query.bound = 'default';
+      next();
+    }
+  }
 }
 
 export default QueryValidation;
