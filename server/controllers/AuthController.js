@@ -2,17 +2,18 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
-import crypto from 'crypto';
 import db from '../database/models';
 import Users from '../utils/utilities';
 import sendVerifyEmailMessage from './helpers/emailSender';
+import resetPassword from './helpers/resetPasswordEmailSender';
 
 
 dotenv.config();
 
 const { User } = db;
 const secret = process.env.SECRET_KEY;
-const secret2 = process.env.EMAIL_SECRET_KEY;
+const emailSecret = process.env.EMAIL_SECRET_KEY;
+const passwordSecret = process.env.PASSWORD_SECRET_KEY;
 
 /**
  * Class representing users
@@ -30,11 +31,13 @@ class AuthController {
       email, username, password, bio, firstname, lastname
     } = req.body.user;
 
-    const myKey = crypto.createCipher('aes192', secret2);
-    let hash = myKey.update(email, 'utf8', 'hex');
-    hash += myKey.final('hex');
-    const tokenExpiredTime = new Date();
-    tokenExpiredTime.setHours(tokenExpiredTime.getHours() + 2);
+    const emailTokenExpiredTime = new Date();
+    const emailHash = jwt.sign({
+      email,
+      emailTokenExpiredTime
+    }, emailSecret, { expiresIn: 7200 });
+
+
     User.find({
       where: {
         [Op.or]: [{ username }, { email }]
@@ -51,13 +54,14 @@ class AuthController {
         username,
         email,
         password: Users.hashPassword(password),
-        hash,
-        verify_hash_expiration: tokenExpiredTime,
+        hash: emailHash,
         bio
       })
         .then((user) => {
           const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '24h' });
-          sendVerifyEmailMessage(user);
+          if (process.env.NODE_ENV !== 'test') {
+            sendVerifyEmailMessage(user);
+          }
           res.status(201).json({
             user: { ...user.toAuthJSON(), token },
             message: `A verification email has been sent to ${user.email}.`,
@@ -110,6 +114,80 @@ class AuthController {
         message: 'You are yet to register. Kindly sign up.'
       });
     }).catch(next);
+  }
+
+  /**
+   * It should enable a User get a reset password link
+   * @param {*} req - Request object
+   * @param {*} res - Response object
+   * @param {*} next - Next function
+   * @returns {message} a message - reset password message
+   */
+  static resetPassword(req, res, next) {
+    const { email } = req.body.user;
+    const passwordTokenExpiredTime = new Date();
+    const passwordHash = jwt.sign({
+      email,
+      passwordTokenExpiredTime
+    }, passwordSecret, { expiresIn: '2h' });
+
+    User.find({
+      where: {
+        email
+      }
+    }).then((userFound) => {
+      if (!userFound) {
+        return res.status(404).json({
+          message: 'Invalid credentials'
+        });
+      }
+
+      userFound.update({
+        reset_password_hash: passwordHash,
+      }).then((user) => {
+        if (process.env.NODE_ENV !== 'test') {
+          resetPassword(userFound);
+        }
+        return res.status(200).json({
+          message: `A reset password link has been sent to your ${user.email}`
+        });
+      }).catch(next);
+    }).catch(next);
+  }
+
+  /**
+     * Update a user password
+     * @param {*} req - Request object
+     * @param {*} res - Response object
+     * @param {*} next - Next function
+     * @returns {message} message
+     */
+  static updatePassword(req, res, next) {
+    const { password, passwordtoken } = req.body.user;
+    jwt.verify(passwordtoken, passwordSecret, (err, decodedUserDetails) => {
+      if (err) {
+        return res.status(500).json({
+          message: 'Your verification link has expired or is invalid '
+        });
+      }
+      User.find({
+        email: decodedUserDetails.email
+      }).then((user) => {
+        if (user && user.reset_password_hash === passwordtoken) {
+          user.update({
+            password: Users.hashPassword(password),
+            reset_password_hash: '',
+          })
+            .then(() => res.status(200).json({
+              message: 'password has been modified'
+            })).catch(next);
+        } else {
+          return res.status(400).json({
+            message: 'Invalid token sent'
+          });
+        }
+      }).catch(next);
+    });
   }
 }
 

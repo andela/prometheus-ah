@@ -37,6 +37,47 @@ paths:
           description: User is forbidden from accessing the site
         404:
           description: Username or password does not match.
+  /users/reset-password/:
+    post:
+      tags:
+        - User
+      summary: reset a user password
+      produces:
+        - application/json
+      parameters:
+      - in: body
+        name: reset password
+        description: It enable a user reset his password
+        schema:
+          $ref: '#/definitions/resetpassword'
+      responses:
+        200:
+          description: A reset password link has been sent to your email.
+        404:
+          description: Invalid credentials.
+        409:
+          description: A reset password link has been sent to this email already.
+  /users/change-password/:
+    post:
+      tags:
+        - User
+      summary: reset a user password
+      produces:
+        - application/json
+      parameters:
+
+      - in: body
+        name: change password
+        description: It enable a user change his password
+        schema:
+          $ref: '#/definitions/change-password'
+      responses:
+        200:
+          description: password has been modified.
+        400:
+          description: Invalid token sent.
+        500:
+          description: Your verification link has expired or is invalid
   /profiles/{username}:
     put:
       tags:
@@ -108,6 +149,26 @@ definitions:
           username:
             type: string
           password:
+            type: string
+  resetpassword:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          email:
+            type: string
+  change-password:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          password:
+            type: string
+          password_confirmation:
+            type: string
+          passwordtoken:
             type: string
   updateUserProfile:
     type: object

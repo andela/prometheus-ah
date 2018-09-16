@@ -8,6 +8,8 @@ chai.use(chaiHttp);
 
 let hash1;
 let hash2;
+
+
 const { User } = db;
 
 describe('User SignUp', () => {
@@ -24,7 +26,7 @@ describe('User SignUp', () => {
             email: users[5].email
           }
         }).then((user) => {
-          hash1 = user.hash;
+          hash1 = user.dataValues.hash;
           done();
         }).catch(err => done(err));
       });
@@ -84,7 +86,7 @@ describe('User SignUp', () => {
         .post('/api/users/reverify')
         .send({
           user: {
-            email: 'joetega@gmail.com'
+            email: 'wrongemail@gmail.com'
           }
         })
         .end((err, res) => {
@@ -138,6 +140,72 @@ describe('User SignUp', () => {
           expect(res.body.message).to.equal('A verification email has been sent to you.');
           done();
         });
+    });
+    it('Should send an error to the user if user have already been verified.', (done) => {
+      chai.request(app)
+        .post('/api/users/reverify')
+        .send({
+          user: {
+            email: users[0].email
+          }
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(409);
+          expect(res.body.message).to.equal('This email has already been verified.');
+          done();
+        });
+    });
+    it('It should send a reset password link to the user\'s email.', (done) => {
+      chai.request(app)
+        .post('/api/users/reset-password')
+        .set('Content-Type', 'application/json')
+        .send({
+          user: {
+            email: users[0].email,
+          }
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.message).to.equal(`A reset password link has been sent to your ${users[0].email}`);
+          if (err) return done(err);
+          done();
+        });
+    });
+    it('It should send an error message to the user if user email is not found.', (done) => {
+      chai.request(app)
+        .post('/api/users/reset-password/')
+        .set('Content-Type', 'application/json')
+        .send({
+          user: {
+            email: 'bukkydada@gmail.com',
+          }
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.body.message).to.equal('Invalid credentials');
+          if (err) return done(err);
+          done();
+        });
+    });
+    it('It should send a message to the user if password link has already been sent.', (done) => {
+      const passwordTimeCheck = () => {
+        chai.request(app)
+          .post('/api/users/reset-password/')
+          .set('Content-Type', 'application/json')
+          .send({
+            user: {
+              email: users[0].email,
+            }
+          })
+          .end((err, res) => {
+            expect(res.status).to.equal(409);
+            expect(res.body.message).to.equal(`A reset password link has been sent to ${users[0].email} already.`);
+            if (err) return done(err);
+          });
+      };
+      setTimeout(passwordTimeCheck, 1500);
+      done();
     });
   });
 });

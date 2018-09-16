@@ -1,11 +1,10 @@
-import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import db from '../database/models';
 import sendVerifyEmailMessage from './helpers/emailSender';
 
 const { User } = db;
 const secret = process.env.SECRET_KEY;
-const secret2 = process.env.EMAIL_SECRET_KEY;
+const emailSecret = process.env.EMAIL_SECRET_KEY;
 
 /**
  * Class representing email verification
@@ -20,45 +19,41 @@ class EmailVerifyController {
    */
   static emailVerification(req, res, next) {
     const { hash } = req.params;
-
-    const myKey = crypto.createDecipher('aes192', secret2);
-    let decodedHash = myKey.update(hash, 'hex', 'utf8');
-    decodedHash += myKey.final('utf8');
-    User.findOne({
-      where: {
-        email: decodedHash
-      }
-    }).then((userFound) => {
-      const currentTime = (new Date());
-      if (userFound.isVerified) {
-        return res.status(400).json({
-          message: 'Your account has already been activated.'
+    jwt.verify(hash, emailSecret, (err, decodedUserData) => {
+      if (err) {
+        return res.status(500).json({
+          message: 'Your verification link has expired or is invalid '
         });
       }
-      if (userFound.verify_hash_expiration < currentTime) {
-        return res.status(400).json({
-          message: 'The verification link has expired.'
-        });
-      }
-
-      User.update({
-        isVerified: true,
-        hash: '',
-        verify_hash_expiration: null
-      }, {
+      User.findOne({
         where: {
-          email: decodedHash
+          email: decodedUserData.email
         }
-      }).then((user) => {
-        const token = jwt.sign({ userId: userFound.id }, secret, { expiresIn: '24h' });
-        if (user) {
-          return res.status(200).json({
-            message: 'Your account was successfully activated.',
-            token
+      }).then((userFound) => {
+        if (userFound && userFound.isVerified) {
+          return res.status(400).json({
+            message: 'Your account has already been activated.'
+          });
+        } else if (userFound && userFound.hash === hash) {
+          userFound.update({
+            isVerified: true,
+            hash: '',
+          }).then((user) => {
+            const token = jwt.sign({ userId: userFound.id }, secret, { expiresIn: '24h' });
+            if (user) {
+              return res.status(200).json({
+                message: 'Your account was successfully activated.',
+                token,
+              });
+            }
+          }).catch(err => res.status(500).json(err.message));
+        } else {
+          return res.status(400).json({
+            message: 'Invalid token sent'
           });
         }
-      }).catch(err => res.status(500).json(err.message));
-    }).catch(next);
+      }).catch(next);
+    });
   }
 
   /**
@@ -85,7 +80,9 @@ class EmailVerifyController {
           message: 'This email has already been verified.'
         });
       }
-      sendVerifyEmailMessage(userToBeVerified);
+      if (process.env.NODE_ENV !== 'test') {
+        sendVerifyEmailMessage(userToBeVerified);
+      }
       res.status(200).json({
         message: 'A verification email has been sent to you.'
       });
