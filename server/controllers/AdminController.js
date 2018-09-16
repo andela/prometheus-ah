@@ -144,7 +144,7 @@ class AdminController {
     })
       .then((user) => {
         if (!user) {
-          res.status(404).json({
+          return res.status(404).json({
             message: 'User not found'
           });
         }

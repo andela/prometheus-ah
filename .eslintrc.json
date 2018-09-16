@@ -20,12 +20,13 @@
     "consistent-return": 0,
     "no-param-reassign": 0,
     "comma-dangle": 0,
+    "no-else-return": 0,
     "curly": [
       "error",
       "multi-line"
     ],
     "max-len": [
-      "error", 
+      "error",
       { "code": 100 }
     ],
     "import/no-unresolved": [

@@ -36,11 +36,11 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
     },
-    hash: {
+    reset_password_hash: {
       type: DataTypes.STRING,
     },
-    verify_hash_expiration: {
-      type: DataTypes.DATE,
+    hash: {
+      type: DataTypes.STRING,
     },
     socialLogin: {
       type: DataTypes.BOOLEAN

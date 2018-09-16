@@ -21,6 +21,19 @@ router.post(
   UserInputValidation.emailInputValidation,
   EmailVerifyController.resendEmailVerification
 );
+
+router.post(
+  '/users/reset-password',
+  UserInputValidation.emailInputValidation,
+  AuthController.resetPassword
+);
+
+router.post(
+  '/users/change-password',
+  UserInputValidation.passwordInputValidation,
+  AuthController.updatePassword
+);
+
 router.get(
   '/confirmation/:hash',
   EmailVerifyController.emailVerification
