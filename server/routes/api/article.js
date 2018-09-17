@@ -29,17 +29,26 @@ router.get(
 );
 
 // Article endpoints
-router.get('/', QueryValidation.queryValidation, ArticlesController.getArticles);
-router.get('/:slug', ArticlesController.getSingleArticle);
-router.get('/:slug/like', QueryValidation.queryValidation, LikeController.totalLikes);
-router.get('/:slug/dislike', QueryValidation.queryValidation, LikeController.totalDislikes);
-
-// Rating endpoint
 router.get(
-  '/:slug/ratings/',
-  RatingsValidation.validateArticleId,
+  '/',
+  Authenticate.optionalAuth,
   QueryValidation.queryValidation,
-  RatingsController.getRatings
+  ArticlesController.getArticles
+);
+
+router.get(
+  '/:slug',
+  ArticlesController.getSingleArticle
+);
+router.get(
+  '/:slug/like',
+  QueryValidation.queryValidation,
+  LikeController.totalLikes
+);
+router.get(
+  '/:slug/dislike',
+  QueryValidation.queryValidation,
+  LikeController.totalDislikes
 );
 
 // Comment endpoints
@@ -49,10 +58,26 @@ router.get(
   CommentsController.getAllComments
 );
 
+// Rating endpoint
+router.get(
+  '/:slug/ratings/',
+  RatingsValidation.validateArticleId,
+  QueryValidation.queryValidation,
+  RatingsController.getRatings
+);
+
 router.use(Authenticate.auth);
 
-router.post('/user/bookmarks/:slug', BookmarkController.bookmarkArticle);
-router.get('/user/bookmarks', BookmarkController.getBookmarks);
+router.post(
+  '/user/bookmarks/:slug',
+  RatingsValidation.validateArticleId,
+  BookmarkController.bookmarkArticle
+);
+router.delete(
+  '/user/bookmarks/:slug',
+  RatingsValidation.validateArticleId,
+  BookmarkController.deleteBookmark
+);
 
 // Article endpoints (Protected)
 router.post(
@@ -60,8 +85,14 @@ router.post(
   ArticleValidation.createArticle,
   ArticlesController.createArticles
 );
-router.post('/:slug/like', LikeController.likeArticle);
-router.post('/:slug/dislike', LikeController.dislikeArticle);
+router.post(
+  '/:slug/like',
+  LikeController.likeArticle
+);
+router.post(
+  '/:slug/dislike',
+  LikeController.dislikeArticle
+);
 
 router.put(
   '/:slug',
@@ -69,10 +100,24 @@ router.put(
   Articles.findArticleBySlug,
   ArticlesController.updateArticle
 );
-router.delete('/:slug', Articles.findArticleBySlug, ArticlesController.deleteArticle);
-router.put('/:slug', ArticleValidation.updateArticle, ArticlesController.updateArticle);
-router.delete('/:slug', ArticlesController.deleteArticle);
-router.delete('/:slug/unlike', LikeController.unlikeArticle);
+router.delete(
+  '/:slug',
+  Articles.findArticleBySlug,
+  ArticlesController.deleteArticle
+);
+router.put(
+  '/:slug',
+  ArticleValidation.updateArticle,
+  ArticlesController.updateArticle
+);
+router.delete(
+  '/:slug',
+  ArticlesController.deleteArticle
+);
+router.delete(
+  '/:slug/unlike',
+  LikeController.unlikeArticle
+);
 
 // Comment endpoints (Protected)
 router.post(

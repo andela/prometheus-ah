@@ -84,6 +84,18 @@ describe('Follow/Unfollow Test Feature', () => {
         done();
       });
   });
+  it('Should return an error if Author does not exist', (done) => {
+    chai.request(app)
+      .get('/api/profiles/jack/following')
+      .set('authorization', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('User not found.');
+        if (err) return done(err);
+        done();
+      });
+  });
   it('Should return an array of User Followers', (done) => {
     chai.request(app)
       .get('/api/profiles/joeeasy/followers')
@@ -104,6 +116,18 @@ describe('Follow/Unfollow Test Feature', () => {
         expect(err).to.equal(null);
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('You are yet to have followers.');
+        if (err) return done(err);
+        done();
+      });
+  });
+  it('Should return an error if Author does not exist.', (done) => {
+    chai.request(app)
+      .get('/api/profiles/tommy/followers')
+      .set('authorization', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('User not found.');
         if (err) return done(err);
         done();
       });

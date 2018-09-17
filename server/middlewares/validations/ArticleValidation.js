@@ -46,9 +46,9 @@ class ArticleValidation {
  */
   static updateArticle(req, res, next) {
     const rules = {
-      title: 'min:3',
-      body: 'min:8',
-      description: 'min:3|max:300',
+      title: 'required|min:3',
+      body: 'required|min:8',
+      description: 'required|min:3|max:300',
       tagList: 'array'
     };
 

@@ -1,5 +1,4 @@
 import Validator from 'validatorjs';
-
 /**
  * @class UserInputValidation
  */
@@ -16,15 +15,14 @@ class UserInputValidation {
   static signUpInputValidation(req, res, next) {
     const {
       username,
+      email,
       firstname,
       lastname,
       bio,
       image,
-      email,
       password,
       password_confirmation // eslint-disable-line
     } = req.body.user;
-
     const validation = new Validator(
       {
         username,
@@ -152,6 +150,38 @@ class UserInputValidation {
   }
 
   /**
+   * validate user input on follow Verification
+   *
+   * @param {object} req
+   * @param {object} res
+   * @param {func} next
+   *
+   * @return {void}
+   */
+  static followInputValidation(req, res, next) {
+    const { username } = req.params;
+    const validation = new Validator(
+      {
+        username
+      },
+      {
+        username: 'required|string',
+      },
+      {
+        'required.username':
+          'This :attribute params is required.',
+        'string.username': 'This :attribute is required. ',
+      }
+    );
+    if (validation.passes()) {
+      return next();
+    }
+    return res.status(400).json({
+      errors: validation.errors.all()
+    });
+  }
+
+  /**
    * validate user input on email Verification
    *
    * @param {object} req
@@ -238,5 +268,4 @@ class UserInputValidation {
     });
   }
 }
-
 export default UserInputValidation;

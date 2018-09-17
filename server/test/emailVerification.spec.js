@@ -7,19 +7,21 @@ import db from '../database/models';
 chai.use(chaiHttp);
 let hash1;
 let hash2;
+let passwordHash;
+
 const { User } = db;
 describe('User SignUp', () => {
   before((done) => {
     chai.request(app)
       .post('/api/users')
       .send({
-        user: users[5]
+        user: users[10]
       })
       .end((err) => {
         if (err) return done(err);
         User.findOne({
           where: {
-            email: users[5].email
+            email: users[10].email
           }
         }).then((user) => {
           hash1 = user.dataValues.hash;
@@ -31,12 +33,56 @@ describe('User SignUp', () => {
     chai.request(app)
       .post('/api/users')
       .send({
-        user: users[6],
+        user: users[10]
+      })
+      .end((err) => {
+        if (err) return done(err);
+        User.findOne({
+          where: {
+            email: users[10].email
+          }
+        }).then((user) => {
+          hash2 = user.dataValues.hash;
+          done();
+        }).catch(err => done(err));
+      });
+  });
+  before((done) => {
+    chai.request(app)
+      .post('/api/users')
+      .send({
+        user: users[11]
+      })
+      .end((err) => {
+        if (err) return done(err);
+        User.findOne({
+          where: {
+            email: users[11].email
+          }
+        }).then((user) => {
+          hash2 = user.dataValues.hash;
+          done();
+        }).catch(err => done(err));
+      });
+  });
+  before((done) => {
+    chai.request(app)
+      .post('/api/users/reset-password')
+      .send({
+        user: {
+          email: users[10].email,
+        }
       })
       .end((err, res) => {
         if (err) return done(err);
-        hash2 = res.body.user.hash;
-        done();
+        User.findOne({
+          where: {
+            email: users[10].email
+          }
+        }).then((user) => {
+          passwordHash = user.dataValues.reset_password_hash;
+          done();
+        }).catch(err => done(err));
       });
   });
   describe('When passed valid data', () => {
@@ -124,11 +170,12 @@ describe('User SignUp', () => {
         .post('/api/users/reverify')
         .send({
           user: {
-            email: users[6].email
+            email: users[11].email
           }
         })
         .end((err, res) => {
           if (err) return done(err);
+          console.log('Im here =>', res.body);
           expect(res.status).to.equal(200);
           expect(res.body.message).to.equal('A verification email has been sent to you.');
           done();
@@ -201,6 +248,25 @@ describe('User SignUp', () => {
       };
       setTimeout(passwordTimeCheck, 1500);
       done();
+    });
+    it('It should update a user password', (done) => {
+      chai.request(app)
+        .post('/api/users/change-password/')
+        .set('Content-Type', 'application/json')
+        .send({
+          user: {
+            password: 'password1',
+            password_confirmation: 'password1',
+            passwordtoken: passwordHash
+          }
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.message).to
+            .equal('Password successfully updated, you can now login with your new password');
+          if (err) return done(err);
+          done();
+        });
     });
   });
 });

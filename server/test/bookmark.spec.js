@@ -60,9 +60,49 @@ describe('Articles Endpoint /articles', () => {
       });
   });
 
-  it('it should remove already bookmarked article', (done) => {
+  it('it should get all bookmarks', (done) => {
+    chai.request(app)
+      .get('/api/articles?favorite=true')
+      .set('authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('articles');
+        expect(res.body).to.have.property('paginationMeta');
+        expect(res.body.paginationMeta).to.be.an('object');
+        expect(res.body.articles).to.be.an('array');
+        done();
+      });
+  });
+  it('should not return bookmarks since token is invalid', (done) => {
+    const wrongToken = 123;
+    chai.request(app)
+      .get('/api/articles?favorite=true')
+      .set('Content-Type', 'application/json')
+      .set('authorization', wrongToken)
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.eql('You do not have permission to this page.');
+        done();
+      });
+  });
+  it('it should not bookmark article since article is already bookmarked', (done) => {
     chai.request(app)
       .post('/api/articles/user/bookmarks/how-to-code')
+      .set('authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.equal('You have already bookmarked this article');
+        done();
+      });
+  });
+
+  it('it should remove already bookmarked article', (done) => {
+    chai.request(app)
+      .delete('/api/articles/user/bookmarks/how-to-code')
       .set('authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -73,15 +113,15 @@ describe('Articles Endpoint /articles', () => {
       });
   });
 
-  it('it should get all bookmarked', (done) => {
+  it('it should not remove bookmark since article can not be found', (done) => {
     chai.request(app)
-      .get('/api/articles/user/bookmarks')
+      .delete('/api/articles/user/bookmarks/how-to-code')
       .set('authorization', userToken)
       .end((err, res) => {
-        expect(res).to.have.status(200);
+        expect(res).to.have.status(404);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('bookmark');
-        expect(res.body).to.have.property('bookmark').to.be.an('array');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.equal('You did not bookmark this article');
         done();
       });
   });

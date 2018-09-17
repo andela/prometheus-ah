@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Bookmark = sequelize.define('Bookmark', {
-    articleSlug: {
+    articleId: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -20,11 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     Bookmark.belongsTo(models.User, {
       foreignKey: 'userId',
     });
-  };
 
-  Bookmark.associate = (models) => {
     Bookmark.belongsTo(models.Article, {
-      foreignKey: 'articleSlug',
+      foreignKey: 'articleId',
     });
   };
 
