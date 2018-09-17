@@ -48,11 +48,12 @@ const users = [
   {
     username: 'peter',
     email: 'peteradeoye@gmail.com',
-    isVerified: false,
-    password: '90123456',
-    password_confirmation: '90123456',
+    status: 'active',
+    role: 'user',
+    password: Users.hashPassword('12345678'),
     createdAt: '2016-02-18T03:22:56.637Z',
-    updatedAt: '2016-02-18T03:48:35.824Z'
+    updatedAt: '2016-02-18T03:48:35.824Z',
+    isVerified: false,
   },
   {
     username: 'tega',
@@ -82,7 +83,7 @@ const users = [
     isVerified: true,
   },
   {
-    username: 'adeolaNotVerified',
+    username: 'adeolanotverified',
     status: 'active',
     role: 'user',
     password: Users.hashPassword('90123456'),
@@ -90,6 +91,23 @@ const users = [
     updatedAt: new Date(),
     isVerified: false,
   },
+  {
+    username: 'tobi',
+    email: 'tobi.too@gmail.com',
+    isVerified: true,
+    password: '90123456',
+    password_confirmation: '90123456',
+    createdAt: '2016-02-18T03:22:56.637Z',
+    updatedAt: '2016-02-18T03:48:35.824Z'
+  },
+  {
+    username: 'frank',
+    email: 'tobi.frank@gmail.com',
+    isVerified: false,
+    password: '90123456',
+    password_confirmation: '90123456',
+    createdAt: '2016-02-18T03:22:56.637Z',
+    updatedAt: '2016-02-18T03:48:35.824Z'
+  },
 ];
-
 export default users;

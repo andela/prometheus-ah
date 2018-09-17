@@ -15,25 +15,23 @@ class BookmarkController {
  * @returns {json} bookmark article
  */
   static bookmarkArticle(req, res, next) {
-    const articleSlug = req.params.slug;
-
+    const { articleId } = req;
     const { userId } = req.decoded;
 
     Bookmark.findOne({
       where: {
-        articleSlug,
+        articleId,
         userId
       }
     })
       .then((bookmark) => {
         if (bookmark) {
-          bookmark.destroy();
           return res.status(200).json({
-            message: 'Bookmark removed successfully'
+            message: 'You have already bookmarked this article'
           });
         }
         Bookmark.create({
-          articleSlug,
+          articleId,
           userId
         })
           .then((data) => {
@@ -50,33 +48,29 @@ class BookmarkController {
  * @param {obj} req
  * @param {obj} res
  * @param {obj} next
- * @returns {json} get list of bookmarks
+ * @returns {json} delet bookmark
  */
-  static getBookmarks(req, res, next) {
-    const page = parseInt((req.query.page || 1), 10);
-    const limit = parseInt((req.query.limit || 10), 10);
-    const offset = parseInt((page - 1), 10) * limit;
+  static deleteBookmark(req, res, next) {
+    const { articleId } = req;
 
-    Bookmark.findAndCountAll({
+    Bookmark.findOne({
       where: {
+        articleId,
         userId: req.decoded.userId
-      },
-      offset,
-      limit
+      }
     })
       .then((bookmark) => {
-        const { count } = bookmark;
-        const pageCount = Math.ceil(count / limit);
-        return res.status(200).json({
-          paginationMeta: {
-            pageCount,
-            totalCount: count,
-            outputCount: bookmark.rows.length,
-            pageSize: limit,
-            currentPage: page,
-          },
-          bookmark: bookmark.rows
-        });
+        if (!bookmark) {
+          return res.status(404).json({
+            message: 'You did not bookmark this article'
+          });
+        }
+        bookmark.destroy()
+          .then(() => {
+            res.status(200).json({
+              message: 'Bookmark removed successfully'
+            });
+          });
       })
       .catch(next);
   }

@@ -45,7 +45,7 @@ describe('Articles Endpoint /articles', () => {
 
   it('should create an article', (done) => {
     const article = {
-      title: 'how to code',
+      title: 'how to cook',
       body: 'PHP is a cool framework for coding but not fast as node',
       description: 'coding',
       tagList: ['PHP', 'coding', 'framework'],
@@ -96,7 +96,7 @@ describe('Articles Endpoint /articles', () => {
 
   it('should get a single article', (done) => {
     chai.request(app)
-      .get('/api/articles/how-to-code')
+      .get('/api/articles/how-to-cook')
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body).to.be.an('object');
@@ -106,13 +106,13 @@ describe('Articles Endpoint /articles', () => {
 
   it('should update an article', (done) => {
     const article = {
-      title: 'how to code in python',
+      title: 'how to wash',
       body: 'PHP is a cool framework for coding but not fast as node',
       description: 'coding',
       tagList: ['coding', 'framework']
     };
     chai.request(app)
-      .put('/api/articles/how-to-code')
+      .put('/api/articles/how-to-cook')
       .set('authorization', userToken)
       .send(article)
       .end((err, res) => {
@@ -126,23 +126,6 @@ describe('Articles Endpoint /articles', () => {
       });
   });
 
-  it('should update an article', (done) => {
-    const article = {
-      title: 'how to code in python',
-      description: 'coding',
-    };
-    chai.request(app)
-      .put('/api/articles/how-to-code')
-      .set('authorization', userToken)
-      .send(article)
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('message');
-        expect(res.body.message).to.equal('Article updated successfully');
-        done();
-      });
-  });
   it('should not update an article since you are not the creator', (done) => {
     const article = {
       title: 'how to code in python',
@@ -164,19 +147,19 @@ describe('Articles Endpoint /articles', () => {
 
   it('it should not update article if invalid request body sent', (done) => {
     chai.request(app)
-      .put('/api/articles/how-to-code')
+      .put('/api/articles/how-to-cook')
       .set('authorization', userToken)
       .send({ invalidKey: 'a' })
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('message').to.be.equal('Invalid request sent.');
+        expect(res.body).to.have.property('errors');
         done();
       });
   });
   it('should not delete an article created by another user', (done) => {
     chai.request(app)
-      .delete('/api/articles/how-to-code')
+      .delete('/api/articles/how-to-cook')
       .set('authorization', userToken2)
       .end((err, res) => {
         expect(res).to.have.status(403);
@@ -186,7 +169,7 @@ describe('Articles Endpoint /articles', () => {
   });
   it('should delete an article you created', (done) => {
     chai.request(app)
-      .delete('/api/articles/how-to-code')
+      .delete('/api/articles/how-to-cook')
       .set('authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -248,10 +231,16 @@ describe('Test Endpoint /articles', () => {
         done();
       });
   });
-  it('should not update an article', (done) => {
+  it('should not update an article since article does not exist', (done) => {
+    const article = {
+      title: 'how to code in python',
+      body: 'PHP is a cool framework for coding but not fast as node',
+      description: 'coding',
+    };
     chai.request(app)
       .put('/api/articles/wrong_id')
       .set('authorization', userToken)
+      .send(article)
       .end((err, res) => {
         expect(res).to.have.status(404);
         expect(res.body).to.be.an('object');
@@ -330,8 +319,8 @@ describe('Articles POST /api/articles/', () => {
       .post('/api/users/login')
       .send({
         user: {
-          username: 'adeolaNotVerified',
-          password: '90123456'
+          username: users[9].username,
+          password: users[2].password2
         }
       })
       .end((err, res) => {

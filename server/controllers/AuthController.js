@@ -5,16 +5,14 @@ import { Op } from 'sequelize';
 import db from '../database/models';
 import Users from '../utils/utilities';
 import sendVerifyEmailMessage from './helpers/emailSender';
+
 import resetPassword from './helpers/resetPasswordEmailSender';
 
-
 dotenv.config();
-
 const { User } = db;
 const secret = process.env.SECRET_KEY;
 const emailSecret = process.env.EMAIL_SECRET_KEY;
 const passwordSecret = process.env.PASSWORD_SECRET_KEY;
-
 /**
  * Class representing users
  */
@@ -28,16 +26,19 @@ class AuthController {
    */
   static signUpUser(req, res, next) {
     const {
-      email, username, password, bio, firstname, lastname
+      password, bio, firstname, lastname
     } = req.body.user;
+    let { email } = req.body.user;
+    email = email.toLowerCase();
 
+    let { username } = req.body.user;
+    username = username.toLowerCase();
+    
     const emailTokenExpiredTime = new Date();
     const emailHash = jwt.sign({
       email,
       emailTokenExpiredTime
     }, emailSecret, { expiresIn: 7200 });
-
-
     User.find({
       where: {
         [Op.or]: [{ username }, { email }]
@@ -86,7 +87,9 @@ class AuthController {
    * @returns {token} token - JWT token
    */
   static signInUser(req, res, next) {
-    const { username, password } = req.body.user;
+    const { password } = req.body.user;
+    let { username } = req.body.user;
+    username = username.toLowerCase();
     User.findOne({
       where: {
         username
@@ -138,7 +141,6 @@ class AuthController {
       email,
       passwordTokenExpiredTime
     }, passwordSecret, { expiresIn: '2h' });
-
     User.find({
       where: {
         email
@@ -149,7 +151,6 @@ class AuthController {
           message: 'Invalid credentials'
         });
       }
-
       userFound.update({
         reset_password_hash: passwordHash,
       }).then((user) => {
@@ -179,15 +180,16 @@ class AuthController {
         });
       }
       User.find({
-        email: decodedUserDetails.email
+        where: {
+          email: decodedUserDetails.email
+        }
       }).then((user) => {
         if (user && user.reset_password_hash === passwordtoken) {
           user.update({
             password: Users.hashPassword(password),
-            reset_password_hash: '',
           })
             .then(() => res.status(200).json({
-              message: 'password has been modified'
+              message: 'Password successfully updated, you can now login with your new password'
             })).catch(next);
         } else {
           return res.status(400).json({
@@ -207,7 +209,6 @@ class AuthController {
      */
   static changePassword(req, res, next) {
     const { oldPassword, password } = req.body;
-
     User.findOne({
       where: {
         id: req.decoded.userId
@@ -235,5 +236,4 @@ class AuthController {
     }).catch(next);
   }
 }
-
 export default AuthController;

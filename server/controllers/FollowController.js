@@ -1,7 +1,6 @@
 import db from '../database/models';
 
 const { User, Follow } = db;
-
 /**
  * Class representing FollowController
  */
@@ -153,6 +152,10 @@ class FollowController {
               authorsIFollow: authorsIFollowList
             });
           }).catch(next);
+      } else {
+        return res.status(404).json({
+          message: 'User not found.'
+        });
       }
     });
   }
@@ -219,9 +222,12 @@ class FollowController {
             myFollowers: myFollowersList
           });
         }).catch(next);
+      } else {
+        return res.status(404).json({
+          message: 'User not found.'
+        });
       }
     });
   }
 }
-
 export default FollowController;

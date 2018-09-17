@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     body: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
       foreignKey: 'userId',
+    });
+
+    Article.hasMany(models.Bookmark, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE'
     });
 
     Article.hasMany(models.Comment, {

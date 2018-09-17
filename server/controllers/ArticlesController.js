@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import db from '../database/models/index';
 import ReadingTime from '../utils/ReadingTime';
 
@@ -5,7 +6,8 @@ const {
   Article,
   Tag,
   Follow,
-  User
+  User,
+  Bookmark
 } = db;
 
 /**
@@ -62,23 +64,59 @@ class ArticlesController {
  * @returns {json} getArticles
  */
   static getArticles(req, res, next) {
-    const { page, limit, order } = req.query;
-    const offset = parseInt(page - 1, 10) * limit;
+    const {
+      page, limit, order, user, title, favorite
+    } = req.query;
+    const offset = parseInt((page - 1), 10) * limit;
 
-    Article.findAndCountAll({
-      include: [
-        {
-          model: Tag,
-          attributes: ['name'],
-          through: {
-            attributes: []
-          }
+    const queryBuilder = {
+      include: [{
+        model: User,
+        attributes:
+        { exclude: ['password', 'bio', 'socialLogin', 'socialLoginType', 'createdAt', 'updatedAt', 'hash', 'verify_hash_expiration', 'isVerified'] }
+      }, {
+        model: Tag,
+        attributes: ['name'],
+        through: {
+          attributes: []
         }
+      }],
+      order: [
+        ['createdAt', order]
       ],
-      order: [['createdAt', order]],
       offset,
-      limit
-    })
+      limit,
+    };
+
+    if (title) {
+      queryBuilder.where = {
+        title: {
+          [Op.iLike]: `%${req.query.title}%`
+        }
+      };
+    }
+
+    if (user) {
+      queryBuilder.include[0].where = {
+        username: {
+          [Op.iLike]: `%${req.query.user}%`
+        }
+      };
+    }
+
+    if (favorite && req.decoded) {
+      queryBuilder.include[1] = {
+        model: Bookmark,
+        where: {
+          userId: req.decoded.userId
+        },
+        attributes: {
+          exclude: ['id', 'articleId', 'userId', 'createdAt', 'updatedAt']
+        }
+      };
+    }
+
+    Article.findAndCountAll(queryBuilder)
       .then((article) => {
         const { count } = article;
         const pageCount = Math.ceil(count / limit);
@@ -88,7 +126,7 @@ class ArticlesController {
             pageSize: limit,
             totalCount: count,
             resultCount: article.rows.length,
-            pageCount
+            pageCount,
           },
           articles: article.rows
         });
@@ -97,11 +135,11 @@ class ArticlesController {
   }
 
   /**
-   * @param {obj} req - Request Object
-   * @param {obj} res - Response Object
-   * @param {obj} next - Next function
-   * @returns {json} articles
-   */
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} articles
+ */
   static getSingleArticle(req, res, next) {
     Article.findOne({
       include: [
@@ -131,11 +169,11 @@ class ArticlesController {
   }
 
   /**
-   * @param {obj} req - Request Object
-   * @param {obj} res - Response Object
-   * @param {obj} next - Next function
-   * @returns {json} articles
-   */
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} articles
+ */
   static updateArticle(req, res, next) {
     const {
       title, body, description, tagList
@@ -184,18 +222,19 @@ class ArticlesController {
   }
 
   /**
-   * @param {obj} req - Request Object
-   * @param {obj} res - Response Object
-   * @param {obj} next - Next function
-   * @returns {json} articles
-   */
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} articles
+ */
   static deleteArticle(req, res) {
     const { article } = req;
-    article.destroy();
-
-    return res.status(200).json({
-      message: 'Article deleted successfully'
-    });
+    article.destroy()
+      .then(() => {
+        res.status(200).json({
+          message: 'Article deleted successfully'
+        });
+      });
   }
 
   /**
