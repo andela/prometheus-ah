@@ -28,12 +28,6 @@ class UserController {
       .then((users) => {
         const { count } = users;
         const pageCount = Math.ceil(count / limit);
-        if (users.rows.length === 0) {
-          return res.status(200).json({
-            message: 'No user on this page',
-            users: users.rows,
-          });
-        }
         return res.status(200).json({
           message: 'Users profile successfully retrieved',
           paginationMeta: {

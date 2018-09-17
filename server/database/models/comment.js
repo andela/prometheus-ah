@@ -6,6 +6,12 @@ export default (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER
     },
+    highlightedText: {
+      type: DataTypes.STRING,
+      required: false,
+      trim: true,
+      allowNull: true,
+    },
     body: {
       type: DataTypes.STRING,
       required: true,

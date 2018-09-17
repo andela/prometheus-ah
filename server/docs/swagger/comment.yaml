@@ -116,6 +116,8 @@ definitions:
         properties:
           body:
             type: string
+          textHighlighted:
+            type: string
   updateComment:
     type: object
     properties:
