@@ -42,6 +42,24 @@ describe('Test API endpoint to comment on articles', () => {
         done();
       });
   });
+  it('should create a comment on highlighted text', (done) => {
+    chai.request(app)
+      .post('/api/articles/how-to-train-your-dragon/comments')
+      .set('Content-type', 'application/json')
+      .set('authorization', userToken)
+      .send({
+        comment: {
+          body: 'excellent article',
+          textHighlighted: 'Jacobian'
+        }
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(201);
+        expect(res.body.comment.body).to.equal('excellent article');
+        expect(res.body.comment.user.username).to.equal('joeeasy');
+        done();
+      });
+  });
 
   it('should not create a comment', (done) => {
     chai.request(app)
@@ -60,7 +78,7 @@ describe('Test API endpoint to comment on articles', () => {
       });
   });
 
-  it('should return error if article does not exixt', (done) => {
+  it('should return error if article does not exist', (done) => {
     chai.request(app)
       .post('/api/articles/how-to-train-me/comments')
       .set('Content-type', 'application/json')
@@ -73,6 +91,23 @@ describe('Test API endpoint to comment on articles', () => {
       .end((err, res) => {
         expect(res).to.have.status(404);
         expect(res.body.message).to.equal('Article does not exist');
+        done();
+      });
+  });
+  it('should return error if highlighted text does not exist', (done) => {
+    chai.request(app)
+      .post('/api/articles/how-to-train-your-dragon/comments')
+      .set('Content-type', 'application/json')
+      .set('authorization', userToken)
+      .send({
+        comment: {
+          textHighlighted: 'I love my life',
+          body: 'excellent article'
+        }
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.message).to.equal('Text not found in the article');
         done();
       });
   });

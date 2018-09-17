@@ -24,8 +24,8 @@ paths:
           description: Access Denied
         404:
           description: Not found
-        405:
-          description: Method not allowed
+        409:
+          description: Conflict
   /admin/{username}/remove/:
     put:
       tags:
@@ -51,8 +51,8 @@ paths:
           description: Access Denied
         404:
           description: Not found
-        405:
-          description: Method not allowed
+        409:
+          description: Conflict
   /admin/{username}/block/:
     put:
       tags:
@@ -78,8 +78,8 @@ paths:
           description: Access Denied
         404:
           description: Not found
-        405:
-          description: Method not allowed
+        409:
+          description: Conflict
   /admin/{username}/unblock/:
     put:
       tags:
@@ -105,8 +105,8 @@ paths:
           description: Access Denied
         404:
           description: Not found
-        405:
-          description: Method not allowed
+        409:
+          description: Conflict
   /admin/blocked/:
     get:
       tags:

@@ -73,20 +73,6 @@ describe('Users profile and password update', () => {
     });
   });
   describe('When user passed valid query parameter', () => {
-    it('should return success status when no user on a page', (done) => {
-      chai.request(app)
-        .get('/api/profiles?page=20&order=a')
-        .set('Content-Type', 'application/json')
-        .set('authorization', userToken)
-        .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body.message).to.equal('No user on this page');
-          expect(res.body).to.have.property('users');
-          expect(res.body.users[0]).to.equal(undefined);
-          if (err) return done(err);
-          done();
-        });
-    });
     it('should return array of users for valid query parameters', (done) => {
       chai.request(app)
         .get('/api/profiles?limit=1&page=1&order=DESC')

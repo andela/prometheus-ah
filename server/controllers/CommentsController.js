@@ -22,6 +22,7 @@ class CommentsControllers {
    */
   static createComment(req, res, next) {
     const {
+      textHighlighted,
       body: commentBody
     } = req.body.comment;
 
@@ -37,22 +38,46 @@ class CommentsControllers {
           message: 'Article does not exist'
         });
       }
-
-      Comment.create({
-        articleId: article.id,
-        userId: req.decoded.userId,
-        body: commentBody.trim()
-      }).then((comment) => {
-        const {
-          id, createdAt, updatedAt, body
-        } = comment;
-        return res.status(201).json({
-          comment: {
-            id, createdAt, updatedAt, body, user: req.decoded
-          }
+      if (textHighlighted) {
+        const articleBody = article.body;
+        const text = articleBody.search(textHighlighted);
+        if (text < 0) {
+          return res.status(404).json({
+            message: 'Text not found in the article'
+          });
+        }
+        Comment.create({
+          articleId: article.id,
+          userId: req.decoded.userId,
+          highlightedText: textHighlighted.trim(),
+          body: commentBody.trim()
+        }).then((comment) => {
+          const {
+            id, createdAt, updatedAt, body, highlightedText
+          } = comment;
+          return res.status(201).json({
+            comment: {
+              id, createdAt, updatedAt, body, highlightedText, user: req.decoded
+            }
+          });
         });
-      })
-        .catch(next);
+      } else {
+        Comment.create({
+          articleId: article.id,
+          userId: req.decoded.userId,
+          body: commentBody.trim()
+        }).then((comment) => {
+          const {
+            id, createdAt, updatedAt, body
+          } = comment;
+          return res.status(201).json({
+            comment: {
+              id, createdAt, updatedAt, body, user: req.decoded
+            }
+          });
+        })
+          .catch(next);
+      }
     })
       .catch(next);
   }
@@ -107,7 +132,6 @@ class CommentsControllers {
               message: 'Access denied.'
             });
           }
-
           comment.update({
             body: commentBody.trim(),
           });
