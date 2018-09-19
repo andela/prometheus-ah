@@ -71,6 +71,17 @@ module.exports = (sequelize, DataTypes) => {
     isVerified: {
       type: DataTypes.BOOLEAN,
       default: false
+    },
+    notificationStatus: {
+      type: DataTypes.STRING,
+      validate: {
+        isIn: {
+          args: [['on', 'off']],
+          msg: 'Notification status must be on or off'
+        },
+      },
+      defaultValue: 'on',
+      allowNull: false
     }
   });
 

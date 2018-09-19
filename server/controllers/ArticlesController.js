@@ -1,7 +1,13 @@
+import { Op } from 'sequelize';
 import db from '../database/models/index';
 import ReadingTime from '../utils/ReadingTime';
+import NotificationsController from './NotificationsController';
 
-const { Article, Tag } = db;
+const {
+  Article,
+  Follow,
+  Tag
+} = db;
 
 /**
  * @param {param} req - Request Object
@@ -40,11 +46,44 @@ class ArticlesController {
             })
             .catch(next));
         }
-        res.status(201).json({
-          message: 'Article created successfully',
-          article,
-          tags: tagList,
-        });
+
+        Follow.findAll({
+          where: {
+            followId: {
+              [Op.eq]: userId
+            }
+          },
+          attributes: ['userId']
+        }).then((followers) => {
+          const notificationDetails = {
+            articleSlug: article.slug,
+            createdBy: req.decoded.username,
+            status: 'unread',
+            type: 'ARTICLE_CREATED'
+          };
+
+          const notificationData = followers.map((user) => {
+            const data = {
+              userId: user.userId,
+              ...notificationDetails
+            };
+
+            return data;
+          });
+
+          NotificationsController.saveArticleNotification(
+            userId,
+            notificationDetails,
+            notificationData,
+            next
+          );
+
+          return res.status(201).json({
+            message: 'Article created successfully',
+            article,
+            tags: tagList,
+          });
+        }).catch(next);
       })
       .catch(next);
   }
@@ -163,6 +202,7 @@ class ArticlesController {
               } else {
                 tags = tagList;
               }
+
               return res.status(200).json({
                 message: 'Article updated successfully',
                 article: updateArticle,

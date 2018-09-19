@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { Op } from 'sequelize';
 import db from '../database/models';
+import NotificationsController from './NotificationsController';
 
 const {
   Article,
@@ -46,6 +47,20 @@ class CommentsControllers {
         const {
           id, createdAt, updatedAt, body
         } = comment;
+
+        const notificationData = {
+          userId: article.userId,
+          articleSlug: article.slug,
+          commentId: id,
+          createdBy: req.decoded.username,
+          status: 'unread',
+          type: 'COMMENT_CREATED'
+        };
+
+        if (req.decoded.userId !== article.userId) {
+          NotificationsController.saveNotification(notificationData, next);
+        }
+
         return res.status(201).json({
           comment: {
             id, createdAt, updatedAt, body, user: req.decoded

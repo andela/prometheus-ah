@@ -1,7 +1,9 @@
 import { Op } from 'sequelize';
 import db from '../database/models';
+import NotificationsController from './NotificationsController';
 
 const {
+  Article,
   Comment,
   CommentThread,
 } = db;
@@ -29,7 +31,8 @@ class CommentThreadsControllers {
         id: {
           [Op.eq]: req.params.id,
         }
-      }
+      },
+      include: [{ model: Article, attributes: ['slug'] }],
     }).then((comment) => {
       if (!comment) {
         return res.status(404).json({
@@ -45,6 +48,20 @@ class CommentThreadsControllers {
         const {
           id, createdAt, updatedAt, body
         } = reply;
+
+        const notificationData = {
+          userId: comment.userId,
+          articleSlug: comment.Article.slug,
+          commentId: comment.id,
+          createdBy: req.decoded.username,
+          status: 'unread',
+          type: 'REPLY_CREATED'
+        };
+
+        if (req.decoded.userId !== comment.userId) {
+          NotificationsController.saveNotification(notificationData, next);
+        }
+
         return res.status(201).json({
           reply: {
             id,
