@@ -22,8 +22,11 @@ class ArticleValidation {
     };
 
     const validation = new Validator(req.body, rules);
-
-    if (validation.passes()) {
+    if (!req.decoded.isVerified) {
+      res.status(403).json({
+        message: 'Access denied.'
+      });
+    } else if (validation.passes()) {
       next();
     } else {
       res.status(400).json({

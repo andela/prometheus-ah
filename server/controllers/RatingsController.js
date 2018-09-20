@@ -14,12 +14,13 @@ class RatingsController {
    *
    * @param {object} req - HTTP Request
    * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
    *
    * @memberOf RatingsController
    *
    * @returns {object} response JSON Object
    */
-  static createRating(req, res) {
+  static createRating(req, res, next) {
     return Rating
       .create({
         rating: req.body.rating,
@@ -33,7 +34,8 @@ class RatingsController {
             articleId: newRating.articleId
           }
         });
-      });
+      })
+      .catch(next);
   }
 
   /**
@@ -42,12 +44,13 @@ class RatingsController {
    *
    * @param {object} req - HTTP Request
    * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
    *
    * @memberOf RatingsController
    *
    * @returns {object} response - Paginated Article Ratings JSON Object
    */
-  static getRatings(req, res) {
+  static getRatings(req, res, next) {
     const { page, limit, order } = req.query;
     const offset = parseInt((page - 1), 10) * limit;
     let averageRating = 0;
@@ -93,7 +96,8 @@ class RatingsController {
               });
             });
           });
-      });
+      })
+      .catch(next);
   }
 
   /**
@@ -102,12 +106,13 @@ class RatingsController {
    *
    * @param {object} req - HTTP Request
    * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
    *
    * @memberOf RatingsController
    *
    * @returns {object} response JSON Object
    */
-  static updateRating(req, res) {
+  static updateRating(req, res, next) {
     return Rating
       .findById(req.params.ratingId)
       .then(rating => rating
@@ -119,7 +124,8 @@ class RatingsController {
             rating: newRating.rating,
             articleId: newRating.articleId
           }
-        })));
+        })))
+      .catch(next);
   }
 
   /**
@@ -128,19 +134,21 @@ class RatingsController {
    *
    * @param {object} req - HTTP Request
    * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
    *
    * @memberOf RatingsController
    *
    * @returns {object} response JSON Object
    */
-  static deleteRating(req, res) {
+  static deleteRating(req, res, next) {
     return Rating
       .findById(req.params.ratingId)
       .then(rating => rating
         .destroy()
         .then(() => res.status(200).send({
           message: 'Rating has been removed',
-        })));
+        })))
+      .catch(next);
   }
 }
 

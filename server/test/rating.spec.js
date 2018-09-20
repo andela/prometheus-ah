@@ -81,6 +81,43 @@ describe('Tests API endpoint to rate articles', () => {
         });
     });
     /**
+    * @description - POST (it should not create a new rating when rating is not an integer)
+    */
+    it('should not create a new rating when rating is not an integer', (done) => {
+      chai.request(app)
+        .post('/api/articles/how-to-train-your-dragon-2/ratings/')
+        .set('authorization', `${userToken}`)
+        .send({
+          rating: 3.5,
+        })
+        .then((res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('errors');
+          expect(res.body.errors).to.have.property('rating');
+          expect(res.body.errors.rating[0]).to.equal('The rating must be an integer.');
+          done();
+        });
+    });
+    /**
+    * @description - POST (it should not create a new rating when rating is a string)
+    */
+    it('should not create a new rating when rating is a string', (done) => {
+      chai.request(app)
+        .post('/api/articles/how-to-train-your-dragon-2/ratings/')
+        .set('authorization', `${userToken}`)
+        .send({
+          rating: '3.5',
+        })
+        .then((res) => {
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('errors');
+          expect(res.body.errors).to.have.property('rating');
+          expect(res.body.errors.rating[0]).to.equal('The rating must be an integer.');
+          done();
+        });
+    });
+    /**
     * @description - POST (it should create a new rating for a specific article)
     */
     it('should create a new rating for a specific article', (done) => {
@@ -133,7 +170,7 @@ describe('Tests API endpoint to rate articles', () => {
           expect(res).to.have.status(400);
           expect(res.body).to.be.an('object');
           expect(res.body).to.have.property('errors');
-          expect(res.body.errors.rating[0]).to.equal('The rating must be a number.');
+          expect(res.body.errors.rating[0]).to.equal('The rating must be an integer.');
           expect(res.body.errors.rating[1]).to.equal('The rating must be at least 1.');
           expect(res.body.errors.rating[2]).to.equal('The rating may not be greater than 5.');
           done();
@@ -211,7 +248,7 @@ describe('Tests API endpoint to rate articles', () => {
           expect(res).to.have.status(400);
           expect(res.body).to.be.an('object');
           expect(res.body).to.have.property('errors');
-          expect(res.body.errors.ratingId[0]).to.equal('The ratingId must be a number.');
+          expect(res.body.errors.ratingId[0]).to.equal('The ratingId must be an integer.');
           done();
         });
     });
