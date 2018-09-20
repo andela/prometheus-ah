@@ -53,7 +53,14 @@ router.get(
   '/profiles',
   Authenticate.auth,
   QueryValidation.queryValidation,
-  UserController.getAllUserProfile
+  UserController.getAllUserProfile,
+  UserController.editProfile
+);
+router.put(
+  '/users/password',
+  Authenticate.auth,
+  UserInputValidation.passwordUpdateValidation,
+  AuthController.changePassword
 );
 
 export default router;

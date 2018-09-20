@@ -5,13 +5,9 @@ import users from '../database/seed-data/users';
 import db from '../database/models';
 
 chai.use(chaiHttp);
-
 let hash1;
 let hash2;
-
-
 const { User } = db;
-
 describe('User SignUp', () => {
   before((done) => {
     chai.request(app)
@@ -31,7 +27,6 @@ describe('User SignUp', () => {
         }).catch(err => done(err));
       });
   });
-
   before((done) => {
     chai.request(app)
       .post('/api/users')
@@ -44,7 +39,6 @@ describe('User SignUp', () => {
         done();
       });
   });
-
   describe('When passed valid data', () => {
     it('Should confirm a user email address', (done) => {
       chai.request(app)
@@ -56,7 +50,6 @@ describe('User SignUp', () => {
           done();
         });
     });
-
     it('Should return an error if user link has expired', (done) => {
       const func = () => {
         chai.request(app)
@@ -167,7 +160,8 @@ describe('User SignUp', () => {
         })
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.message).to.equal(`A reset password link has been sent to your ${users[0].email}`);
+          expect(res.body.message).to
+            .equal(`A reset password link has been sent to ${users[0].email}`);
           if (err) return done(err);
           done();
         });
@@ -200,7 +194,8 @@ describe('User SignUp', () => {
           })
           .end((err, res) => {
             expect(res.status).to.equal(409);
-            expect(res.body.message).to.equal(`A reset password link has been sent to ${users[0].email} already.`);
+            expect(res.body.message).to
+              .equal(`A reset password link has been sent to ${users[0].email} already.`);
             if (err) return done(err);
           });
       };

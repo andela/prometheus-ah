@@ -151,7 +151,6 @@ class UserInputValidation {
     });
   }
 
-
   /**
    * validate user input on email Verification
    *
@@ -180,6 +179,49 @@ class UserInputValidation {
       },
       {
         'required.passwordtoken': ':attribute field is required.',
+        'required.password': ':attribute field is required.',
+        'min.password':
+          'The :attribute is too short. Min length is :min characters.',
+        'max.password':
+          'The :attribute is too long. Max length is :max characters.',
+        'confirmed.password': 'Password Mismatch.'
+      }
+    );
+    if (validation.passes()) {
+      return next();
+    }
+    return res.status(400).json({
+      errors: validation.errors.all()
+    });
+  }
+
+  /**
+   * validate user password update field
+   *
+   * @param {object} req
+   * @param {object} res
+   * @param {func} next
+   *
+   * @return {void}
+   */
+  static passwordUpdateValidation(req, res, next) {
+    const {
+      oldPassword,
+      password,
+      password_confirmation // eslint-disable-line
+    } = req.body;
+    const validation = new Validator(
+      {
+        oldPassword,
+        password,
+        password_confirmation
+      },
+      {
+        oldPassword: 'required',
+        password: 'required|min:8|max:40|confirmed',
+        password_confirmation: 'required',
+      },
+      {
         'required.password': ':attribute field is required.',
         'min.password':
           'The :attribute is too short. Min length is :min characters.',

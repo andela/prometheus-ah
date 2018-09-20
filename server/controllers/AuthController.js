@@ -149,7 +149,7 @@ class AuthController {
           resetPassword(userFound);
         }
         return res.status(200).json({
-          message: `A reset password link has been sent to your ${user.email}`
+          message: `A reset password link has been sent to ${user.email}`
         });
       }).catch(next);
     }).catch(next);
@@ -188,6 +188,43 @@ class AuthController {
         }
       }).catch(next);
     });
+  }
+
+  /**
+     * Update a user password
+     * @param {*} req - Request object
+     * @param {*} res - Response object
+     * @param {*} next - Next function
+     * @returns {message} message
+     */
+  static changePassword(req, res, next) {
+    const { oldPassword, password } = req.body;
+
+    User.findOne({
+      where: {
+        id: req.decoded.userId
+      }
+    }).then((user) => {
+      if (!bcrypt.compareSync(oldPassword, user.password)) {
+        return res.status(401).json({
+          message: 'password incorrect, try again'
+        });
+      }
+      if (bcrypt.compareSync(password, user.password)) {
+        return res.status(409).json({
+          message: 'New password is the same as previous password'
+        });
+      }
+      const hashPassword = Users.hashPassword(password);
+      user.update({
+        password: hashPassword
+      });
+      const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '24h' });
+      return res.status(200).json({
+        message: 'Password successfully updated, you can now login with your new password',
+        user: { ...user.toAuthJSON(), token },
+      });
+    }).catch(next);
   }
 }
 
