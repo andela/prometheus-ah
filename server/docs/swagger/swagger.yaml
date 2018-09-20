@@ -78,6 +78,32 @@ paths:
           description: Invalid token sent.
         500:
           description: Your verification link has expired or is invalid
+  /users/password/:
+    put:
+      tags:
+        - User
+      summary: It updates a users password
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: Header takes user's token
+        type: string
+      - in: body
+        name: Password update
+        description: It enable users to update password
+        schema:
+          $ref: '#/definitions/updatePassword'
+      responses:
+        200:
+          description: An object with a user profile detail
+        401:
+          description: Unauthorized request
+        400:
+          description: Bad request
+        409:
+          description: Conflict
   /profiles/{username}:
     put:
       tags:
@@ -125,6 +151,33 @@ paths:
           description: An object with a user profile detail
         404:
           description: User with username not found
+  /profiles/:
+    get:
+      tags:
+        - Profiles
+      summary: Get all users profile
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: limit
+        description: Set the limit for each returned users
+      - in: query
+        name: page
+        description: Set the page for each returned users
+      - in: query
+        name: order
+        description: Set the order for each returned users
+      - in: header
+        name: authorization
+        description: Header takes user authorization token
+      responses:
+        200:
+          description: Success response
+        400:
+          description: Invalid query parameters
+        401:
+          description: Unauthorized users
 definitions:
   signUp:
     type: object
@@ -184,3 +237,12 @@ definitions:
             type: string
           image:
             type: string
+  updatePassword:
+    type: object
+    properties:
+      oldPassword:
+        type: string
+      password:
+        type: string
+      password_confirmation:
+        type: string
