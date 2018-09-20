@@ -58,7 +58,14 @@ class AuthController {
         bio
       })
         .then((user) => {
-          const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '24h' });
+          const token = jwt.sign(
+            {
+              userId: user.id,
+              username: user.username,
+              role: user.role,
+              isVerified: user.isVerified,
+            }, secret, { expiresIn: '24h' }
+          );
           if (process.env.NODE_ENV !== 'test') {
             sendVerifyEmailMessage(user);
           }
@@ -96,6 +103,7 @@ class AuthController {
             userId: user.id,
             username: user.username,
             role: user.role,
+            isVerified: user.isVerified,
           }, secret, { expiresIn: '24h' });
           return res.status(200).json({
             message: 'Welcome User you are now logged in.',

@@ -8,7 +8,6 @@ chai.use(chaiHttp);
 
 let userToken;
 let userToken2;
-
 describe('Articles Endpoint /articles', () => {
   before((done) => {
     chai.request(app)
@@ -270,6 +269,97 @@ describe('Test Endpoint /articles', () => {
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
         expect(res.body).to.have.property('message').to.be.equal('Article not found');
+        done();
+      });
+  });
+});
+
+
+describe('Test Endpoint /articles/feed', () => {
+  it('should return an error when user token is invalid', (done) => {
+    chai.request(app)
+      .get('/api/articles/feed')
+      .set('Content-Type', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('You need to signup or login to perform this action');
+        done();
+      });
+  });
+
+  it('should login a user', (done) => {
+    chai.request(app)
+      .post('/api/users/login')
+      .send({
+        user: {
+          username: users[8].username,
+          password: users[2].password2
+        }
+      })
+      .end((err, res) => {
+        userToken = res.body.user.token;
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('should return articles of authors followed by user', (done) => {
+    chai.request(app)
+      .get('/api/articles/feed')
+      .set('Content-Type', 'application/json')
+      .set('authorization', userToken)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('articles');
+        expect(res.body.articles).to.be.an('array');
+        expect(res.body).to.have.property('paginationMeta');
+        expect(res.body.paginationMeta.currentPage).to.equal(1);
+        expect(res.body.paginationMeta.pageSize).to.equal(10);
+        expect(res.body.articles[0].slug).to.equal('how-to-force-your-dragon-3');
+        expect(res.body.articles.length).to.equal(5);
+        if (err) return done(err);
+        done();
+      });
+  });
+});
+
+describe('Articles POST /api/articles/', () => {
+  before((done) => {
+    chai.request(app)
+      .post('/api/users/login')
+      .send({
+        user: {
+          username: 'adeolaNotVerified',
+          password: '90123456'
+        }
+      })
+      .end((err, res) => {
+        userToken = res.body.user.token;
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  /**
+   * @description - PUT (should not create an article when user is not verified)
+   */
+  it('should not create an article when user is not verified', (done) => {
+    const article = {
+      title: 'how to code',
+      body: 'PHP is a cool framework for coding but not fast as node',
+      description: 'coding',
+      tagList: ['PHP', 'coding', 'framework'],
+    };
+    chai.request(app)
+      .post('/api/articles')
+      .set('authorization', userToken)
+      .send(article)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Access denied.');
         done();
       });
   });

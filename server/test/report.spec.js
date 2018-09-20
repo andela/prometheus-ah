@@ -197,7 +197,7 @@ describe('Tests API endpoint to report articles', () => {
           expect(res.body).to.have.property('reports');
           expect(res.body.reports[0].categoryId).to.equal(1);
           expect(res.body.reports[0].details)
-            .to.equal('This article is too hot');
+            .to.equal('This article is an infringement, a word for word copy');
           done();
         });
     });

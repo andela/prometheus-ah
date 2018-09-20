@@ -14,12 +14,13 @@ class ReportsController {
    *
    * @param {object} req - HTTP Request
    * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
    *
    * @memberOf ReportsController
    *
    * @returns {object} response JSON Object
    */
-  static createReport(req, res) {
+  static createReport(req, res, next) {
     const { categoryId, details } = req.body;
     const { slug } = req.params;
     Article.findOne({
@@ -68,7 +69,8 @@ class ReportsController {
                 });
               });
           });
-      });
+      })
+      .catch(next);
   }
 
   /**
@@ -77,12 +79,13 @@ class ReportsController {
    *
    * @param {object} req - HTTP Request
    * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
    *
    * @memberOf ReportsController
    *
    * @returns {object} response JSON Object
    */
-  static getReport(req, res) {
+  static getReport(req, res, next) {
     Report.findOne({
       where: {
         id: req.params.reportId
@@ -109,7 +112,8 @@ class ReportsController {
             status: report.status
           }
         });
-      });
+      })
+      .catch(next);
   }
 
   /**
@@ -118,12 +122,13 @@ class ReportsController {
    *
    * @param {object} req - HTTP Request
    * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
    *
    * @memberOf ReportsController
    *
    * @returns {object} response JSON Object
    */
-  static getReports(req, res) {
+  static getReports(req, res, next) {
     const { page, limit, order } = req.query;
     const offset = parseInt((page - 1), 10) * limit;
 
@@ -150,7 +155,8 @@ class ReportsController {
             ...reports.rows,
           }
         });
-      });
+      })
+      .catch(next);
   }
 
   /**
@@ -159,12 +165,13 @@ class ReportsController {
    *
    * @param {object} req - HTTP Request
    * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
    *
    * @memberOf ReportsController
    *
    * @returns {object} response JSON Object
    */
-  static closeReport(req, res) {
+  static closeReport(req, res, next) {
     return Report
       .findOne({
         where: {
@@ -189,7 +196,8 @@ class ReportsController {
               status: newReport.status
             }
           }));
-      });
+      })
+      .catch(next);
   }
 
   /**
@@ -198,12 +206,13 @@ class ReportsController {
    *
    * @param {object} req - HTTP Request
    * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
    *
    * @memberOf ReportsController
    *
    * @returns {object} response JSON Object
    */
-  static deleteReport(req, res) {
+  static deleteReport(req, res, next) {
     return Report
       .findOne({
         where: {
@@ -223,7 +232,8 @@ class ReportsController {
           .then(() => res.status(200).send({
             message: 'Report has been deleted',
           }));
-      });
+      })
+      .catch(next);
   }
 }
 

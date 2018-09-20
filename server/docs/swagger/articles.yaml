@@ -38,6 +38,29 @@ paths:
       responses:
         200:
           description: An object with articles details
+  /articles/feed:
+    get:
+      tags:
+        - Articles
+      summary: get all the articles of an author the user follows
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - in: query
+        name: limit
+        description: Set the limit for each returned users
+      - in: query
+        name: page
+        description: Set the page for each returned users
+      responses:
+        200:
+          description: An object with articles details
+        401:
+          description: Unauthorized user
   /articles/{slug}:
     get:
       tags:

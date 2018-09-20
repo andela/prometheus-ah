@@ -1,20 +1,25 @@
 import db from '../database/models/index';
 import ReadingTime from '../utils/ReadingTime';
 
-const { Article, Tag } = db;
+const {
+  Article,
+  Tag,
+  Follow,
+  User
+} = db;
 
 /**
- * @param {param} req - Request Object
- * @param {param} res - Response Object
- * @param {func} next - Next function
+ * @param {param} req
+ * @param {param} res
+ * @param {func} next
  */
 class ArticlesController {
   /**
-   * @param {obj} req - Request Object
-   * @param {obj} res - Response Object
-   * @param {obj} next - Next function
-   * @returns {json} createArticles
-   */
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} createArticles
+ */
   static createArticles(req, res, next) {
     const {
       title, body, description, tagList
@@ -22,7 +27,7 @@ class ArticlesController {
     const readingTime = ReadingTime.wordCount(body);
 
     const { userId } = req.decoded;
-
+    
     Article.create({
       title,
       body,
@@ -49,12 +54,13 @@ class ArticlesController {
       .catch(next);
   }
 
+
   /**
-   * @param {obj} req - Request Object
-   * @param {obj} res - Response Object
-   * @param {obj} next - Next function
-   * @returns {json} getArticles
-   */
+ * @param {obj} req
+ * @param {obj} res
+ * @param {obj} next
+ * @returns {json} getArticles
+ */
   static getArticles(req, res, next) {
     const { page, limit, order } = req.query;
     const offset = parseInt(page - 1, 10) * limit;
@@ -190,6 +196,51 @@ class ArticlesController {
     return res.status(200).json({
       message: 'Article deleted successfully'
     });
+  }
+
+  /**
+   * @param {obj} req
+   * @param {obj} res
+   * @param {obj} next
+   * @returns {json} getArticles
+   */
+  static articleFeed(req, res, next) {
+    const { page, limit, order } = req.query;
+    const offset = parseInt((page - 1), 10) * limit;
+
+    Article.findAll({
+      limit: 10,
+      order: [
+        ['createdAt', order]
+      ],
+      include: [{
+        model: User,
+        attributes: ['username'],
+        include: [{
+          model: Follow,
+          attributes: [],
+          where: {
+            userId: req.decoded.userId
+          },
+        }],
+      }],
+    })
+      .then((articles) => {
+        const count = articles.length;
+        const feedArticles = articles.slice(offset, (offset + limit));
+        const pageCount = Math.ceil(count / limit);
+        return res.status(200).json({
+          paginationMeta: {
+            currentPage: page,
+            pageSize: limit,
+            totalCount: articles.length,
+            resultCount: articles.length,
+            pageCount,
+          },
+          articles: feedArticles
+        });
+      })
+      .catch(next);
   }
 }
 

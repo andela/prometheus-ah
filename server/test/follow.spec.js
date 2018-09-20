@@ -10,7 +10,7 @@ let userToken;
 describe('Follow/Unfollow Test Feature', () => {
   const payload = {
     user: {
-      username: users[1].username,
+      username: users[8].username,
       password: users[2].password2
     }
   };
@@ -50,7 +50,7 @@ describe('Follow/Unfollow Test Feature', () => {
   });
   it('Should not allow User to follow himself', (done) => {
     chai.request(app)
-      .post('/api/profiles/faksam/follow')
+      .post('/api/profiles/adeola/follow')
       .set('authorization', userToken)
       .end((err, res) => {
         expect(err).to.equal(null);

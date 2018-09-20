@@ -35,6 +35,7 @@ class Authenticate {
               req.decoded = {
                 ...user.toAuthJSON(),
                 userId: decoded.userId,
+                isVerified: decoded.isVerified,
                 role: decoded.role,
               };
               return next();

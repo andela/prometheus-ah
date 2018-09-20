@@ -21,7 +21,7 @@ class RatingsValidation {
     const data = { rating };
 
     const rules = {
-      rating: 'required|numeric|min:1|max:5'
+      rating: 'required|integer|min:1|max:5'
     };
 
     const validation = new Validator(data, rules);
@@ -128,7 +128,7 @@ class RatingsValidation {
     const data = { ratingId };
 
     const rules = {
-      ratingId: 'numeric'
+      ratingId: 'integer'
     };
 
     const validation = new Validator(data, rules);

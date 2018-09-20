@@ -7,6 +7,7 @@ const admins = [
     password: Users.hashPassword('password'),
     role: 'superAdmin',
     status: 'active',
+    isVerified: true,
     createdAt: '2018-02-18T03:22:56.637Z',
     updatedAt: '2018-02-18T03:48:35.824Z'
   },
@@ -16,6 +17,7 @@ const admins = [
     password: Users.hashPassword('password1'),
     status: 'blocked',
     role: 'user',
+    isVerified: true,
     createdAt: '2018-02-18T03:22:56.637Z',
     updatedAt: '2018-02-18T03:48:35.824Z'
   },
@@ -24,6 +26,7 @@ const admins = [
     email: 'makeadmin@gmail.com',
     status: 'active',
     role: 'user',
+    isVerified: true,
     password: Users.hashPassword('password2'),
     createdAt: '2018-02-18T03:22:56.637Z',
     updatedAt: '2018-02-18T03:48:35.824Z'
@@ -33,6 +36,7 @@ const admins = [
     email: 'makeadmin@gmail.com',
     status: 'active',
     role: 'user',
+    isVerified: true,
     password: Users.hashPassword('password3'),
     createdAt: '2018-02-18T03:22:56.637Z',
     updatedAt: '2018-02-18T03:48:35.824Z'
@@ -43,6 +47,7 @@ const admins = [
     password: Users.hashPassword('password4'),
     role: 'admin',
     status: 'active',
+    isVerified: true,
     createdAt: '2018-02-18T03:22:56.637Z',
     updatedAt: '2018-02-18T03:48:35.824Z'
   },
@@ -52,6 +57,7 @@ const admins = [
     password: Users.hashPassword('password5'),
     status: 'blocked',
     role: 'user',
+    isVerified: true,
     createdAt: '2018-02-18T03:22:56.637Z',
     updatedAt: '2018-02-18T03:48:35.824Z'
   },
@@ -61,6 +67,7 @@ const admins = [
     password: Users.hashPassword('password6'),
     status: 'blocked',
     role: 'user',
+    isVerified: true,
     createdAt: '2018-02-18T03:22:56.637Z',
     updatedAt: '2018-02-18T03:48:35.824Z'
   },

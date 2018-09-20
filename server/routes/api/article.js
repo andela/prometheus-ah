@@ -19,6 +19,15 @@ import LikeController from '../../controllers/ArticleLikesController';
 
 const router = express.Router();
 
+// Article Feed Endpoint
+
+router.get(
+  '/feed',
+  Authenticate.auth,
+  QueryValidation.queryValidation,
+  ArticlesController.articleFeed
+);
+
 // Article endpoints
 router.get('/', QueryValidation.queryValidation, ArticlesController.getArticles);
 router.get('/:slug', ArticlesController.getSingleArticle);
