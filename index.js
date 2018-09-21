@@ -3,8 +3,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import errorhandler from 'errorhandler';
 import express from 'express';
+import http from 'http';
+import socketIo from 'socket.io';
 import passport from 'passport';
+import path from 'path';
 import swaggerUi from 'swagger-ui-express';
+import Socket from './server/utils/socket';
 import swaggerSpec from './server/utils/swagger';
 import routes from './server/routes';
 import './server/database/config/passport';
@@ -16,6 +20,14 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 // Create global app objects
 const app = express();
+const server = http.Server(app);
+const io = socketIo(server);
+
+Socket.connect(io);
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/client/index.html'));
+});
 
 app.use(cors());
 
@@ -35,7 +47,6 @@ app.use(express.static(`${__dirname}/'public'`));
 if (!isProduction) {
   app.use(errorhandler());
 }
-
 
 app.use(routes);
 
@@ -86,7 +97,7 @@ app.use((err, req, res, next) => {
 });
 
 // finally, let's start our server...
-const server = app.listen(process.env.PORT || 3000, () => {
+server.listen(process.env.PORT || 3000, () => {
   // eslint-disable-next-line no-console
   console.log(`'Listening on port '${server.address().port}`);
 });

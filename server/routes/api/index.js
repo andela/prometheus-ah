@@ -7,6 +7,7 @@ import socialLogin from './socialLogin';
 import article from './article';
 import follow from './follow';
 import reports from './reports';
+import notification from './notification';
 
 const router = express.Router();
 
@@ -20,6 +21,8 @@ router.use('/replies', commentThreadLikes);
 router.use('/reports', reports);
 
 router.use('/', follow);
+
+router.use('/notifications', notification);
 
 
 export default router;

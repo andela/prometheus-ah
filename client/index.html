@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Socket Test</title>
+</head>
+<body>
+  Socket Notification Test
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on('COMMENT_CREATED', payload => console.log(payload));
+    socket.on('REPLY_CREATED', payload => console.log(payload));
+    socket.on('ARTICLE_CREATED', payload => console.log(payload));
+  </script>
+</body>
+</html>

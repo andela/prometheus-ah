@@ -1,0 +1,103 @@
+paths:
+  /notifications/reads:
+    put:
+      tags:
+        - Notification
+      summary: mark a notification as read
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - in: body
+        name: update notification read status
+        description: It enable a user to update a notification read status
+        schema:
+          $ref: '#/definitions/updateNotificationBody'
+      responses:
+        200:
+          description: Notification has been read
+        400:
+          description: Notification has already been read'
+        404:
+          description: Notification does not exist
+        403:
+          description: Access denied
+  /notifications/status/{username}:
+    put:
+      tags:
+        - Notification
+      summary: update notification status
+      produces:
+        - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: username
+        in: path
+        description: path parameter takes the user username
+        type: string
+      - in: body
+        name: update notification status
+        description: It enable a user to update his/her notification status
+        schema:
+          $ref: '#/definitions/updateNotificationStatus'
+      responses:
+        200:
+          description: An object with the updated notification status.
+        403:
+          description: Access denied.
+/notifications/users/{username}:
+    get:
+      tags:
+        - Notification
+      summary: It gets all notifications of a user
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: username
+        in: path
+        description: path parameter takes the user username
+        type: string
+      - in: query
+        name: limit
+        description: Set the limit for returned reports
+      - in: query
+        name: page
+        description: Set the page for returned reports
+      - in: query
+        name: order
+        description: Set the order for returned reports
+        type: string
+      responses:
+        200:
+          description: An object containing pagination metadata and notifaction
+        403:
+          description: Access Denied
+definitions:
+  updateNotificationBody:
+    type: object
+    properties:
+      articleSlug:
+        type: string
+      userId:
+        type: integer
+      commentId:
+        type: string
+  updateNotificationStatus:
+    type: object
+    properties:
+      notification:
+        type: object
+        status:
+          type: object
+          body:
+            type: string
