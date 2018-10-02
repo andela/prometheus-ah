@@ -34,9 +34,6 @@ paths:
         in: path
         description: path parameter takes the article slug
         type: string
-      - in: body
-        name: get comments
-        description: It enables a user to get all comments for an article
         schema:
           $ref: '#/definitions/getComments'
       responses:
@@ -95,11 +92,6 @@ paths:
         in: path
         description: path parameter takes the article slug
         type: string
-      - in: body
-        name: get comments
-        description: It enables a user to delete a comments for an article
-        schema:
-          $ref: '#/definitions/deleteComment'
       responses:
         200:
           description: comment deleted

@@ -3,7 +3,7 @@ paths:
     post:
       tags:
         - CommentThreadLikes
-      summary: like and unlike a reply to a comment
+      summary: like a reply to a comment
       produces:
       - application/json
       parameters:
