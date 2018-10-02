@@ -50,9 +50,6 @@ paths:
         in: path
         description: path parameter takes the article slug
         type: string
-      - in: body
-        name: get a single article
-        description: It enables users to a single article
       responses:
         200:
           description: An object with an articles details
