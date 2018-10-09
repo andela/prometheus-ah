@@ -5,7 +5,7 @@ import emailTemplate from './emailTemplate';
 dotenv.config();
 
 const emailSender = (verifyUser) => {
-  const url = `http://${process.env.HOST_URL}/confirmation/${verifyUser.hash}`;
+  const url = `http://${process.env.HOST_URL}/api/confirmation/?emailToken=${verifyUser.hash}`;
 
   const sendGridKey = process.env.SENDGRID_API_KEY;
   sgMail.setApiKey(sendGridKey);

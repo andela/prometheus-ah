@@ -2,6 +2,7 @@ import express from 'express';
 import FollowController from '../../controllers/FollowController';
 import Authenticate from '../../middlewares/Authenticate';
 import followInput from '../../middlewares/validations/AuthValidation';
+
 const follow = express.Router();
 follow.post('/profiles/:username/follow',
   Authenticate.auth,

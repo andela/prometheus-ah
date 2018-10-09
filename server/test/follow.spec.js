@@ -6,20 +6,37 @@ import users from '../database/seed-data/users';
 chai.use(chaiHttp);
 
 let userToken;
+let otherToken;
 
 describe('Follow/Unfollow Test Feature', () => {
-  const payload = {
+  const payload1 = {
     user: {
       username: users[8].username,
+      password: users[2].password2
+    }
+  };
+  const payload2 = {
+    user: {
+      username: users[12].username,
       password: users[2].password2
     }
   };
   before((done) => {
     chai.request(app)
       .post('/api/users/login')
-      .send(payload)
+      .send(payload1)
       .end((err, res) => {
         userToken = res.body.user.token;
+        if (err) return done(err);
+        done();
+      });
+  });
+  before((done) => {
+    chai.request(app)
+      .post('/api/users/login')
+      .send(payload2)
+      .end((err, res) => {
+        otherToken = res.body.user.token;
         if (err) return done(err);
         done();
       });
@@ -80,6 +97,18 @@ describe('Follow/Unfollow Test Feature', () => {
         expect(err).to.equal(null);
         expect(res.status).to.equal(200);
         expect(res.body.authorsIFollow).to.be.an('array');
+        if (err) return done(err);
+        done();
+      });
+  });
+  it('Should return an empty array when user is not following any Author yet', (done) => {
+    chai.request(app)
+      .get('/api/profiles/joeeasy/following')
+      .set('authorization', otherToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('You are yet to follow an Author.');
         if (err) return done(err);
         done();
       });

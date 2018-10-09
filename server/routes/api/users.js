@@ -35,7 +35,7 @@ router.post(
 );
 
 router.get(
-  '/confirmation/:hash',
+  '/confirmation',
   EmailVerifyController.emailVerification
 );
 router.post('/users/login', UserInputValidation.loginInputValidation, AuthController.signInUser);

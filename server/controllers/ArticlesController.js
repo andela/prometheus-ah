@@ -29,7 +29,7 @@ class ArticlesController {
     const readingTime = ReadingTime.wordCount(body);
 
     const { userId } = req.decoded;
-    
+
     Article.create({
       title,
       body,
@@ -73,7 +73,19 @@ class ArticlesController {
       include: [{
         model: User,
         attributes:
-        { exclude: ['password', 'bio', 'socialLogin', 'socialLoginType', 'createdAt', 'updatedAt', 'hash', 'verify_hash_expiration', 'isVerified'] }
+         {
+           exclude: [
+             'password',
+             'bio',
+             'socialLogin',
+             'socialLoginType',
+             'createdAt',
+             'updatedAt',
+             'hash',
+             'verify_hash_expiration',
+             'isVerified'
+           ]
+         }
       }, {
         model: Tag,
         attributes: ['name'],

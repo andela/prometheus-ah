@@ -73,7 +73,7 @@ describe('User SignUp', () => {
           email: users[10].email,
         }
       })
-      .end((err, res) => {
+      .end((err) => {
         if (err) return done(err);
         User.findOne({
           where: {
@@ -88,7 +88,7 @@ describe('User SignUp', () => {
   describe('When passed valid data', () => {
     it('Should confirm a user email address', (done) => {
       chai.request(app)
-        .get(`/api/confirmation/${hash1}`)
+        .get(`/api/confirmation/?emailToken=${hash1}`)
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
@@ -99,7 +99,7 @@ describe('User SignUp', () => {
     it('Should return an error if user link has expired', (done) => {
       const func = () => {
         chai.request(app)
-          .get(`/api/confirmation/${hash2}`)
+          .get(`/api/confirmation/?emailToken=${hash2}`)
           .end((err, res) => {
             if (err) return done(err);
             expect(res.status).to.equal(400);
@@ -111,7 +111,7 @@ describe('User SignUp', () => {
     });
     it('Should return an error if user has already been verified', (done) => {
       chai.request(app)
-        .get(`/api/confirmation/${hash1}`)
+        .get(`/api/confirmation/?emailToken=${hash1}`)
         .set('Content-Type', 'application/json')
         .end((err, res) => {
           if (err) return done(err);
@@ -175,13 +175,12 @@ describe('User SignUp', () => {
         })
         .end((err, res) => {
           if (err) return done(err);
-          console.log('Im here =>', res.body);
           expect(res.status).to.equal(200);
           expect(res.body.message).to.equal('A verification email has been sent to you.');
           done();
         });
     });
-    it('Should send an error to the user if user have already been verified.', (done) => {
+    it('Should send an error to the user if user has already been verified.', (done) => {
       chai.request(app)
         .post('/api/users/reverify')
         .send({
