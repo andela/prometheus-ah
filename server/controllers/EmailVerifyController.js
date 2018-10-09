@@ -18,7 +18,7 @@ class EmailVerifyController {
    * @returns {object} user - User object
    */
   static emailVerification(req, res, next) {
-    const { hash } = req.params;
+    const hash = req.query.emailToken;
     jwt.verify(hash, emailSecret, (err, decodedUserData) => {
       if (err) {
         return res.status(500).json({

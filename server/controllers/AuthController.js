@@ -33,7 +33,7 @@ class AuthController {
 
     let { username } = req.body.user;
     username = username.toLowerCase();
-    
+
     const emailTokenExpiredTime = new Date();
     const emailHash = jwt.sign({
       email,
@@ -65,6 +65,7 @@ class AuthController {
               username: user.username,
               role: user.role,
               isVerified: user.isVerified,
+              image: user.image,
             }, secret, { expiresIn: '24h' }
           );
           if (process.env.NODE_ENV !== 'test') {
@@ -107,6 +108,8 @@ class AuthController {
             username: user.username,
             role: user.role,
             isVerified: user.isVerified,
+            image: user.image,
+            email: user.email
           }, secret, { expiresIn: '24h' });
           return res.status(200).json({
             message: 'Welcome User you are now logged in.',

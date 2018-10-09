@@ -5,7 +5,8 @@ import passwordResetTemplate from './passwordResetTemplate';
 dotenv.config();
 
 const emailSender = (verifyUser) => {
-  const url = `${process.env.HOST_URL}/users/change-password/${verifyUser.reset_password_hash}`;
+  const url = `
+  ${process.env.HOST_URL}/users/change-password/?passwordToken=${verifyUser.reset_password_hash}`;
   const sendGridKey = process.env.SENDGRID_API_KEY;
   sgMail.setApiKey(sendGridKey);
   const msg = {

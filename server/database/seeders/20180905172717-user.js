@@ -9,6 +9,7 @@ module.exports = {
     users[4],
     users[8],
     users[9],
+    users[12],
     admins[1],
     admins[2],
     admins[3],
