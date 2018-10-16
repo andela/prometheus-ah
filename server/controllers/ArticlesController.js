@@ -76,13 +76,13 @@ class ArticlesController {
          {
            exclude: [
              'password',
-             'bio',
              'socialLogin',
              'socialLoginType',
              'createdAt',
              'updatedAt',
              'hash',
              'verify_hash_expiration',
+             'reset_password_hash',
              'isVerified'
            ]
          }
@@ -161,6 +161,18 @@ class ArticlesController {
           through: {
             attributes: []
           }
+        },
+        {
+          model: User,
+          attributes: [
+            'id',
+            'email',
+            'username',
+            'firstname',
+            'lastname',
+            'image',
+            'bio'
+          ],
         }
       ],
       where: {
