@@ -36,7 +36,6 @@ if (!isProduction) {
   app.use(errorhandler());
 }
 
-
 app.use(routes);
 
 if (!isProduction) {
