@@ -223,7 +223,7 @@ describe('User SignUp', () => {
         })
         .end((err, res) => {
           expect(res.status).to.equal(404);
-          expect(res.body.message).to.equal('Invalid credentials');
+          expect(res.body.message).to.equal('Email was not found');
           if (err) return done(err);
           done();
         });

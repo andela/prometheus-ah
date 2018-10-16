@@ -63,9 +63,8 @@ describe('Tests API endpoint to report articles', () => {
         .then((res) => {
           expect(res).to.have.status(404);
           expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('errors');
-          expect(res.body.errors).to.have.property('message');
-          expect(res.body.errors.message)
+          expect(res.body).to.have.property('message');
+          expect(res.body.message)
             .to.equal('Category not found');
           done();
         });
@@ -104,9 +103,8 @@ describe('Tests API endpoint to report articles', () => {
           .then((res) => {
             expect(res).to.have.status(404);
             expect(res.body).to.be.an('object');
-            expect(res.body).to.have.property('errors');
-            expect(res.body.errors).to.have.property('message');
-            expect(res.body.errors.message).to.equal('Article not found');
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.equal('Article not found');
             done();
           });
       }
@@ -229,14 +227,14 @@ describe('Tests API endpoint to report articles', () => {
         .set('authorization', userToken)
         .then((res) => {
           expect(res.status).to.equal(404);
-          expect(res.body).to.have.property('errors');
-          expect(res.body.errors.message)
+          expect(res.body).to.have.property('message');
+          expect(res.body.message)
             .to.equal('Report not found');
           done();
         });
     });
   });
-  describe('PUT /api/reports/:reportId', () => {
+  describe('PUT /api/reports/:id', () => {
     /**
      * @description - PUT (it should update the status of a specific report)
      */
@@ -270,12 +268,12 @@ describe('Tests API endpoint to report articles', () => {
           expect(res).to.have.status(400);
           expect(res.body).to.be.an('object');
           expect(res.body).to.have.property('errors');
-          expect(res.body.errors).to.equal('The reportId must be an integer.');
+          expect(res.body.errors).to.equal('The id must be an integer.');
           done();
         });
     });
   });
-  describe('DELETE reports/:reportId', () => {
+  describe('DELETE reports/:id', () => {
     /**
      * @description - Delete (it should delete a specific report)
      */
@@ -301,8 +299,8 @@ describe('Tests API endpoint to report articles', () => {
         .then((res) => {
           expect(res).to.have.status(404);
           expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('errors');
-          expect(res.body.errors.message).to.equal('Report not found');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Report not found');
           done();
         });
     });

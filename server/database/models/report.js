@@ -6,6 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.STRING
     },
+  }, {
+    paranoid: true
   });
   Report.associate = (models) => {
     Report.belongsTo(models.User, {
