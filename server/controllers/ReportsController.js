@@ -1,6 +1,11 @@
 import db from '../database/models';
 
-const { Article, Report, ReportCategory } = db;
+const {
+  Article,
+  Report,
+  ReportCategory,
+  User
+} = db;
 
 /**
  * @class ReportsController
@@ -32,9 +37,7 @@ class ReportsController {
       .then((article) => {
         if (!article) {
           return res.status(404).json({
-            errors: {
-              message: 'Article not found'
-            }
+            message: 'Article not found'
           });
         }
         ReportCategory.findOne({
@@ -46,9 +49,7 @@ class ReportsController {
           .then((reportCategory) => {
             if (!reportCategory) {
               return res.status(404).json({
-                errors: {
-                  message: 'Category not found'
-                }
+                message: 'Category not found'
               });
             }
             Report
@@ -62,6 +63,7 @@ class ReportsController {
               .then((newReport) => {
                 res.status(201).send({
                   report: {
+                    message: 'New report created successfully',
                     categoryId,
                     details: newReport.details,
                     status: newReport.status
@@ -88,28 +90,31 @@ class ReportsController {
   static getReport(req, res, next) {
     Report.findOne({
       where: {
-        id: req.params.reportId
+        id: req.params.id
       },
       include: [{
         model: ReportCategory,
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'description']
         }
-      }],
+      }, {
+        model: User,
+        attributes: ['username', 'email'],
+      }
+      ],
     })
       .then((report) => {
         if (!report) {
           return res.status(404).json({
-            errors: {
-              message: 'Report not found'
-            }
+            message: 'Report not found',
           });
         }
         return res.status(200).json({
           report: {
             category: report.ReportCategory.title,
             details: report.details,
-            status: report.status
+            status: report.status,
+            user: report.User
           }
         });
       })
@@ -139,6 +144,16 @@ class ReportsController {
         ],
         offset,
         limit,
+        include: [{
+          model: ReportCategory,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt', 'description']
+          }
+        }, {
+          model: User,
+          attributes: ['username', 'email'],
+        }
+        ],
       })
       .then((reports) => {
         const { count } = reports;
@@ -175,7 +190,7 @@ class ReportsController {
     return Report
       .findOne({
         where: {
-          id: req.params.reportId,
+          id: req.params.id,
         },
         include: [{
           model: ReportCategory,
@@ -191,6 +206,7 @@ class ReportsController {
           })
           .then(newReport => res.status(200).send({
             reports: {
+              message: 'Closed report successfully',
               category: newReport.ReportCategory.title,
               details: newReport.details,
               status: newReport.status
@@ -216,15 +232,13 @@ class ReportsController {
     return Report
       .findOne({
         where: {
-          id: req.params.reportId,
+          id: req.params.id,
         }
       })
       .then((report) => {
         if (!report) {
           return res.status(404).send({
-            errors: {
-              message: 'Report not found',
-            }
+            message: 'Report not found',
           });
         }
         report

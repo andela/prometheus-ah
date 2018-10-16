@@ -1,8 +1,7 @@
 import express from 'express';
 import Authenticate from '../../middlewares/Authenticate';
-import ReportsController from '../../controllers/ReportsController';
+import ReportCategoryController from '../../controllers/ReportCategoryController';
 import ReportValidation from '../../middlewares/validations/ReportValidation';
-import QueryValidation from '../../middlewares/validations/QueryValidation';
 import isAdmin from '../../middlewares/isAdmin';
 
 const router = express.Router();
@@ -13,27 +12,33 @@ router.use(Authenticate.auth);
 // Report endpoints (Protected)
 router.get(
   '/',
-  isAdmin,
-  QueryValidation.queryValidation,
-  ReportsController.getReports
+  ReportCategoryController.getReportCategories
 );
 router.get(
   '/:id',
   isAdmin,
   ReportValidation.validateId,
-  ReportsController.getReport
+  ReportCategoryController.getReportCategory
 );
 router.put(
   '/:id',
   isAdmin,
   ReportValidation.validateId,
-  ReportsController.closeReport
+  ReportValidation.validateReportCategory,
+  ReportCategoryController.updateReportCategory
 );
 router.delete(
   '/:id',
   isAdmin,
   ReportValidation.validateId,
-  ReportsController.deleteReport
+  ReportCategoryController.deleteReportCategory
+);
+
+router.post(
+  '/',
+  isAdmin,
+  ReportValidation.validateReportCategory,
+  ReportCategoryController.createReportCategory
 );
 
 export default router;

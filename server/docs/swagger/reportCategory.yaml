@@ -1,0 +1,111 @@
+paths:
+  /reportCategories/:
+    post:
+      tags:
+        - Report Categories
+      summary: create a new report category
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - in: body
+        name: report category
+        description: It enables an admin to create a new report category
+        schema:
+          $ref: '#/definitions/reportCategory'
+      responses:
+        201:
+          description: An object with new report category
+        404:
+          description: Resource not found
+    get:
+      tags:
+        - Report Categories
+      summary: gets all the report categories
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      responses:
+        200:
+          description: Success response
+  /reportCategories/{id}:
+    get:
+      tags:
+        - Report Categories
+      summary: gets all the report categories
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: id
+        in: path
+        description: path parameter takes the report category id
+        type: string
+      responses:
+        200:
+          description: Success response
+        404:
+          description: Resource not found
+    put:
+      tags:
+        - Report Categories
+      summary: It updates the report category
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: id
+        in: path
+        description: path parameter takes the report category id
+        type: string
+      - in: body
+        name: update report category
+        description: It enables a user to update their profile
+        schema:
+          $ref: '#/definitions/reportCategory'
+      responses:
+        200:
+          description: An object containing the updated report category
+        401:
+          description: Unauthorized user
+    delete:
+      tags:
+        - Report Categories
+      summary: deletes a report category
+      produces:
+        - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - name: id
+        in: path
+        description: path parameter takes the report catgoryid
+        type: string
+      responses:
+        200:
+          description: A message confirming the report has been deleted
+        401:
+          description: Unauthorized user
+definitions:
+  reportCategory:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string

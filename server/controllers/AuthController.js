@@ -151,7 +151,7 @@ class AuthController {
     }).then((userFound) => {
       if (!userFound) {
         return res.status(404).json({
-          message: 'Invalid credentials'
+          message: 'Email was not found'
         });
       }
       userFound.update({
