@@ -54,6 +54,29 @@ paths:
           description: Success response
         400:
           description: Invalid query parameters
+  /reports/user/{articleId}:
+    get:
+      tags:
+        - Report
+      summary: gets all the reports
+      produces:
+      - application/json
+      parameters:
+      - name: authorization
+        in: header
+        description: authorization token
+        type: string
+      - in: path
+        name: articleId
+        description: Get user reports using the articleId
+      - in: query
+        name: order
+        description: Set the order for returned reports
+      responses:
+        200:
+          description: Success response
+        400:
+          description: Invalid query parameters
   /reports/{reportId}:
     get:
       tags:
