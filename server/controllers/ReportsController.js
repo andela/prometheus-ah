@@ -175,6 +175,58 @@ class ReportsController {
   }
 
   /**
+   * @description - Get All UsersReports For a Specific Article
+   * @static
+   *
+   * @param {object} req - HTTP Request
+   * @param {object} res - HTTP Response
+   * @param {object} next call next funtion/handler
+   *
+   * @memberOf ReportsController
+   *
+   * @returns {object} response JSON Object
+   */
+  static getUsersReports(req, res, next) {
+    const { articleId } = req.params;
+    const { order } = req.query;
+
+    return Report
+      .findAll({
+        where: {
+          userId: req.decoded.userId,
+          status: 'Open',
+          articleId
+        },
+        order: [
+          ['createdAt', order]
+        ],
+        include: [{
+          model: ReportCategory,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt', 'description']
+          }
+        }, {
+          model: User,
+          attributes: ['username', 'email'],
+        }
+        ],
+      })
+      .then((reports) => {
+        if (reports.length < 1) {
+          return res.status(200).json({
+            message: 'You haven\'t report this article'
+          });
+        }
+        return res.status(200).json({
+          reports: {
+            ...reports,
+          }
+        });
+      })
+      .catch(next);
+  }
+
+  /**
    * @description - Update a Specific Report
    * @static
    *

@@ -7,6 +7,7 @@ import admins from '../database/seed-data/admins';
 chai.use(chaiHttp);
 
 let userToken;
+let userToken2;
 
 describe('Tests API endpoint to report articles', () => {
   /**
@@ -24,6 +25,23 @@ describe('Tests API endpoint to report articles', () => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('Welcome User you are now logged in.');
         userToken = res.body.user.token;
+        done();
+      });
+  });
+  before((done) => {
+    chai.request(app)
+      .post('/api/users/login')
+      .set('Content-Type', 'application/json')
+      .send({
+        user: {
+          username: 'joeeasy',
+          password: '12345678'
+        }
+      })
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('Welcome User you are now logged in.');
+        userToken2 = res.body.user.token;
         done();
       });
   });
@@ -196,6 +214,28 @@ describe('Tests API endpoint to report articles', () => {
           expect(res.body.reports[0].categoryId).to.equal(1);
           expect(res.body.reports[0].details)
             .to.equal('This article is an infringement, a word for word copy');
+          done();
+        });
+    });
+    it('should get report for an article', (done) => {
+      chai.request(app)
+        .get('/api/reports/user/1')
+        .set('authorization', userToken2)
+        .then((res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.reports).to.be.an('object');
+          done();
+        });
+    });
+    it('should return a message if a user has not report an article', (done) => {
+      chai.request(app)
+        .get('/api/reports/user/10')
+        .set('authorization', userToken)
+        .then((res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.message).to.equal('You haven\'t report this article');
           done();
         });
     });

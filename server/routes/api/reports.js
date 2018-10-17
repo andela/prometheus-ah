@@ -10,6 +10,11 @@ const router = express.Router();
 // Protect endpoints
 router.use(Authenticate.auth);
 
+router.get(
+  '/user/:articleId',
+  QueryValidation.queryValidation,
+  ReportsController.getUsersReports
+);
 // Report endpoints (Protected)
 router.get(
   '/',
