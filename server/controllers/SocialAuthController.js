@@ -61,7 +61,7 @@ class AuthController {
             userId: data.id,
             username: data.username,
             role: data.role,
-            isVerified: data.isVerified,
+            isVerified: true,
             image: data.image
           }, secret, { expiresIn: '1d' }
         ),
