@@ -207,6 +207,9 @@ describe('Test API endpoint to comment on articles', () => {
         expect(res.body.comments['0'].body).to.equal('This article is hot');
         expect(res.body.comments['1'].body).to.equal('This article is correct');
         expect(res.body.comments['2'].body).to.equal('updated article');
+        expect(res.body.comments['0'].User.username).to.equal('joeeasy');
+        expect(res.body.comments['1'].User.username).to.equal('faksam');
+        expect(res.body.comments['2'].User.username).to.equal('joeeasy');
         done();
       });
   });

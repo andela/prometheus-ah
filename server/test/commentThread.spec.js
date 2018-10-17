@@ -171,6 +171,8 @@ describe('Test API endpoint to replies on comments', () => {
         expect(res).to.have.status(200);
         expect(res.body.replies['0'].body).to.equal('updated reply');
         expect(res.body.replies['1'].body).to.equal('This article is best here too');
+        expect(res.body.replies['0'].User.username).to.equal('joeeasy');
+        expect(res.body.replies['1'].User.username).to.equal('faksam');
         done();
       });
   });

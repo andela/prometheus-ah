@@ -5,6 +5,7 @@ import db from '../database/models';
 const {
   Article,
   Comment,
+  User,
 } = db;
 
 /**
@@ -187,7 +188,11 @@ class CommentsControllers {
         order: ['id'],
         attributes: ['id', 'createdAt', 'updatedAt', 'body'],
         offset,
-        limit
+        limit,
+        include: [{
+          model: User,
+          attributes: ['username', 'email', 'image'],
+        }],
       }).then((comments) => {
         const { count } = comments;
         const pageCount = Math.ceil(count / limit);
@@ -202,7 +207,6 @@ class CommentsControllers {
           },
           comments: {
             ...comments.rows,
-            user: req.decoded
           },
           commentsCount: count,
         });
