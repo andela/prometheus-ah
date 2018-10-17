@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import db from '../database/models';
 
-const { SECRET_KEY } = process.env;
+const secret = process.env.SECRET_KEY;
 const { User } = db;
 /**
  * @class AuthController
@@ -46,19 +46,33 @@ class AuthController {
  * @memberOf AuthController
  */
   static response(req, res) {
-    const user = {
-      email: req.user.email,
-      username: req.user.username,
-      lastName: req.user.lastName,
-      firstName: req.user.firstName,
-      token: jwt.sign({ email: req.user.email }, SECRET_KEY, { expiresIn: '1d' }),
-    };
-    if (req.user.created) {
-      return res.status(201).json({
-        message: 'User successfully created', user
-      });
-    }
-    return res.status(200).json({ message: 'authentication successful', user });
+    User.findOne({
+      where: {
+        username: req.user.username,
+      }
+    }).then((data) => {
+      const user = {
+        email: data.email,
+        username: data.username,
+        lastName: data.lastName,
+        firstName: data.firstName,
+        token: jwt.sign(
+          {
+            userId: data.id,
+            username: data.username,
+            role: data.role,
+            isVerified: data.isVerified,
+            image: data.image
+          }, secret, { expiresIn: '1d' }
+        ),
+      };
+      if (req.user.created) {
+        return res.status(201).json({
+          message: 'User successfully created', user
+        });
+      }
+      return res.status(200).json({ message: 'authentication successful', user });
+    }).catch(err => (err.message));
   }
 
   /**
