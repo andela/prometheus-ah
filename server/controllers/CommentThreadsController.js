@@ -4,6 +4,7 @@ import db from '../database/models';
 const {
   Comment,
   CommentThread,
+  User,
 } = db;
 
 /**
@@ -146,7 +147,11 @@ class CommentThreadsControllers {
         id: {
           [Op.eq]: req.params.id
         }
-      }
+      },
+      include: [{
+        model: User,
+        attributes: ['username', 'email', 'image'],
+      }],
     }).then((comment) => {
       if (!comment) {
         return res.status(404).json({
@@ -163,7 +168,11 @@ class CommentThreadsControllers {
         order: ['id'],
         attributes: ['id', 'createdAt', 'updatedAt', 'body'],
         offset,
-        limit
+        limit,
+        include: [{
+          model: User,
+          attributes: ['username', 'email', 'image'],
+        }],
       }).then((replies) => {
         const { count } = replies;
         const pageCount = Math.ceil(count / limit);
@@ -178,7 +187,6 @@ class CommentThreadsControllers {
           },
           replies: {
             ...replies.rows,
-            user: req.decoded
           },
           repliesCount: replies.count,
         });
