@@ -4,10 +4,11 @@ import commentThreadLikes from './commentThreadLikes';
 import users from './users';
 import admin from './admin';
 import socialLogin from './socialLogin';
-import article from './article';
 import follow from './follow';
 import reports from './reports';
 import reportCategories from './reportCategories';
+import readStats from './readStats';
+import article from './article';
 
 const router = express.Router();
 
@@ -22,6 +23,8 @@ router.use('/reports', reports);
 router.use('/reportCategories', reportCategories);
 
 router.use('/', follow);
+
+router.use('/', readStats);
 
 
 export default router;
