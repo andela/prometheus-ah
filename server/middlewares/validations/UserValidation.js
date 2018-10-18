@@ -16,7 +16,7 @@ class UserValidation {
   static editUserProfile(req, res, next) {
     const {
       email, firstname, lastname, bio, image
-    } = req.body.user;
+    } = req.body;
 
     const validation = new Validator(
       {
