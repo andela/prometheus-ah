@@ -9,10 +9,10 @@ import swaggerSpec from './server/utils/swagger';
 import routes from './server/routes';
 import './server/database/config/passport';
 
-
 dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
+
 
 // Create global app objects
 const app = express();
@@ -26,7 +26,6 @@ app.use(require('morgan')('dev'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 
 app.use(require('method-override')());
 

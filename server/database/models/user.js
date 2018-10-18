@@ -66,7 +66,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     image: {
       type: DataTypes.STRING,
-      defaultValue: 'https://bit.ly/2MKfwkO'
     },
     isVerified: {
       type: DataTypes.BOOLEAN,

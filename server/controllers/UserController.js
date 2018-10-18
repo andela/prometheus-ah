@@ -1,4 +1,6 @@
 import db from '../database/models';
+import { cloudinaryConfig, uploader } from '../database/config/cloudinary';
+import { multerUploads, dataUri } from '../database/config/multerConfig';
 
 const { User } = db;
 
@@ -71,35 +73,53 @@ class UserController {
    * @returns {profile} token - JWT token
    */
   static editProfile(req, res, next) {
-    const { decoded, userFound } = req;
-    if (userFound.id !== decoded.userId) {
-      return res.status(403).json({
-        message: 'Access denied.'
-      });
-    }
-    const {
-      email: Email, bio: Bio, image: Image, firstname: Firstname, lastname: Lastname
-    } = req.body.user;
-    userFound.update({
-      email: Email || userFound.email,
-      bio: Bio || userFound.bio,
-      image: Image || userFound.image,
-      firstname: Firstname || userFound.firstname,
-      lastname: Lastname || userFound.lastname
-    })
-      .then((updatedProfile) => {
-        const {
-          id, email, username, firstname, lastname, bio, image
-        } = updatedProfile;
-        const profileUpdate = {
-          id, email, username, firstname, lastname, bio, image
-        };
-        res.status(200).json({
-          message: 'Profile successfully updated',
-          profile: profileUpdate
-        });
-      })
-      .catch(next);
+    multerUploads(req, res, () => {
+      const {
+        email: Email, bio: Bio, firstname: Firstname, lastname: Lastname
+      } = req.body;
+
+      const updateUser = (Image) => {
+        const { decoded, userFound } = req;
+        if (userFound.id !== decoded.userId) {
+          return res.status(403).json({
+            message: 'Access denied.'
+          });
+        }
+        userFound.update({
+          email: Email || userFound.email,
+          bio: Bio || userFound.bio,
+          image: Image || userFound.image,
+          firstname: Firstname || userFound.firstname,
+          lastname: Lastname || userFound.lastname
+        })
+          .then((updatedProfile) => {
+            const {
+              id, email, username, firstname, lastname, bio, image
+            } = updatedProfile;
+            const profileUpdate = {
+              id, email, username, firstname, lastname, bio, image
+            };
+            res.status(200).json({
+              message: 'Profile successfully updated',
+              profile: profileUpdate
+            });
+          })
+          .catch(next);
+      };
+      if (req.file) {
+        const file = dataUri(req);
+        cloudinaryConfig();
+        uploader.upload(
+          file.content,
+          (result) => {
+            const image = result.url;
+            return updateUser(image);
+          },
+        );
+      } else {
+        updateUser();
+      }
+    });
   }
 }
 

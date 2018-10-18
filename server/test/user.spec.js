@@ -1,8 +1,11 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import fs from 'fs';
+import nock from 'nock';
 import app from '../../index';
 import userFaker from './helpers/userFakeData';
 import users from '../database/seed-data/users';
+import response from './helpers/response';
 
 chai.use(chaiHttp);
 
@@ -27,6 +30,12 @@ describe('Profile', () => {
       });
   });
 
+  before(() => {
+    nock('https://api.cloudinary.com/v1_1/kingslife')
+      .post('/image/upload')
+      .reply(200, response);
+  });
+
   before((done) => {
     chai.request(app)
       .post('/api/users/login')
@@ -40,6 +49,28 @@ describe('Profile', () => {
       .end((err, res) => {
         token2 = res.body.user.token;
         if (err) return done(err);
+        done();
+      });
+  });
+
+  it('should update user profile with multipart form-data', (done) => {
+    const { username } = users[0];
+    chai.request(app)
+      .put(`/api/profiles/${username}`)
+      .set('Content-Type', 'multipart/form-data')
+      .set('authorization', token1)
+      .field('firstname', 'kingsley')
+      .field('lastname', 'mocha')
+      .field('bio', 'loves programming')
+      .field('email', 'mocha@gmail.com')
+      .type('form')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.profile.firstname).to.equal('kingsley');
+        expect(res.body.profile.lastname).to.equal('mocha');
+        expect(res.body.profile.bio).to.equal('loves programming');
+        expect(res.body.profile.email).to.equal('mocha@gmail.com');
+        expect(res.body.message).to.equal('Profile successfully updated');
         done();
       });
   });
@@ -80,7 +111,7 @@ describe('Profile', () => {
     it('should edit a profile if the right username and token is sent', (done) => {
       const { username } = users[0];
       const update = {
-        user: { bio: 'tomorrow is a better day' }
+        bio: 'tomorrow is a better day'
       };
       chai
         .request(app)
@@ -99,7 +130,7 @@ describe('Profile', () => {
     it('should not edit a profile if the validation of input fails', (done) => {
       const { username } = users[0];
       const update = {
-        user: { bio: 'tom' }
+        bio: 'tom'
       };
       chai
         .request(app)
