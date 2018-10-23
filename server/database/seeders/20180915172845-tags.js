@@ -8,6 +8,8 @@ module.exports = {
     tags[3],
     tags[4],
     tags[5],
+    tags[6],
+    tags[7],
   ]),
 
   down: queryInterface => queryInterface.bulkDelete('Tags', null, {})

@@ -10,6 +10,11 @@ module.exports = {
     articles[5],
     articles[6],
     articles[7],
+    articles[8],
+    articles[9],
+    articles[10],
+    articles[11],
+    articles[12],
   ]),
   down: queryInterface => queryInterface.bulkDelete('Articles', null, {})
 };

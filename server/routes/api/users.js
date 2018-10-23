@@ -63,5 +63,6 @@ router.put(
   UserInputValidation.passwordUpdateValidation,
   AuthController.changePassword
 );
+router.get('/featuredAuthor', UserController.getFeaturedAuthor);
 
 export default router;

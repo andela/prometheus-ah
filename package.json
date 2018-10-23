@@ -14,9 +14,12 @@
     "migrations": "node_modules/.bin/sequelize db:migrate",
     "undo:seeders": "node_modules/.bin/sequelize db:seed:undo:all",
     "seeders": "babel-node node_modules/.bin/sequelize db:seed:all",
+    "seed:articles": "babel-node node_modules/.bin/sequelize db:seed --seed `basename $(ls server/database/seeders/*-articles.js)`",
+    "seed:tags": "babel-node node_modules/.bin/sequelize db:seed --seed `basename $(ls server/database/seeders/*-tags.js)`",
+    "seed:articleTags": "babel-node node_modules/.bin/sequelize db:seed --seed `basename $(ls server/database/seeders/*-articleTags.js)`",
     "seed:admin": "babel-node node_modules/.bin/sequelize db:seed --seed `basename $(ls server/database/seeders/*-admin-user.js)`",
     "pretest": "cross-env NODE_ENV=test npm run undo:migrations && cross-env NODE_ENV=test npm run migrations && cross-env NODE_ENV=test npm run seeders",
-    "heroku-postbuild": "npm run migrations && npm run seed:admin"
+    "heroku-postbuild": "npm run migrations"
   },
   "engines": {
     "node": "8.11.4"
