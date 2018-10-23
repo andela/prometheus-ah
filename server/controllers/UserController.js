@@ -1,8 +1,9 @@
+import { Op } from 'sequelize';
 import db from '../database/models';
 import { cloudinaryConfig, uploader } from '../database/config/cloudinary';
 import { multerUploads, dataUri } from '../database/config/multerConfig';
 
-const { User } = db;
+const { User, Article } = db;
 
 /**
  * Class representing users
@@ -120,6 +121,41 @@ class UserController {
         updateUser();
       }
     });
+  }
+
+  /**
+   * Get a featured user with posts
+   * @param {*} req - Request object
+   * @param {*} res - Response object
+   * @param {*} next - Next function
+   * @returns {object} - user
+   */
+  static getFeaturedAuthor(req, res, next) {
+    const author = process.env.FT_AUTHOR;
+
+    User.findOne({
+      where: {
+        username: {
+          [Op.eq]: author
+        }
+      },
+      attributes: ['id', 'username', 'firstname', 'lastname', 'image'],
+      include: [{
+        model: Article,
+        as: 'articles',
+        attributes: ['id', 'slug', 'title', 'readingTime'],
+      }]
+    })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({
+            message: `The user ${author} was not found`
+          });
+        }
+
+        return res.status(200).json({ user });
+      })
+      .catch(next);
   }
 }
 

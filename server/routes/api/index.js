@@ -5,6 +5,7 @@ import users from './users';
 import admin from './admin';
 import socialLogin from './socialLogin';
 import article from './article';
+import featuredArticles from './featuredArticles';
 import follow from './follow';
 import reports from './reports';
 import reportCategories from './reportCategories';
@@ -15,6 +16,7 @@ router.use('/admin', admin);
 router.use('/', users);
 router.use('/', socialLogin);
 router.use('/articles', article);
+router.use('/', featuredArticles);
 
 router.use('/comments', commentThread);
 router.use('/replies', commentThreadLikes);

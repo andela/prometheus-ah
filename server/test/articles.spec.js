@@ -80,7 +80,7 @@ describe('Articles Endpoint /articles', () => {
         done();
       });
   });
-  it('should return default when page query  or limit or order doesnt exist', (done) => {
+  it('should return default when page query or limit or order doesnt exist', (done) => {
     chai.request(app)
       .get('/api/articles?limit=-3&page=1&order=asdd')
       .set('Content-Type', 'application/json')
@@ -261,6 +261,17 @@ describe('Test Endpoint /articles', () => {
         done();
       });
   });
+
+  it('should return featured articles', (done) => {
+    chai.request(app)
+      .get('/api/featuredArticles')
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.articles.length).to.equal(5);
+        expect(res.body.articles[0].slug).to.equal(process.env.FT_ARTICLE_1);
+        done();
+      });
+  });
 });
 
 
@@ -305,8 +316,9 @@ describe('Test Endpoint /articles/feed', () => {
         expect(res.body).to.have.property('paginationMeta');
         expect(res.body.paginationMeta.currentPage).to.equal(1);
         expect(res.body.paginationMeta.pageSize).to.equal(10);
-        expect(res.body.articles[0].slug).to.equal('how-to-force-your-dragon-3');
-        expect(res.body.articles.length).to.equal(5);
+        expect(res.body.articles[0].slug)
+          .to.equal('the-purpose-of-life-is-not-happiness-its-usefulness');
+        expect(res.body.articles.length).to.equal(9);
         if (err) return done(err);
         done();
       });

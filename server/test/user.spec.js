@@ -1,6 +1,5 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import fs from 'fs';
 import nock from 'nock';
 import app from '../../index';
 import userFaker from './helpers/userFakeData';
@@ -102,6 +101,17 @@ describe('Profile', () => {
             'Sorry, there is no user with that username'
           );
           if (err) return done(err);
+          done();
+        });
+    });
+
+    it('should return details of featured author', (done) => {
+      chai
+        .request(app)
+        .get('/api/featuredAuthor')
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.user.username).to.equal(process.env.FT_AUTHOR);
           done();
         });
     });

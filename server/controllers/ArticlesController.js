@@ -305,6 +305,59 @@ class ArticlesController {
       })
       .catch(next);
   }
+
+  /**
+   * @param {obj} req
+   * @param {obj} res
+   * @param {obj} next
+   * @returns {json} getFeaturedArticles
+   */
+  static getFeaturedArticles(req, res, next) {
+    const featuredArticles = [
+      process.env.FT_ARTICLE_1,
+      process.env.FT_ARTICLE_2,
+      process.env.FT_ARTICLE_3,
+      process.env.FT_ARTICLE_4,
+      process.env.FT_ARTICLE_5
+    ];
+
+    Article.findAll({
+      where: {
+        slug: {
+          [Op.in]: featuredArticles
+        }
+      },
+      include: [{
+        model: User,
+        attributes: ['username', 'firstname', 'lastname'],
+      },
+      {
+        model: Tag,
+        attributes: ['name'],
+        through: {
+          attributes: []
+        }
+      }]
+    })
+      .then((articles) => {
+        const foundArticlesSlug = articles.map(article => article.slug);
+        const notFound = featuredArticles.filter((slug) => {
+          if (foundArticlesSlug.includes(slug)) {
+            return;
+          }
+          return slug;
+        });
+
+        if (notFound.length > 0) {
+          return res.status(404).json({
+            message: `The articles with the slug ${notFound} were not found`
+          });
+        }
+
+        return res.status(200).json({ articles });
+      })
+      .catch(next);
+  }
 }
 
 export default ArticlesController;

@@ -35,6 +35,18 @@ const tags = [
     createdAt: new Date(),
     updatedAt: new Date(),
   },
+  {
+    name: 'self',
+    createdBy: 'ADMIN',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    name: 'science',
+    createdBy: 'ADMIN',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
 ];
 
 export default tags;
