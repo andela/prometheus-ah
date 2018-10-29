@@ -24,7 +24,7 @@ class ArticlesController {
  */
   static createArticles(req, res, next) {
     const {
-      title, body, description, tagList
+      title, body, description, tagList, status
     } = req.body;
     const readingTime = ReadingTime.wordCount(body);
 
@@ -35,7 +35,8 @@ class ArticlesController {
       body,
       description,
       userId,
-      readingTime
+      readingTime,
+      status
     })
       .then((article) => {
         if (tagList) {
@@ -69,6 +70,11 @@ class ArticlesController {
     } = req.query;
     const offset = parseInt((page - 1), 10) * limit;
 
+    let whereClause = {
+      status: {
+        [Op.eq]: 'publish'
+      }
+    };
     const queryBuilder = {
       include: [{
         model: User,
@@ -101,19 +107,41 @@ class ArticlesController {
     };
 
     if (title) {
-      queryBuilder.where = {
+      whereClause = {
+        ...whereClause,
         title: {
           [Op.iLike]: `%${req.query.title}%`
         }
       };
     }
 
-    if (user) {
+    if (user && !req.decoded) {
       queryBuilder.include[0].where = {
         username: {
           [Op.iLike]: `%${req.query.user}%`
         }
       };
+    }
+
+    if (user && req.decoded) {
+      if (user && (req.decoded.username === req.query.user)) {
+        queryBuilder.include[0].where = {
+          username: {
+            [Op.eq]: `%${req.query.user}%`
+          }
+        };
+        queryBuilder.where = {
+          status: {
+            [Op.or]: ['publish', 'draft', 'block']
+          }
+        };
+      } else {
+        queryBuilder.include[0].where = {
+          username: {
+            [Op.iLike]: `%${req.query.user}%`
+          }
+        };
+      }
     }
 
     if (favorite && req.decoded) {
@@ -127,6 +155,8 @@ class ArticlesController {
         }
       };
     }
+
+    queryBuilder.where = whereClause;
 
     Article.findAndCountAll(queryBuilder)
       .then((article) => {
@@ -200,7 +230,7 @@ class ArticlesController {
  */
   static updateArticle(req, res, next) {
     const {
-      title, body, description, tagList
+      title, body, description, tagList, status
     } = req.body;
     const { article } = req;
     if (tagList) {
@@ -215,7 +245,7 @@ class ArticlesController {
       })
         .catch(next);
     }
-    if (title || body || description || tagList) {
+    if (title || body || description || tagList || status) {
       if (body) {
         req.body.readingTime = ReadingTime.wordCount(body);
       }
@@ -272,6 +302,9 @@ class ArticlesController {
     const offset = parseInt((page - 1), 10) * limit;
 
     Article.findAll({
+      where: {
+        status: 'publish'
+      },
       limit: 10,
       order: [
         ['createdAt', order]
@@ -325,6 +358,9 @@ class ArticlesController {
       where: {
         slug: {
           [Op.in]: featuredArticles
+        },
+        status: {
+          [Op.eq]: 'publish'
         }
       },
       include: [{

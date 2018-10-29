@@ -130,6 +130,8 @@ definitions:
         type: string
       description:
         type: string
+      status:
+        type: string
       tagList:
         type: array
         items:
@@ -140,6 +142,8 @@ definitions:
       title:
         type: string
       body:
+        type: string
+      status:
         type: string
       tagList:
         type: array

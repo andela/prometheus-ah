@@ -48,6 +48,7 @@ describe('Articles Endpoint /articles', () => {
       title: 'how to cook',
       body: 'PHP is a cool framework for coding but not fast as node',
       description: 'coding',
+      status: 'publish',
       tagList: ['PHP', 'coding', 'framework'],
     };
     chai.request(app)
@@ -80,6 +81,51 @@ describe('Articles Endpoint /articles', () => {
         done();
       });
   });
+
+  it('should return articles with query title parameter', (done) => {
+    chai.request(app)
+      .get('/api/articles?title=how to cook')
+      .set('Content-Type', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('articles');
+        expect(res.body.articles).to.be.an('array');
+        expect(res.body.articles[0].title).to.equal('how to cook');
+        if (err) return done(err);
+        done();
+      });
+  });
+
+
+  it('should return articles with query user parameter if user is not logged in', (done) => {
+    chai.request(app)
+      .get('/api/articles?user=faksam')
+      .set('Content-Type', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('articles');
+        expect(res.body.articles).to.be.an('array');
+        expect(res.body.articles[0].userId).to.equal(2);
+        if (err) return done(err);
+        done();
+      });
+  });
+
+  it('should return articles with query user parameter if user is logged in', (done) => {
+    chai.request(app)
+      .get('/api/articles?user=faksam')
+      .set('authorization', userToken)
+      .set('Content-Type', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('articles');
+        expect(res.body.articles).to.be.an('array');
+        expect(res.body.articles[0].userId).to.equal(2);
+        if (err) return done(err);
+        done();
+      });
+  });
+
   it('should return default when page query or limit or order doesnt exist', (done) => {
     chai.request(app)
       .get('/api/articles?limit=-3&page=1&order=asdd')
@@ -109,6 +155,7 @@ describe('Articles Endpoint /articles', () => {
       title: 'how to wash',
       body: 'PHP is a cool framework for coding but not fast as node',
       description: 'coding',
+      status: 'publish',
       tagList: ['coding', 'framework']
     };
     chai.request(app)
@@ -131,6 +178,7 @@ describe('Articles Endpoint /articles', () => {
       title: 'how to code in python',
       body: 'PHP is a cool framework for coding but not fast as node',
       description: 'coding',
+      status: 'publish',
     };
     chai.request(app)
       .put('/api/articles/how-to-train-your-dragon-3')
@@ -236,6 +284,7 @@ describe('Test Endpoint /articles', () => {
       title: 'how to code in python',
       body: 'PHP is a cool framework for coding but not fast as node',
       description: 'coding',
+      status: 'publish',
     };
     chai.request(app)
       .put('/api/articles/wrong_id')

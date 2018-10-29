@@ -21,6 +21,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    status: {
+      type: DataTypes.STRING,
+      isIn: {
+        args: [['draft', 'publish', 'block']],
+      },
+      defaultValue: 'draft',
+    }
   }, {});
 
   SequelizeSlugify.slugifyModel(Article, {
