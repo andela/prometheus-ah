@@ -255,6 +255,48 @@ class LikeController {
       });
     }).catch(next);
   }
+
+  /**
+   * This returns a boolean after checking if a user has liked an article.
+   * @param {object} req an object containing the request made to the server
+   * @param {object} res this object is used to send a response to the user
+   * @param {Function} next  called when an error occurs
+   * @returns {void} does not return a value
+   */
+  static likeStatus(req, res, next) {
+    Article.findOne({
+      where: {
+        slug: req.params.slug
+      }
+    })
+      .then((article) => {
+        if (!article) {
+          return res.status(404).json({
+            message: 'Article not found'
+          });
+        }
+        if (req.decoded) {
+          return Likes.findOne({
+            where: {
+              userId: req.decoded.userId,
+              articleId: article.id
+            }
+          })
+            .then((userLikes) => {
+              if (userLikes) {
+                res.status(200).json({
+                  userLikes: true
+                });
+              } else {
+                res.status(200).json({
+                  userLikes: false
+                });
+              }
+            });
+        }
+      })
+      .catch(next);
+  }
 }
 
 export default LikeController;
