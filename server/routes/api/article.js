@@ -38,6 +38,7 @@ router.get(
 
 router.get(
   '/:slug',
+  Authenticate.optionalAuth,
   ArticlesController.getSingleArticle
 );
 router.get(
@@ -92,6 +93,11 @@ router.post(
 router.post(
   '/:slug/dislike',
   LikeController.dislikeArticle
+);
+
+router.get(
+  '/:slug/likes',
+  LikeController.likeStatus
 );
 
 router.put(

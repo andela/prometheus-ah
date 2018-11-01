@@ -7,7 +7,7 @@ const {
   Tag,
   Follow,
   User,
-  Bookmark
+  Bookmark,
 } = db;
 
 /**

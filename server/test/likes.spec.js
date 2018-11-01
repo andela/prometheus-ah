@@ -231,4 +231,27 @@ describe('Get all likes', () => {
         done();
       });
   });
+
+  it('should return the like status for an article', (done) => {
+    const slug = 'how-to-code';
+    chai.request(app)
+      .get(`/api/articles/${slug}/likes`)
+      .set('authorization', userToken)
+      .end((err, res) => {
+        expect(res.body).to.be.an('object');
+        expect(res.body.userLikes).to.equal(true);
+        done();
+      });
+  });
+  it('should return the like status for an article', (done) => {
+    const slug = 'how-to-code';
+    chai.request(app)
+      .get(`/api/articles/${slug}/likes`)
+      .set('authorization', userToken2)
+      .end((err, res) => {
+        expect(res.body).to.be.an('object');
+        expect(res.body.userLikes).to.equal(false);
+        done();
+      });
+  });
 });
