@@ -1,6 +1,9 @@
 import db from '../database/models';
 
-const { User } = db;
+const {
+  User,
+  Article,
+} = db;
 
 /**
  * @class
@@ -89,6 +92,45 @@ class AdminController {
       })
       .catch(next);
   }
+
+  /**
+   * block an article
+   * @param {*} req - Request object
+   * @param {*} res - Response object
+   * @param {*} next - Next function
+   * @returns {object} token - User object
+   */
+  static resolveArticle(req, res, next) {
+    const { status } = req.body;
+    const { slug } = req.params;
+
+    Article.update(
+      { status },
+      {
+        returning: true,
+        where: {
+          slug
+        }
+      }
+    )
+      .then(([rows, [article]]) => { //eslint-disable-line
+        if (!article) {
+          return res.status(404).json({
+            message: 'Article not found'
+          });
+        }
+
+        article.getTags()
+          .then(retrievedTags => res.status(200).json({
+            message: `Article was ${status}ed successfully`,
+            article,
+            tags: retrievedTags
+          }))
+          .catch(next);
+      })
+      .catch(next);
+  }
+
 
   /**
  * Get Blocked user

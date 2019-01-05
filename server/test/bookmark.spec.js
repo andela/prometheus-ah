@@ -30,7 +30,8 @@ describe('Articles Endpoint /articles', () => {
     const article = {
       title: 'how to code',
       body: 'PHP is a cool framework for coding but not fast as node',
-      description: 'coding'
+      description: 'coding',
+      status: 'publish',
     };
     chai.request(app)
       .post('/api/articles')

@@ -5,6 +5,7 @@ const articles = [
     title: 'How to train your dragon',
     description: 'Ever wonder how?',
     body: 'It takes a Jacobian',
+    status: 'publish',
     createdAt: '2016-02-18T03:22:56.637Z',
     updatedAt: '2016-02-18T03:48:35.824Z',
   },
@@ -14,6 +15,7 @@ const articles = [
     title: 'How to train your dragon',
     description: 'Ever wonder wht?',
     body: 'It takes a Racobian',
+    status: 'publish',
     createdAt: '2016-02-18T03:22:56.637Z',
     updatedAt: '2016-02-18T03:48:35.824Z',
   },
@@ -23,6 +25,7 @@ const articles = [
     title: 'How to train your dragon',
     description: 'Ever wonder where?',
     body: 'It takes a Zacobian',
+    status: 'publish',
     createdAt: '2016-02-18T03:22:56.637Z',
     updatedAt: '2016-02-18T03:48:35.824Z',
   },
@@ -32,6 +35,7 @@ const articles = [
     title: 'How to force your dragon',
     description: 'Ever wonder where?',
     body: 'It takes a Zacobian',
+    status: 'publish',
     createdAt: '2016-09-18T03:22:56.637Z',
     updatedAt: '2016-09-18T03:48:35.824Z',
   },
@@ -41,6 +45,7 @@ const articles = [
     title: 'How to train your lion',
     description: 'Ever wonder where?',
     body: 'It takes a Zacobian',
+    status: 'publish',
     createdAt: '2016-03-18T03:22:56.637Z',
     updatedAt: '2016-03-18T03:48:35.824Z',
   },
@@ -50,6 +55,7 @@ const articles = [
     title: 'How to tame your fish',
     description: 'Ever wonder where?',
     body: 'It takes a Zacobian',
+    status: 'publish',
     createdAt: '2016-04-18T03:22:56.637Z',
     updatedAt: '2016-04-18T03:48:35.824Z',
   },
@@ -59,6 +65,7 @@ const articles = [
     title: 'How to train your parrot',
     description: 'Ever wonder where?',
     body: 'It takes a Zacobian',
+    status: 'publish',
     createdAt: '2016-06-18T03:22:56.637Z',
     updatedAt: '2016-06-18T03:48:35.824Z',
   },
@@ -68,6 +75,7 @@ const articles = [
     title: 'How to train your vision',
     description: 'Ever wonder where?',
     body: 'It takes a Zacobian',
+    status: 'publish',
     createdAt: '2016-08-18T03:22:56.637Z',
     updatedAt: '2016-08-18T03:48:35.824Z',
   },
@@ -85,6 +93,7 @@ const articles = [
           a design pattern is a reusable solution for commonly occurring
           problems in software design. Design patterns represent the best
           practices used by the experienced software developers. `,
+    status: 'publish',
     createdAt: '2018-09-21 20:11:23.238+01',
     updatedAt: '2018-09-21 20:11:23.238+01',
   },
@@ -98,6 +107,7 @@ const articles = [
            This work, however, would influence more than just the realm of the natural sciences.
            Many fields that we now classify under the heading of social science did, in fact,
            also grow out of the foundation he helped lay.`,
+    status: 'publish',
     createdAt: '2018-10-20 13:21:33.812+01',
     updatedAt: '2018-10-20 13:21:33.812+01',
   },
@@ -110,6 +120,7 @@ const articles = [
           The first OO language I used was C++ and then Smalltalk and finally .NET and Java.
           I was gung-ho to leverage the benefits of And Reuse is the word of the day.
           No… make that the year and perhaps evermore.`,
+    status: 'publish',
     createdAt: '2018-10-20 13:28:51.678+01',
     updatedAt: '2018-10-20 13:28:51.678+01',
   },
@@ -123,6 +134,7 @@ const articles = [
           And that is to be happy. Right? Why else go through all the pain and hardship?
           It’s to achieve happiness in some way. And I’m not the only person who believed that.
           In fact, if you look around you, most people are pursuing happiness in their lives.`,
+    status: 'publish',
     createdAt: '2018-10-20 13:31:42.506+01',
     updatedAt: '2018-10-20 13:31:42.506+01',
   },
@@ -138,6 +150,7 @@ const articles = [
     opportunities to work with A-list organizations and a successful career.
     As I got older, I started to think differently.
     I realized that working more is not always the right, or only, path to success.`,
+    status: 'publish',
     createdAt: '2018-10-20 13:25:26.047+01',
     updatedAt: '2018-10-20 13:25:26.047+01',
   },
